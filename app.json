@@ -1,0 +1,166 @@
+{
+  "id": "no.almli.thermostat",
+  "version": "0.0.1",
+  "compatibility": ">=1.5.0",
+  "sdk": 2,
+  "name": {
+    "en": "VThermo"
+  },
+  "description": {
+    "en": "Virtual thermostat"
+  },
+  "category": [
+    "tools"
+  ],
+  "permissions": [
+    "homey:manager:api"
+  ],
+  "images": {
+    "large": "/assets/images/large.png",
+    "small": "/assets/images/small.png"
+  },
+  "author": {
+    "name": "Bjørnar Almli",
+    "email": "bjornar.almli@gmail.com"
+  },
+  "contributors": {
+    "developers": [
+      {
+        "name": "Bjørnar Almli",
+        "email": "bjornar.almli@gmail.com"
+      }
+    ]
+  },
+  "flow": {
+    "triggers": [
+      {
+        "id": "vt_target_temperature_changed",
+        "title": {
+          "en": "Target temperature changed x"
+        },
+        "tokens": [
+          {
+            "name": "temperature",
+            "type": "number",
+            "title": {
+              "en": "temperature"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vt_temperature_changed",
+        "title": {
+          "en": "Temperature changed x"
+        },
+        "tokens": [
+          {
+            "name": "temperature",
+            "type": "number",
+            "title": {
+              "en": "temperature"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "id": "VThermo",
+      "name": {
+        "en": "VThermo"
+      },
+      "class": "thermostat",
+      "capabilities": [
+        "target_temperature",
+        "measure_temperature"
+      ],
+      "capabilitiesOptions": {
+        "target_temperature": {
+          "decimals": 1,
+          "min": 5,
+          "max": 40,
+          "step": 0.5
+        }
+      },
+      "mobile": {
+        "components": [
+          {
+            "id": "icon",
+            "capabilities": []
+          },
+          {
+            "id": "sensor",
+            "capabilities": [
+              "measure_temperature"
+            ]
+          },
+          {
+            "id": "thermostat",
+            "capabilities": [
+              "target_temperature"
+            ]
+          }
+        ]
+      },
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "General settings"
+          },
+          "children": [
+            {
+              "id": "zoneName",
+              "type": "text",
+              "label": {
+                "en": "zoneName"
+              },
+              "value": ""
+            },
+            {
+              "id": "hysteresis",
+              "type": "number",
+              "label": {
+                "en": "hysteresis"
+              },
+              "value": 0.5
+            }
+          ]
+        }
+      ],
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_my_devices"
+          }
+        },
+        {
+          "id": "add_my_devices",
+          "template": "add_devices"
+        }
+      ],
+      "images": {
+        "large": "/drivers/VThermo/assets/images/large.png",
+        "small": "/drivers/VThermo/assets/images/small.png"
+      }
+    }
+  ]
+}

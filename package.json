@@ -1,0 +1,15 @@
+{
+  "name": "no.almli.thermostat",
+  "version": "0.0.1",
+  "description": "Virtual thermostat",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bjørnar Almli",
+  "license": "ISC",
+  "dependencies": {
+    "athom-api": "^2.0.138",
+    "lodash": "^4.17.11"
+  }
+}

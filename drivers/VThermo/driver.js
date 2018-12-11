@@ -12,7 +12,9 @@ class VThermoDriver extends Homey.Driver {
         let devices = [
             {
                 "name": "VThermo",
-                "data": {"id": "VThermo"}
+                "data": {
+                    "id": guid()
+                }
             }
         ];
         callback(null, devices);
@@ -21,3 +23,10 @@ class VThermoDriver extends Homey.Driver {
 }
 
 module.exports = VThermoDriver;
+
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}

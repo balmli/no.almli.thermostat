@@ -22,15 +22,8 @@ class VThermoDevice extends Homey.Device {
 
         this.registerCapabilityListener('target_temperature', (value, opts) => {
             this.log(this.getName() + ' -> target_temperature changed: ', value, opts);
-            return Promise.resolve();
+            return this.checkTemp();
         });
-
-        /*
-        this.registerMultipleCapabilityListener(this.getCapabilities(), (changedCapabs, optsObj) => {
-            this.log(this.getName() + ' -> capability changed: ', changedCapabs);
-            return Promise.resolve();
-        }, 500);
-        */
 
         this.checkTemp();
     }
@@ -46,51 +39,36 @@ class VThermoDevice extends Homey.Device {
     async checkTemp() {
 
         let settings = this.getSettings();
-        //let zoneName = settings.zoneName;
-        let hysteresis = settings.hysteresis || 0.5;
-
-        /*
+        let zoneName = settings.zoneName;
         if (!zoneName) {
             this.log(this.getName() + ' -> no zoneName defined');
             this.scheduleCheckTemp(60);
             return Promise.resolve();
         }
-        */
-
-        let zone = this.getZone();
-
-        this.log('zone', zone);
-        this.log('hysteresis', hysteresis);
-
-        let state = this.getState();
-        this.log(this.getName() + ' -> state', state);
+        let hysteresis = settings.hysteresis || 0.5;
 
         let currentTemperature = this.getCapabilityValue('measure_temperature');
         if (currentTemperature) {
-            this.log(this.getName() + ' -> current temperature', currentTemperature);
+            this.log(this.getName() + ' @ ' + zoneName + ' -> current temperature', currentTemperature);
         }
 
         let targetTemp = this.getCapabilityValue('target_temperature');
         if (!targetTemp) {
-            this.log(this.getName() + ' -> no target_temperature defined');
+            this.log(this.getName() + ' @ ' + zoneName + ' -> no target_temperature defined');
             this.scheduleCheckTemp(60);
             return Promise.resolve();
         }
-        this.log(this.getName() + ' -> target temperature', targetTemp);
+        this.log(this.getName() + ' @ ' + zoneName + ' -> target temperature', targetTemp);
 
         let currentHomey = await HomeyAPI.forCurrentHomey();
+
         let devices = await currentHomey.devices.getDevices();
-        //let devices = await Homey.app.getDevices();
-//    .filter(d => d.zone === zone)
-        _(devices)
-            .forEach(d => this.log(d.name, d.zone, d.driverId, d.class));
 
         let thermometer = _(devices)
-            .filter(d => d.zone === zone)
+            .filter(d => d.zone.name === zoneName)
             .find(d => d.class === 'sensor' && d.capabilities.measure_temperature);
-
         if (!thermometer) {
-            this.log(this.getName() + ' -> no temperature sensor in zone', zone);
+            this.log(this.getName() + ' @ ' + zoneName + ' -> no temperature sensor in zone', zoneName);
             this.scheduleCheckTemp(60);
             return Promise.resolve();
         }
@@ -98,8 +76,8 @@ class VThermoDevice extends Homey.Device {
         let newTemperature = thermometer.state.measure_temperature;
         if (!currentTemperature || currentTemperature !== newTemperature) {
             this._tempChangedTrigger.trigger(this, {temperature: newTemperature});
-            this.setCapabilityValue('measure_temperature', newTemperature);
-            this.log(this.getName() + ' -> trigged temperature change', newTemperature);
+            await this.setCapabilityValue('measure_temperature', newTemperature);
+            this.log(this.getName() + ' @ ' + zoneName + ' -> trigged temperature change', newTemperature);
         }
 
         let onoff = undefined;
@@ -111,10 +89,10 @@ class VThermoDevice extends Homey.Device {
 
         if (onoff !== undefined) {
             _(devices)
-                .filter(d => d.zone === zone && d.class === 'heater')
+                .filter(d => d.zone.name === zoneName && d.class === 'heater' && d.state.onoff !== onoff)
                 .forEach(d => {
-                    //d.setCapabilityValue('onoff', onoff);
-                    this.log(this.getName() + ' -> ' + d.name + ' set to ', onoff);
+                    d.setCapabilityValue('onoff', onoff);
+                    this.log(this.getName() + ' @ ' + zoneName + ' -> ' + d.name + ' set to ', onoff);
                 });
         }
 
@@ -124,8 +102,11 @@ class VThermoDevice extends Homey.Device {
     }
 
     scheduleCheckTemp(seconds) {
+        if (this.curTimeout) {
+            clearTimeout(this.curTimeout);
+        }
         this.log(`Checking temp in ${seconds} seconds`);
-        setTimeout(this.checkTemp.bind(this), seconds * 1000);
+        this.curTimeout = setTimeout(this.checkTemp.bind(this), seconds * 1000);
     }
 
 }

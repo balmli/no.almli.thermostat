@@ -22,7 +22,7 @@ class VThermoDevice extends Homey.Device {
 
         this.registerCapabilityListener('target_temperature', (value, opts) => {
             this.log(this.getName() + ' -> target_temperature changed: ', value, opts);
-            return this.checkTemp();
+            return this.checkTemp(value);
         });
 
         this.checkTemp();
@@ -36,7 +36,7 @@ class VThermoDevice extends Homey.Device {
         this.log(this.getName() + ' -> virtual device deleted');
     }
 
-    async checkTemp() {
+    async checkTemp(targetTemp) {
 
         let settings = this.getSettings();
         let zoneName = settings.zoneName;
@@ -52,7 +52,9 @@ class VThermoDevice extends Homey.Device {
             this.log(this.getName() + ' @ ' + zoneName + ' -> current temperature', currentTemperature);
         }
 
-        let targetTemp = this.getCapabilityValue('target_temperature');
+        if (!targetTemp) {
+            targetTemp = this.getCapabilityValue('target_temperature');
+        }
         if (!targetTemp) {
             this.log(this.getName() + ' @ ' + zoneName + ' -> no target_temperature defined');
             this.scheduleCheckTemp(60);
@@ -88,12 +90,13 @@ class VThermoDevice extends Homey.Device {
         }
 
         if (onoff !== undefined) {
-            _(devices)
-                .filter(d => d.zone.name === zoneName && d.class === 'heater' && d.state.onoff !== onoff)
-                .forEach(d => {
-                    d.setCapabilityValue('onoff', onoff);
+            for (let device in devices) {
+                let d = devices[device];
+                if (d.zone.name === zoneName && d.class === 'heater' && d.state.onoff !== onoff) {
+                    await d.setCapabilityValue('onoff', onoff);
                     this.log(this.getName() + ' @ ' + zoneName + ' -> ' + d.name + ' set to ', onoff);
-                });
+                }
+            }
         }
 
         this.scheduleCheckTemp(60);

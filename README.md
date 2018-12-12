@@ -14,6 +14,7 @@ A virtual thermostat that gets the temperature from a temperature sensor to turn
 
 #### Conditions
 
+- The thermostat is on / off
 - The thermostat mode is / is not
 
 #### Actions

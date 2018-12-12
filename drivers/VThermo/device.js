@@ -9,11 +9,17 @@ class VThermoDevice extends Homey.Device {
     onInit() {
         this.log(this.getName() + ' -> virtual device initialized');
 
-        this._targetTempChangedTrigger = new Homey.FlowCardTriggerDevice('vt_target_temperature_changed');
-        this._targetTempChangedTrigger.register();
+        //this._targetTempChangedTrigger = new Homey.FlowCardTriggerDevice('vt_target_temperature_changed');
+        //this._targetTempChangedTrigger.register();
 
-        this._tempChangedTrigger = new Homey.FlowCardTriggerDevice('vt_temperature_changed');
-        this._tempChangedTrigger.register();
+        //this._tempChangedTrigger = new Homey.FlowCardTriggerDevice('vt_temperature_changed');
+        //this._tempChangedTrigger.register();
+
+        this.onoffCondition = new Homey.FlowCardCondition('onoff_is_on')
+            .register()
+            .registerRunListener((args, state) => {
+                return args.device.getCapabilityValue('onoff');
+            });
 
         this.registerCapabilityListener('measure_temperature', (value, opts) => {
             this.log(this.getName() + ' -> measure_temperature changed: ', value, opts);
@@ -43,7 +49,7 @@ class VThermoDevice extends Homey.Device {
         if (!zoneName) {
             this.log(this.getName() + ' -> no zoneName defined');
             this.scheduleCheckTemp(60);
-            return Promise.resolve();
+            return Promise.reject('no_zoneName_defined');
         }
         let hysteresis = settings.hysteresis || 0.5;
 
@@ -58,7 +64,7 @@ class VThermoDevice extends Homey.Device {
         if (!targetTemp) {
             this.log(this.getName() + ' @ ' + zoneName + ' -> no target_temperature defined');
             this.scheduleCheckTemp(60);
-            return Promise.resolve();
+            return Promise.reject('no_target_temperature_defined');
         }
         this.log(this.getName() + ' @ ' + zoneName + ' -> target temperature', targetTemp);
 
@@ -72,12 +78,12 @@ class VThermoDevice extends Homey.Device {
         if (!thermometer) {
             this.log(this.getName() + ' @ ' + zoneName + ' -> no temperature sensor in zone', zoneName);
             this.scheduleCheckTemp(60);
-            return Promise.resolve();
+            return Promise.reject('no_temperature_sensor_in_zone');
         }
 
         let newTemperature = thermometer.state.measure_temperature;
         if (!currentTemperature || currentTemperature !== newTemperature) {
-            this._tempChangedTrigger.trigger(this, {temperature: newTemperature});
+            //this._tempChangedTrigger.trigger(this, {temperature: newTemperature});
             await this.setCapabilityValue('measure_temperature', newTemperature);
             this.log(this.getName() + ' @ ' + zoneName + ' -> trigged temperature change', newTemperature);
         }
@@ -90,6 +96,7 @@ class VThermoDevice extends Homey.Device {
         }
 
         if (onoff !== undefined) {
+            await this.setCapabilityValue('onoff', onoff);
             for (let device in devices) {
                 let d = devices[device];
                 if (d.zone.name === zoneName && d.class === 'heater' && d.state.onoff !== onoff) {

@@ -77,6 +77,19 @@
           }
         ]
       }
+    ],
+    "conditions": [
+      {
+        "id": "onoff_is_on",
+        "title": {
+          "en": "Thermostat is !{{on|off}}"
+        },
+        "args": [{
+          "name": "device",
+          "type": "device",
+          "filter": "driver_id=VThermo"
+        }]
+      }
     ]
   },
   "drivers": [
@@ -87,6 +100,7 @@
       },
       "class": "thermostat",
       "capabilities": [
+        "onoff",
         "target_temperature",
         "measure_temperature"
       ],

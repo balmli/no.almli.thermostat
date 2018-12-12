@@ -21,14 +21,24 @@ class VThermoDevice extends Homey.Device {
                 return args.device.getCapabilityValue('onoff');
             });
 
-        this.registerCapabilityListener('measure_temperature', (value, opts) => {
-            this.log(this.getName() + ' -> measure_temperature changed: ', value, opts);
+        this.registerCapabilityListener('onoff', (value, opts) => {
+            this.log(this.getName() + ' -> onoff changed: ', value, opts);
             return Promise.resolve();
         });
 
         this.registerCapabilityListener('target_temperature', (value, opts) => {
             this.log(this.getName() + ' -> target_temperature changed: ', value, opts);
             return this.checkTemp(value);
+        });
+
+        this.registerCapabilityListener('thermostat_mode', (value, opts) => {
+            this.log(this.getName() + ' -> thermostat_mode changed: ', value, opts);
+            return Promise.resolve();
+        });
+
+        this.registerCapabilityListener('measure_temperature', (value, opts) => {
+            this.log(this.getName() + ' -> measure_temperature changed: ', value, opts);
+            return Promise.resolve();
         });
 
         this.checkTemp();
@@ -69,7 +79,6 @@ class VThermoDevice extends Homey.Device {
         this.log(this.getName() + ' @ ' + zoneName + ' -> target temperature', targetTemp);
 
         let currentHomey = await HomeyAPI.forCurrentHomey();
-
         let devices = await currentHomey.devices.getDevices();
 
         let thermometer = _(devices)

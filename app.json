@@ -102,6 +102,7 @@
       "capabilities": [
         "onoff",
         "target_temperature",
+        "thermostat_mode",
         "measure_temperature"
       ],
       "capabilitiesOptions": {

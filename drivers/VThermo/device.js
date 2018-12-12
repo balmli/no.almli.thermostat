@@ -105,7 +105,7 @@ class VThermoDevice extends Homey.Device {
         }
 
         if (onoff !== undefined) {
-            await this.setCapabilityValue('onoff', onoff);
+            //this.setCapabilityValue('onoff', onoff);
             for (let device in devices) {
                 let d = devices[device];
                 if (d.zone.name === zoneName && d.class === 'heater' && d.state.onoff !== onoff) {

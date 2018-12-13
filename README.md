@@ -7,10 +7,12 @@ A virtual thermostat that gets the temperature from a temperature sensor to turn
 ### Device: VThermo
 #### Triggers
 
-- The thermostat mode has changed
-- The thermostat mode has changed to
 - The temperature has changed
 - The target temperature has changed
+- The thermostat mode has changed
+- The thermostat mode has changed to
+- The thermostat turned off
+- The thermostat turned on
 
 #### Conditions
 
@@ -19,9 +21,8 @@ A virtual thermostat that gets the temperature from a temperature sensor to turn
 
 #### Actions
 
-- Set the temperature for the current thermostat mode
 - Set the thermostat mode
-- Set the setpoint of a thermostat mode 
+- Set the temperature for the current thermostat mode
 
 ### Release Notes
 

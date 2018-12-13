@@ -34,19 +34,89 @@
   "flow": {
     "triggers": [
       {
-        "id": "vt_target_temperature_changed",
+        "id": "vt_mode_changed",
         "title": {
-          "en": "Target temperature changed x"
+          "en": "Thermostat mode has changed"
         },
         "tokens": [
           {
-            "name": "temperature",
-            "type": "number",
+            "name": "vt_mode",
             "title": {
-              "en": "temperature"
+              "en": "Mode"
+            },
+            "example": {
+              "en": "Comfort"
+            }
+          },
+          {
+            "name": "mode_name",
+            "title": {
+              "en": "Name"
+            },
+            "example": {
+              "en": "Comfort"
             }
           }
         ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vt_mode_changed_to",
+        "title": {
+          "en": "Thermostat mode has changed to"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=VThermo"
+          },
+          {
+            "name": "vt_mode",
+            "title": {
+              "en": "Mode"
+            },
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "Comfort",
+                "label": {
+                  "en": "Comfort"
+                }
+              },
+              {
+                "id": "ECO",
+                "label": {
+                  "en": "Energy Saving"
+                }
+              },
+              {
+                "id": "Off",
+                "label": {
+                  "en": "Off"
+                }
+              },
+              {
+                "id": "Cooling",
+                "label": {
+                  "en": "Cooling"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "vt_onoff_true",
+        "title": {
+          "en": "Thermostat turned on"
+        },
         "args": [
           {
             "name": "device",
@@ -56,19 +126,10 @@
         ]
       },
       {
-        "id": "vt_temperature_changed",
+        "id": "vt_onoff_false",
         "title": {
-          "en": "Temperature changed x"
+          "en": "Thermostat turned off"
         },
-        "tokens": [
-          {
-            "name": "temperature",
-            "type": "number",
-            "title": {
-              "en": "temperature"
-            }
-          }
-        ],
         "args": [
           {
             "name": "device",
@@ -84,11 +145,162 @@
         "title": {
           "en": "Thermostat is !{{on|off}}"
         },
-        "args": [{
-          "name": "device",
-          "type": "device",
-          "filter": "driver_id=VThermo"
-        }]
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vt_mode_is",
+        "title": {
+          "en": "Thermostat mode is"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          },
+          {
+            "name": "vt_mode",
+            "title": {
+              "en": "Mode"
+            },
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "Comfort",
+                "label": {
+                  "en": "Comfort"
+                }
+              },
+              {
+                "id": "ECO",
+                "label": {
+                  "en": "Energy Saving"
+                }
+              },
+              {
+                "id": "Off",
+                "label": {
+                  "en": "Off"
+                }
+              },
+              {
+                "id": "Cooling",
+                "label": {
+                  "en": "Cooling"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "vt_change_mode",
+        "title": {
+          "en": "Set the thermostat mode"
+        },
+        "hint": {
+          "en": "Set the thermostat mode (Comfort / Energy Saving / Off / Cooling) and activate instantly"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=VThermo"
+          },
+          {
+            "name": "vt_mode",
+            "title": {
+              "en": "Mode"
+            },
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "Comfort",
+                "label": {
+                  "en": "Comfort"
+                }
+              },
+              {
+                "id": "ECO",
+                "label": {
+                  "en": "Energy Saving"
+                }
+              },
+              {
+                "id": "Off",
+                "label": {
+                  "en": "Off"
+                }
+              },
+              {
+                "id": "Cooling",
+                "label": {
+                  "en": "Cooling"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "vt_change_mode_setpoint",
+        "title": {
+          "en": "Set a setpoint of a thermostat mode"
+        },
+        "hint": {
+          "en": "Change the setpoint of a specific thermostat mode (Comfort / Energy Saving / Cooling). Note: does NOT activate this mode"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=VThermo"
+          },
+          {
+            "name": "vt_mode",
+            "title": {
+              "en": "Mode"
+            },
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "Comfort",
+                "label": {
+                  "en": "Comfort"
+                }
+              },
+              {
+                "id": "ECO",
+                "label": {
+                  "en": "Energy Saving"
+                }
+              },
+              {
+                "id": "Cooling",
+                "label": {
+                  "en": "Cooling"
+                }
+              }
+            ]
+          },
+          {
+            "name": "setpointValue",
+            "type": "range",
+            "min": 5,
+            "max": 40,
+            "step": 0.5,
+            "label": "°C",
+            "labelDecimals": 1
+          }
+        ]
       }
     ]
   },
@@ -100,12 +312,15 @@
       },
       "class": "thermostat",
       "capabilities": [
-        "onoff",
+        "vt_onoff",
         "target_temperature",
-        "thermostat_mode",
+        "vt_mode",
         "measure_temperature"
       ],
       "capabilitiesOptions": {
+        "vt_onoff": {
+          "greyout": true
+        },
         "target_temperature": {
           "decimals": 1,
           "min": 5,
@@ -122,7 +337,31 @@
           {
             "id": "sensor",
             "capabilities": [
-              "measure_temperature"
+              "measure_temperature",
+              "vt_onoff"
+            ],
+            "options": {
+              "icons": {
+                "vt_onoff": "/drivers/VThermo/assets/images/onoff.svg"
+              },
+              "vt_onoff": {
+                "noblink": false,
+                "greyout": true,
+                "label": {
+                  "true": {
+                    "en": "Active"
+                  },
+                  "false": {
+                    "en": "Idle"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": "picker",
+            "capabilities": [
+              "vt_mode"
             ]
           },
           {
@@ -147,6 +386,30 @@
                 "en": "zoneName"
               },
               "value": ""
+            },
+            {
+              "id": "Comfort_setpoint",
+              "type": "number",
+              "label": {
+                "en": "Comfort mode temperature"
+              },
+              "value": 21.0
+            },
+            {
+              "id": "ECO_setpoint",
+              "type": "number",
+              "label": {
+                "en": "Energy saving mode temperature"
+              },
+              "value": 18.0
+            },
+            {
+              "id": "Cooling_setpoint",
+              "type": "number",
+              "label": {
+                "en": "Cooling mode temperature"
+              },
+              "value": 15.0
             },
             {
               "id": "hysteresis",
@@ -177,5 +440,56 @@
         "small": "/drivers/VThermo/assets/images/small.png"
       }
     }
-  ]
+  ],
+  "capabilities": {
+    "vt_mode": {
+      "type": "enum",
+      "title": {
+        "en": "Thermostat mode"
+      },
+      "desc": {
+        "en": "Mode of the thermostat"
+      },
+      "values": [
+        {
+          "id": "Comfort",
+          "title": {
+            "en": "Comfort"
+          }
+        },
+        {
+          "id": "ECO",
+          "title": {
+            "en": "Energy Saving"
+          }
+        },
+        {
+          "id": "Off",
+          "title": {
+            "en": "Off"
+          }
+        },
+        {
+          "id": "Cooling",
+          "title": {
+            "en": "Cooling"
+          }
+        }
+      ],
+      "getable": true,
+      "setable": true
+    },
+    "vt_onoff": {
+      "type": "boolean",
+      "title": {
+        "en": "State"
+      },
+      "desc": {
+        "en": "State of the thermostat"
+      },
+      "getable": true,
+      "setable": false,
+      "greyout": true
+    }
+  }
 }

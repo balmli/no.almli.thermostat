@@ -16,6 +16,11 @@ class VThermoDevice extends Homey.Device {
     onInit() {
         this.log('virtual device initialized');
 
+        this.log('name:', this.getName());
+        this.log('class:', this.getClass());
+        this.log('data:', this.getData());
+        this.log('id:', this.getData().id);
+
         this._modeChangedTrigger = new Homey.FlowCardTriggerDevice('vt_mode_changed');
         this._modeChangedTrigger
             .register();
@@ -83,6 +88,11 @@ class VThermoDevice extends Homey.Device {
         this.log('virtual device added:', this.getData().id);
     }
 
+    onSettings(oldSettings, newSettings, changedKeys, callback) {
+        // TODO check temp if setpoint changed for current mode
+        this.log('onSettings', oldSettings, newSettings, changedKeys);
+    }
+
     onDeleted() {
         this.log('virtual device deleted');
     }
@@ -108,59 +118,57 @@ class VThermoDevice extends Homey.Device {
         return this.checkTemp({target_temperature: setpointValue, vt_mode: vtMode});
     }
 
+    clearCheckTime() {
+        if (this.curTimeout) {
+            clearTimeout(this.curTimeout);
+            this.curTimeout = undefined;
+        }
+    }
+
+    scheduleCheckTemp(seconds) {
+        this.clearCheckTime();
+        this.log(`Checking temp in ${seconds} seconds`);
+        this.curTimeout = setTimeout(this.checkTemp.bind(this), seconds * 1000);
+    }
+
     async checkTemp(opts) {
         this.clearCheckTime();
 
+        let currentHomey = await HomeyAPI.forCurrentHomey();
+        let devices = await currentHomey.devices.getDevices();
+        let zones = await currentHomey.zones.getZones();
+
         let settings = this.getSettings();
+        let hysteresis = settings.hysteresis || 0.5;
         let zoneName = settings.zoneName;
         if (!zoneName) {
             this.log('no zoneName defined');
             this.scheduleCheckTemp(60);
             return Promise.resolve();
         }
-        let hysteresis = settings.hysteresis || 0.5;
 
-        let currentTemperature = this.getCapabilityValue('measure_temperature');
+        let zoneForThermostat = this.findZone(this.getData().id, zoneName, devices, zones);
 
-        let targetTemp = opts ? opts.target_temperature : undefined;
-        if (!targetTemp) {
-            targetTemp = this.getCapabilityValue('target_temperature');
-        }
-        if (!targetTemp) {
-            this.log('no target_temperature defined');
-            this.scheduleCheckTemp(60);
-            return Promise.resolve();
-        }
-        this.log('target temperature', targetTemp);
-
-        let currentHomey = await HomeyAPI.forCurrentHomey();
-        let devices = await currentHomey.devices.getDevices();
-
-        let thermometer = _(devices)
-            .filter(d => d.zone.name === zoneName)
-            .find(d => d.class === 'sensor' && d.capabilities.measure_temperature);
+        let thermometer = this.findThermometer(zoneName, devices);
         if (!thermometer) {
-            this.log('no temperature sensor in zone', zoneName);
             this.scheduleCheckTemp(60);
             return Promise.resolve();
         }
 
-        let newTemperature = thermometer.state.measure_temperature;
-        if (!currentTemperature || currentTemperature !== newTemperature) {
-            this.setCapabilityValue('measure_temperature', newTemperature);
-            this.log('trigged temperature change', newTemperature);
-        }
-        this.log('temperature', newTemperature);
+        let vtMode = this.findVtMode(opts);
 
-        let vtMode = opts && opts.vt_mode ? opts.vt_mode : undefined;
-        if (!vtMode) {
-            vtMode = this.getCapabilityValue('vt_mode');
+        let targetTemp = this.findTargetTemperature(opts, vtMode);
+        if (!targetTemp) {
+            this.scheduleCheckTemp(60);
+            return Promise.resolve();
         }
+
+        let temperature = this.findTemperature(thermometer);
 
         let onoff = undefined;
-        if (vtMode === 'Off' || newTemperature > (targetTemp + hysteresis)) {
+        if (vtMode === 'Off' || temperature > (targetTemp + hysteresis)) {
             onoff = false;
-        } else if (newTemperature < (targetTemp - hysteresis)) {
+        } else if (temperature < (targetTemp - hysteresis)) {
             onoff = true;
         }
 
@@ -187,17 +195,67 @@ class VThermoDevice extends Homey.Device {
         return Promise.resolve();
     }
 
-    clearCheckTime() {
-        if (this.curTimeout) {
-            clearTimeout(this.curTimeout);
-            this.curTimeout = undefined;
-        }
+    findZone(deviceId, zoneName, devices, zones) {
+        this.log('findZone', deviceId, zoneName);
+        _(devices)
+            .filter(d => d.zone.name === zoneName)
+            .filter(d => d.class === 'thermostat')
+            .forEach(d => {
+                this.log('thermostat', d.id, d.name, d.zone, d.data);
+            });
+        let zone = _(zones)
+            .find(z => z.name === zoneName);
+        this.log('zone', zone);
+        return zone;
     }
 
-    scheduleCheckTemp(seconds) {
-        this.clearCheckTime();
-        this.log(`Checking temp in ${seconds} seconds`);
-        this.curTimeout = setTimeout(this.checkTemp.bind(this), seconds * 1000);
+    findThermometer(zoneName, devices) {
+        let thermometer = _(devices)
+            .filter(d => d.zone.name === zoneName)
+            .find(d => d.class === 'sensor' && d.capabilities.measure_temperature);
+        if (!thermometer) {
+            this.log('no temperature sensor in zone', zoneName);
+        }
+        return thermometer;
+    }
+
+    findVtMode(opts) {
+        let vtMode = opts && opts.vt_mode ? opts.vt_mode : undefined;
+        if (!vtMode) {
+            vtMode = this.getCapabilityValue('vt_mode');
+        }
+        if (!vtMode) {
+            vtMode = 'Comfort';
+            this.setCapabilityValue('vt_mode', vtMode);
+        }
+        return vtMode;
+    }
+
+    findTargetTemperature(opts, vtMode) {
+        let targetTemp = opts && opts.target_temperature ? opts.target_temperature : undefined;
+        if (!targetTemp) {
+            targetTemp = this.getCapabilityValue('target_temperature');
+        }
+        if (!targetTemp) {
+            targetTemp = this.getSetting(`${vtMode}_setpoint`);
+        }
+        if (!targetTemp) {
+            this.log('no target_temperature defined');
+        } else {
+            this.log('target temperature', targetTemp);
+        }
+        return targetTemp;
+    }
+
+    findTemperature(thermometer) {
+        let currentTemperature = this.getCapabilityValue('measure_temperature');
+        let temperature = thermometer.state.measure_temperature;
+        if (!currentTemperature || currentTemperature !== temperature) {
+            this.setCapabilityValue('measure_temperature', temperature);
+            this.log('trigged temperature change', temperature);
+        }
+        this.log('temperature', temperature);
+        return temperature;
     }
 
 }

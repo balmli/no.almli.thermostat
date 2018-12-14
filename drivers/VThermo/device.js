@@ -16,11 +16,6 @@ class VThermoDevice extends Homey.Device {
     onInit() {
         this.log('virtual device initialized');
 
-        this.log('name:', this.getName());
-        this.log('class:', this.getClass());
-        this.log('data:', this.getData());
-        this.log('id:', this.getData().id);
-
         this._modeChangedTrigger = new Homey.FlowCardTriggerDevice('vt_mode_changed');
         this._modeChangedTrigger
             .register();
@@ -88,11 +83,6 @@ class VThermoDevice extends Homey.Device {
         this.log('virtual device added:', this.getData().id);
     }
 
-    onSettings(oldSettings, newSettings, changedKeys, callback) {
-        // TODO check temp if setpoint changed for current mode
-        this.log('onSettings', oldSettings, newSettings, changedKeys);
-    }
-
     onDeleted() {
         this.log('virtual device deleted');
     }
@@ -132,20 +122,14 @@ class VThermoDevice extends Homey.Device {
 
         let currentHomey = await HomeyAPI.forCurrentHomey();
         let devices = await currentHomey.devices.getDevices();
-        let zones = await currentHomey.zones.getZones();
+
+        let thisDevice = _(devices).find(d => d.data && d.data.id === this.getData().id);
+        let zoneId = thisDevice.zone.id;
 
         let settings = this.getSettings();
         let hysteresis = settings.hysteresis || 0.5;
-        let zoneName = settings.zoneName;
-        if (!zoneName) {
-            this.log('no zoneName defined');
-            this.scheduleCheckTemp(60);
-            return Promise.resolve();
-        }
 
-        let zoneForThermostat = this.findZone(this.getData().id, zoneName, devices, zones);
-
-        let thermometer = this.findThermometer(zoneName, devices);
+        let thermometer = this.findThermometer(zoneId, devices);
         if (!thermometer) {
             this.scheduleCheckTemp(60);
             return Promise.resolve();
@@ -172,7 +156,7 @@ class VThermoDevice extends Homey.Device {
             this.setCapabilityValue('vt_onoff', onoff);
             for (let device in devices) {
                 let d = devices[device];
-                if (d.zone.name === zoneName && d.class === 'heater' && d.state.onoff !== onoff) {
+                if (d.zone.id === zoneId && d.class === 'heater' && d.state.onoff !== onoff) {
                     await d.setCapabilityValue('onoff', onoff);
                     this.log(d.name + ' set to ' + onoff);
                 }
@@ -181,7 +165,7 @@ class VThermoDevice extends Homey.Device {
                 this._turnedOnTrigger.trigger(this);
                 this.log('trigged thermostat turned on');
             } else {
-                this._turnedOffTrigger.trigger();
+                this._turnedOffTrigger.trigger(this);
                 this.log('trigged thermostat turned off');
             }
         }
@@ -191,26 +175,12 @@ class VThermoDevice extends Homey.Device {
         return Promise.resolve();
     }
 
-    findZone(deviceId, zoneName, devices, zones) {
-        this.log('findZone', deviceId, zoneName);
-        _(devices)
-            .filter(d => d.zone.name === zoneName)
-            .filter(d => d.class === 'thermostat')
-            .forEach(d => {
-                this.log('thermostat', d.id, d.name, d.zone, d.data);
-            });
-        let zone = _(zones)
-            .find(z => z.name === zoneName);
-        this.log('zone', zone);
-        return zone;
-    }
-
-    findThermometer(zoneName, devices) {
+    findThermometer(zoneId, devices) {
         let thermometer = _(devices)
-            .filter(d => d.zone.name === zoneName)
+            .filter(d => d.zone.id === zoneId)
             .find(d => d.class === 'sensor' && d.capabilities.measure_temperature);
         if (!thermometer) {
-            this.log('no temperature sensor in zone', zoneName);
+            this.log('no temperature sensor in zone', zoneId);
         }
         return thermometer;
     }

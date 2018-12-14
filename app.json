@@ -380,14 +380,6 @@
           },
           "children": [
             {
-              "id": "zoneName",
-              "type": "text",
-              "label": {
-                "en": "zoneName"
-              },
-              "value": ""
-            },
-            {
               "id": "Comfort_setpoint",
               "type": "number",
               "label": {

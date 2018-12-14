@@ -98,12 +98,8 @@ class VThermoDevice extends Homey.Device {
     }
 
     async updateSettings(vtMode, setpointValue) {
-        if (vtMode === 'Comfort') {
-            this.setSettings({Comfort_setpoint: setpointValue});
-        } else if (vtMode === 'ECO') {
-            this.setSettings({ECO_setpoint: setpointValue});
-        } else if (vtMode === 'Cooling') {
-            this.setSettings({Cooling_setpoint: setpointValue});
+        if (vtMode !== 'Off') {
+            this.setSettings(`${vtMode}_setpoint`, setpointValue);
         }
     }
 

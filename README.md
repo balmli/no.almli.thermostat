@@ -1,6 +1,8 @@
 # Thermostat
 
-A virtual thermostat that gets the temperature from a temperature sensor to turn on / off heaters in the same zone.
+Add this virtual thermostat to a zone with a temperature sensor and it will turn on / off heaters in the same zone.
+
+The thermostat has modes (Heating, Energy Saving, Cooling and Off), and separate setpoint temperatures for the different modes.
 
 ## Flow cards
 

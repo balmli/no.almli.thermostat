@@ -141,7 +141,7 @@
     ],
     "conditions": [
       {
-        "id": "onoff_is_on",
+        "id": "vt_onoff_is_on",
         "title": {
           "en": "Thermostat is !{{on|off}}"
         },

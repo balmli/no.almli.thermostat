@@ -23,10 +23,7 @@ class VThermoDevice extends Homey.Device {
         this._modeChangedToTrigger = new Homey.FlowCardTriggerDevice('vt_mode_changed_to');
         this._modeChangedToTrigger
             .register()
-            .registerRunListener((args, state) => {
-                //this.log('changed to ', args.vt_mode, state);
-                return Promise.resolve(args.vt_mode === args.device.getCapabilityValue('vt_mode'));
-            });
+            .registerRunListener((args, state) => args.vt_mode === state.vt_mode);
 
         this._turnedOnTrigger = new Homey.FlowCardTriggerDevice('vt_onoff_true');
         this._turnedOnTrigger
@@ -38,15 +35,11 @@ class VThermoDevice extends Homey.Device {
 
         this._onoffCondition = new Homey.FlowCardCondition('vt_onoff_is_on')
             .register()
-            .registerRunListener((args, state) => {
-                return args.device.getCapabilityValue('vt_onoff');
-            });
+            .registerRunListener((args, state) => args.device.getCapabilityValue('vt_onoff'));
 
         this._modeIsCondition = new Homey.FlowCardCondition('vt_mode_is')
             .register()
-            .registerRunListener((args, state) => {
-                return args.vt_mode === args.device.getCapabilityValue('vt_mode');
-            });
+            .registerRunListener((args, state) => args.vt_mode === args.device.getCapabilityValue('vt_mode'));
 
         this._changeModeAction = new Homey.FlowCardAction('vt_change_mode')
             .register()
@@ -73,12 +66,13 @@ class VThermoDevice extends Homey.Device {
         });
 
         this.registerCapabilityListener('vt_mode', (value, opts) => {
-            const thermostatModeObj = {
+            this._modeChangedTrigger.trigger(this, {
                 mode: value,
-                mode_name: modeNames[value]
-            };
-            this._modeChangedTrigger.trigger(this, thermostatModeObj, null);
-            this._modeChangedToTrigger.trigger(this, null, thermostatModeObj);
+                modeName: modeNames[value]
+            }, null).catch(console.error);
+            this._modeChangedToTrigger.trigger(this, null, {
+                vt_mode: value
+            }).catch(console.error);
             return this.updateVtMode(value);
         });
 

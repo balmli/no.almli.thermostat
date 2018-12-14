@@ -156,7 +156,7 @@
       {
         "id": "vt_mode_is",
         "title": {
-          "en": "Thermostat mode is"
+          "en": "Thermostat mode !{{is|is not}}"
         },
         "args": [
           {
@@ -349,10 +349,10 @@
                 "greyout": true,
                 "label": {
                   "true": {
-                    "en": "Active"
+                    "en": "On"
                   },
                   "false": {
-                    "en": "Idle"
+                    "en": "Off"
                   }
                 }
               }
@@ -393,7 +393,7 @@
               "label": {
                 "en": "Comfort mode temperature"
               },
-              "value": 21.0
+              "value": 21
             },
             {
               "id": "ECO_setpoint",
@@ -401,7 +401,7 @@
               "label": {
                 "en": "Energy saving mode temperature"
               },
-              "value": 18.0
+              "value": 18
             },
             {
               "id": "Cooling_setpoint",
@@ -409,7 +409,7 @@
               "label": {
                 "en": "Cooling mode temperature"
               },
-              "value": 15.0
+              "value": 21
             },
             {
               "id": "hysteresis",

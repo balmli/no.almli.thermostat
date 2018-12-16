@@ -128,12 +128,6 @@ class VThermoDevice extends Homey.Device {
         let settings = this.getSettings();
         let hysteresis = settings.hysteresis || 0.5;
 
-        let thermometer = this.findThermometer(zoneId, devices);
-        if (!thermometer) {
-            this.scheduleCheckTemp(60);
-            return Promise.resolve();
-        }
-
         let vtMode = this.findVtMode(opts);
 
         let targetTemp = this.findTargetTemperature(opts, vtMode);
@@ -142,7 +136,11 @@ class VThermoDevice extends Homey.Device {
             return Promise.resolve();
         }
 
-        let temperature = this.findTemperature(thermometer);
+        let temperature = this.findTemperature(zoneId, devices);
+        if (!temperature) {
+            this.scheduleCheckTemp(60);
+            return Promise.resolve();
+        }
 
         let onoff = undefined;
         if (vtMode === 'Off' || temperature > (targetTemp + hysteresis)) {
@@ -174,16 +172,6 @@ class VThermoDevice extends Homey.Device {
         return Promise.resolve();
     }
 
-    findThermometer(zoneId, devices) {
-        let thermometer = _(devices)
-            .filter(d => d.zone.id === zoneId)
-            .find(d => d.class === 'sensor' && d.capabilities.measure_temperature);
-        if (!thermometer) {
-            this.log('no temperature sensor in zone', zoneId);
-        }
-        return thermometer;
-    }
-
     findVtMode(opts) {
         let vtMode = opts && opts.vt_mode ? opts.vt_mode : undefined;
         if (!vtMode) {
@@ -212,9 +200,23 @@ class VThermoDevice extends Homey.Device {
         return targetTemp;
     }
 
-    findTemperature(thermometer) {
+    findTemperature(zoneId, devices) {
         let currentTemperature = this.getCapabilityValue('measure_temperature');
-        let temperature = thermometer.state.measure_temperature;
+
+        let sumTemp = 0;
+        let numTemp = 0;
+        for (let device in devices) {
+            let d = devices[device];
+            if (d.zone.id === zoneId && d.class === 'sensor' && d.capabilities.measure_temperature) {
+                sumTemp += d.state.measure_temperature;
+                numTemp ++;
+            }
+        }
+        if (numTemp === 0) {
+            this.log('no temperature sensor in zone', zoneId);
+            return;
+        }
+        let temperature = sumTemp / numTemp;
         if (!currentTemperature || currentTemperature !== temperature) {
             this.setCapabilityValue('measure_temperature', temperature);
             this.log('trigged temperature change', temperature);

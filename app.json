@@ -101,12 +101,6 @@
                 "label": {
                   "en": "Off"
                 }
-              },
-              {
-                "id": "Cooling",
-                "label": {
-                  "en": "Cooling"
-                }
               }
             ]
           }
@@ -188,12 +182,6 @@
                 "label": {
                   "en": "Off"
                 }
-              },
-              {
-                "id": "Cooling",
-                "label": {
-                  "en": "Cooling"
-                }
               }
             ]
           }
@@ -207,7 +195,7 @@
           "en": "Set the thermostat mode"
         },
         "hint": {
-          "en": "Set the thermostat mode (Comfort / Energy Saving / Off / Cooling) and activate instantly"
+          "en": "Set the thermostat mode (Comfort / Energy Saving / Off) and activate instantly"
         },
         "args": [
           {
@@ -239,12 +227,6 @@
                 "label": {
                   "en": "Off"
                 }
-              },
-              {
-                "id": "Cooling",
-                "label": {
-                  "en": "Cooling"
-                }
               }
             ]
           }
@@ -256,7 +238,7 @@
           "en": "Set a setpoint of a thermostat mode"
         },
         "hint": {
-          "en": "Change the setpoint of a specific thermostat mode (Comfort / Energy Saving / Cooling). Note: does NOT activate this mode"
+          "en": "Change the setpoint of a specific thermostat mode (Comfort / Energy Saving). Note: does NOT activate this mode"
         },
         "args": [
           {
@@ -281,12 +263,6 @@
                 "id": "ECO",
                 "label": {
                   "en": "Energy Saving"
-                }
-              },
-              {
-                "id": "Cooling",
-                "label": {
-                  "en": "Cooling"
                 }
               }
             ]
@@ -396,14 +372,6 @@
               "value": 18
             },
             {
-              "id": "Cooling_setpoint",
-              "type": "number",
-              "label": {
-                "en": "Cooling mode temperature"
-              },
-              "value": 21
-            },
-            {
               "id": "hysteresis",
               "type": "number",
               "label": {
@@ -459,12 +427,6 @@
           "id": "Off",
           "title": {
             "en": "Off"
-          }
-        },
-        {
-          "id": "Cooling",
-          "title": {
-            "en": "Cooling"
           }
         }
       ],

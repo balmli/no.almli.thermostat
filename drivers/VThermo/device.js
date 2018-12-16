@@ -7,8 +7,7 @@ const Homey = require('homey'),
 const modeNames = {
     "Comfort": "Comfort",
     "ECO": "Energy Saving",
-    "Off": "Off",
-    "Cooling": "Cooling"
+    "Off": "Off"
 };
 
 class VThermoDevice extends Homey.Device {

@@ -4,25 +4,10 @@ const Homey = require('homey'),
     {HomeyAPI} = require('athom-api'),
     _ = require('lodash');
 
-const modeNames = {
-    "Comfort": "Comfort",
-    "ECO": "Energy Saving",
-    "Off": "Off"
-};
-
 class VThermoDevice extends Homey.Device {
 
     onInit() {
         this.log('virtual device initialized');
-
-        this._modeChangedTrigger = new Homey.FlowCardTriggerDevice('vt_mode_changed');
-        this._modeChangedTrigger
-            .register();
-
-        this._modeChangedToTrigger = new Homey.FlowCardTriggerDevice('vt_mode_changed_to');
-        this._modeChangedToTrigger
-            .register()
-            .registerRunListener((args, state) => args.vt_mode === state.vt_mode);
 
         this._turnedOnTrigger = new Homey.FlowCardTriggerDevice('vt_onoff_true');
         this._turnedOnTrigger
@@ -36,43 +21,8 @@ class VThermoDevice extends Homey.Device {
             .register()
             .registerRunListener((args, state) => args.device.getCapabilityValue('vt_onoff'));
 
-        this._modeIsCondition = new Homey.FlowCardCondition('vt_mode_is')
-            .register()
-            .registerRunListener((args, state) => args.vt_mode === args.device.getCapabilityValue('vt_mode'));
-
-        this._changeModeAction = new Homey.FlowCardAction('vt_change_mode')
-            .register()
-            .registerRunListener((args, state) => {
-                args.device.setCapabilityValue('vt_mode', args.vt_mode);
-                return this.updateVtMode(args.vt_mode);
-            });
-
-        this._changeModeSetpointAction = new Homey.FlowCardAction('vt_change_mode_setpoint')
-            .register()
-            .registerRunListener((args, state) => {
-                this.updateSettings(args.vt_mode, args.setpointValue);
-                if (args.vt_mode === args.device.getCapabilityValue('vt_mode')) {
-                    args.device.setCapabilityValue('target_temperature', args.setpointValue);
-                    return this.checkTemp({target_temperature: args.setpointValue});
-                }
-                return Promise.resolve();
-            });
-
         this.registerCapabilityListener('target_temperature', (value, opts) => {
-            let vtMode = this.getCapabilityValue('vt_mode');
-            this.updateSettings(vtMode, value);
             return this.checkTemp({target_temperature: value});
-        });
-
-        this.registerCapabilityListener('vt_mode', (value, opts) => {
-            this._modeChangedTrigger.trigger(this, {
-                mode: value,
-                modeName: modeNames[value]
-            }, null).catch(console.error);
-            this._modeChangedToTrigger.trigger(this, null, {
-                vt_mode: value
-            }).catch(console.error);
-            return this.updateVtMode(value);
         });
 
         this.checkTemp();
@@ -84,23 +34,6 @@ class VThermoDevice extends Homey.Device {
 
     onDeleted() {
         this.log('virtual device deleted');
-    }
-
-    async updateSettings(vtMode, setpointValue) {
-        if (vtMode !== 'Off') {
-            this.setSettings(`${vtMode}_setpoint`, setpointValue);
-        }
-    }
-
-    async updateVtMode(vtMode) {
-        let setpointValue = this.getSetting(`${vtMode}_setpoint`);
-        if (setpointValue) {
-            this.setCapabilityValue('target_temperature', setpointValue);
-        } else {
-            setpointValue = this.getCapabilityValue('target_temperature');
-        }
-
-        return this.checkTemp({target_temperature: setpointValue, vt_mode: vtMode});
     }
 
     clearCheckTime() {
@@ -128,9 +61,7 @@ class VThermoDevice extends Homey.Device {
         let settings = this.getSettings();
         let hysteresis = settings.hysteresis || 0.5;
 
-        let vtMode = this.findVtMode(opts);
-
-        let targetTemp = this.findTargetTemperature(opts, vtMode);
+        let targetTemp = this.findTargetTemperature(opts);
         if (!targetTemp) {
             this.scheduleCheckTemp(60);
             return Promise.resolve();
@@ -143,7 +74,7 @@ class VThermoDevice extends Homey.Device {
         }
 
         let onoff = undefined;
-        if (vtMode === 'Off' || temperature > (targetTemp + hysteresis)) {
+        if (temperature > (targetTemp + hysteresis)) {
             onoff = false;
         } else if (temperature < (targetTemp - hysteresis)) {
             onoff = true;
@@ -172,25 +103,10 @@ class VThermoDevice extends Homey.Device {
         return Promise.resolve();
     }
 
-    findVtMode(opts) {
-        let vtMode = opts && opts.vt_mode ? opts.vt_mode : undefined;
-        if (!vtMode) {
-            vtMode = this.getCapabilityValue('vt_mode');
-        }
-        if (!vtMode) {
-            vtMode = 'Comfort';
-            this.setCapabilityValue('vt_mode', vtMode);
-        }
-        return vtMode;
-    }
-
-    findTargetTemperature(opts, vtMode) {
+    findTargetTemperature(opts) {
         let targetTemp = opts && opts.target_temperature ? opts.target_temperature : undefined;
         if (!targetTemp) {
             targetTemp = this.getCapabilityValue('target_temperature');
-        }
-        if (!targetTemp) {
-            targetTemp = this.getSetting(`${vtMode}_setpoint`);
         }
         if (!targetTemp) {
             this.log('no target_temperature defined');
@@ -213,6 +129,7 @@ class VThermoDevice extends Homey.Device {
             }
         }
         if (numTemp === 0) {
+            this.setCapabilityValue('measure_temperature', null);
             this.log('no temperature sensor in zone', zoneId);
             return;
         }

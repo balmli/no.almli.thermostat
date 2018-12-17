@@ -34,79 +34,6 @@
   "flow": {
     "triggers": [
       {
-        "id": "vt_mode_changed",
-        "title": {
-          "en": "Thermostat mode has changed"
-        },
-        "tokens": [
-          {
-            "name": "mode",
-            "title": {
-              "en": "Mode"
-            },
-            "example": {
-              "en": "Comfort"
-            }
-          },
-          {
-            "name": "modeName",
-            "title": {
-              "en": "Name"
-            },
-            "example": {
-              "en": "Comfort"
-            }
-          }
-        ],
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=VThermo"
-          }
-        ]
-      },
-      {
-        "id": "vt_mode_changed_to",
-        "title": {
-          "en": "Thermostat mode has changed to"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=VThermo"
-          },
-          {
-            "name": "vt_mode",
-            "title": {
-              "en": "Mode"
-            },
-            "type": "dropdown",
-            "values": [
-              {
-                "id": "Comfort",
-                "label": {
-                  "en": "Comfort"
-                }
-              },
-              {
-                "id": "ECO",
-                "label": {
-                  "en": "Energy Saving"
-                }
-              },
-              {
-                "id": "Off",
-                "label": {
-                  "en": "Off"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
         "id": "vt_onoff_true",
         "title": {
           "en": "Thermostat turned on"
@@ -146,137 +73,6 @@
             "filter": "driver_id=VThermo"
           }
         ]
-      },
-      {
-        "id": "vt_mode_is",
-        "title": {
-          "en": "Thermostat mode !{{is|is not}}"
-        },
-        "args": [
-          {
-            "name": "device",
-            "type": "device",
-            "filter": "driver_id=VThermo"
-          },
-          {
-            "name": "vt_mode",
-            "title": {
-              "en": "Mode"
-            },
-            "type": "dropdown",
-            "values": [
-              {
-                "id": "Comfort",
-                "label": {
-                  "en": "Comfort"
-                }
-              },
-              {
-                "id": "ECO",
-                "label": {
-                  "en": "Energy Saving"
-                }
-              },
-              {
-                "id": "Off",
-                "label": {
-                  "en": "Off"
-                }
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "actions": [
-      {
-        "id": "vt_change_mode",
-        "title": {
-          "en": "Set the thermostat mode"
-        },
-        "hint": {
-          "en": "Set the thermostat mode (Comfort / Energy Saving / Off) and activate instantly"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=VThermo"
-          },
-          {
-            "name": "vt_mode",
-            "title": {
-              "en": "Mode"
-            },
-            "type": "dropdown",
-            "values": [
-              {
-                "id": "Comfort",
-                "label": {
-                  "en": "Comfort"
-                }
-              },
-              {
-                "id": "ECO",
-                "label": {
-                  "en": "Energy Saving"
-                }
-              },
-              {
-                "id": "Off",
-                "label": {
-                  "en": "Off"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "vt_change_mode_setpoint",
-        "title": {
-          "en": "Set a setpoint of a thermostat mode"
-        },
-        "hint": {
-          "en": "Change the setpoint of a specific thermostat mode (Comfort / Energy Saving). Note: does NOT activate this mode"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=VThermo"
-          },
-          {
-            "name": "vt_mode",
-            "title": {
-              "en": "Mode"
-            },
-            "type": "dropdown",
-            "values": [
-              {
-                "id": "Comfort",
-                "label": {
-                  "en": "Comfort"
-                }
-              },
-              {
-                "id": "ECO",
-                "label": {
-                  "en": "Energy Saving"
-                }
-              }
-            ]
-          },
-          {
-            "name": "setpointValue",
-            "type": "range",
-            "min": 5,
-            "max": 40,
-            "step": 0.5,
-            "label": "°C",
-            "labelDecimals": 1
-          }
-        ]
       }
     ]
   },
@@ -290,7 +86,6 @@
       "capabilities": [
         "vt_onoff",
         "target_temperature",
-        "vt_mode",
         "measure_temperature"
       ],
       "capabilitiesOptions": {
@@ -335,12 +130,6 @@
             }
           },
           {
-            "id": "picker",
-            "capabilities": [
-              "vt_mode"
-            ]
-          },
-          {
             "id": "thermostat",
             "capabilities": [
               "target_temperature"
@@ -355,22 +144,6 @@
             "en": "General settings"
           },
           "children": [
-            {
-              "id": "Comfort_setpoint",
-              "type": "number",
-              "label": {
-                "en": "Comfort mode temperature"
-              },
-              "value": 21
-            },
-            {
-              "id": "ECO_setpoint",
-              "type": "number",
-              "label": {
-                "en": "Energy saving mode temperature"
-              },
-              "value": 18
-            },
             {
               "id": "hysteresis",
               "type": "number",
@@ -402,37 +175,6 @@
     }
   ],
   "capabilities": {
-    "vt_mode": {
-      "type": "enum",
-      "title": {
-        "en": "Thermostat mode"
-      },
-      "desc": {
-        "en": "Mode of the thermostat"
-      },
-      "values": [
-        {
-          "id": "Comfort",
-          "title": {
-            "en": "Comfort"
-          }
-        },
-        {
-          "id": "ECO",
-          "title": {
-            "en": "Energy Saving"
-          }
-        },
-        {
-          "id": "Off",
-          "title": {
-            "en": "Off"
-          }
-        }
-      ],
-      "getable": true,
-      "setable": true
-    },
     "vt_onoff": {
       "type": "boolean",
       "title": {

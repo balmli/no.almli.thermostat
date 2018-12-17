@@ -9,6 +9,7 @@ Add this virtual thermostat to a zone with a temperature sensor and it will turn
 
 - The temperature has changed.
 - The target temperature has changed.
+- The humidity has changed.
 - The thermostat turned off.
 - The thermostat turned on.
 

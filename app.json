@@ -58,6 +58,30 @@
             "filter": "driver_id=VThermo"
           }
         ]
+      },
+      {
+        "id": "vt_humidity_changed",
+        "title": {
+          "en": "Humidity changed"
+        },
+        "tokens": [
+          {
+            "name": "humidity",
+            "title": {
+              "en": "Humidity"
+            },
+            "example": {
+              "en": "35"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
       }
     ],
     "conditions": [
@@ -86,7 +110,8 @@
       "capabilities": [
         "vt_onoff",
         "target_temperature",
-        "measure_temperature"
+        "measure_temperature",
+        "measure_humidity"
       ],
       "capabilitiesOptions": {
         "vt_onoff": {
@@ -148,7 +173,7 @@
               "id": "hysteresis",
               "type": "number",
               "label": {
-                "en": "hysteresis"
+                "en": "Hysteresis"
               },
               "value": 0.5
             }

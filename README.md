@@ -43,6 +43,10 @@ Add a virtual humidity controller to a zone with a humidity sensor and it will t
 Development has been supported by:   
 * Robert Hertzer for testing
 
+## Feedback:
+
+Please report issues at the [issues section on Github](https://github.com/balmli/no.almli.thermostat/issues).
+
 ## Release Notes:
 
 #### 0.1.0

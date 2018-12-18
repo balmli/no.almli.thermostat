@@ -1,15 +1,13 @@
-# Thermostat
+# Virtual thermostat and humidity app
 
-Add this virtual thermostat to a zone with a temperature sensor and it will turn on / off heaters in the same zone.
+## Device: VThermo
 
-## Flow cards
+Add a virtual thermostat to a zone with a temperature sensor and it will turn on / off heaters in the same zone.
 
-### Device: VThermo
 #### Triggers
 
 - The temperature has changed.
 - The target temperature has changed.
-- The humidity has changed.
 - The thermostat turned off.
 - The thermostat turned on.
 
@@ -19,9 +17,36 @@ Add this virtual thermostat to a zone with a temperature sensor and it will turn
 
 #### Actions
 
-- Set the temperature.
+- Set the target temperature.
 
-### Release Notes
+## Device: VHumidity
+
+Add a virtual humidity controller to a zone with a humidity sensor and it will turn on / off fans in the same zone.
+
+#### Triggers
+
+- The humidity has changed.
+- The target humidity has changed.
+- The humidity device turned off.
+- The humidity device turned on.
+
+#### Conditions
+
+- The humidity device is on / off.
+
+#### Actions
+
+- Set the target humidity.
+
+## Acknowledgements:
+
+Development has been supported by:   
+* Robert Hertzer for testing
+
+## Release Notes:
+
+#### 0.1.0
+- Added humidity device
 
 #### 0.0.1
 - Initial version

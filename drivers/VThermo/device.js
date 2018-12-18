@@ -9,10 +9,6 @@ class VThermoDevice extends Homey.Device {
     onInit() {
         this.log('virtual device initialized');
 
-        this._humidityChangedTrigger = new Homey.FlowCardTriggerDevice('vt_humidity_changed');
-        this._humidityChangedTrigger
-            .register();
-
         this._turnedOnTrigger = new Homey.FlowCardTriggerDevice('vt_onoff_true');
         this._turnedOnTrigger
             .register();
@@ -123,32 +119,11 @@ class VThermoDevice extends Homey.Device {
     findTemperature(zoneId, devices) {
         let sumTemp = 0;
         let numTemp = 0;
-        let sumHumidity = 0;
-        let numHumidity = 0;
         for (let device in devices) {
             let d = devices[device];
-            if (d.zone.id === zoneId) {
-                if (d.class === 'sensor' && d.capabilities.measure_temperature) {
-                    sumTemp += d.state.measure_temperature;
-                    numTemp++;
-                }
-                if (d.class === 'sensor' && d.capabilities.measure_humidity) {
-                    sumHumidity += d.state.measure_humidity;
-                    numHumidity++;
-                }
-            }
-        }
-        if (numHumidity === 0) {
-            this.setCapabilityValue('measure_humidity', null);
-        } else {
-            let currentHumidity = this.getCapabilityValue('measure_humidity');
-            let humidity = sumHumidity / numHumidity;
-            if (!currentHumidity || currentHumidity !== humidity) {
-                this.setCapabilityValue('measure_humidity', humidity);
-                this._humidityChangedTrigger.trigger(this, {
-                    humidity: humidity
-                });
-                this.log('trigged humidity change', humidity);
+            if (d.zone.id === zoneId && d.class === 'sensor' && d.capabilities.measure_temperature) {
+                sumTemp += d.state.measure_temperature;
+                numTemp++;
             }
         }
         if (numTemp === 0) {

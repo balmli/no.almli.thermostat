@@ -74,7 +74,7 @@ class VHumidityDevice extends Homey.Device {
         let devices = await currentHomey.devices.getDevices();
 
         let thisDevice = _(devices).find(d => d.data && d.data.id === this.getData().id);
-        let zoneId = thisDevice.zone.id;
+        let zoneId = thisDevice.zone;
 
         let settings = this.getSettings();
         let hysteresis = settings.hysteresis || 1;
@@ -102,7 +102,7 @@ class VHumidityDevice extends Homey.Device {
             this.setCapabilityValue('vt_onoff', onoff);
             for (let device in devices) {
                 let d = devices[device];
-                if (d.zone.id === zoneId && d.class === 'fan' && d.state.onoff !== onoff) {
+                if (d.zone === zoneId && d.virtualClass === 'fan' && d.capabilitiesObj.onoff.value !== onoff) {
                     await d.setCapabilityValue('onoff', onoff);
                     this.log(d.name + ' set to ' + onoff);
                 }
@@ -139,8 +139,8 @@ class VHumidityDevice extends Homey.Device {
         let numHumidity = 0;
         for (let device in devices) {
             let d = devices[device];
-            if (d.zone.id === zoneId && d.class === 'sensor' && d.capabilities.measure_humidity) {
-                sumHumidity += d.state.measure_humidity;
+            if (d.zone === zoneId && d.class === 'sensor' && d.capabilitiesObj.measure_humidity) {
+                sumHumidity += d.capabilitiesObj.measure_humidity.value;
                 numHumidity++;
             }
         }

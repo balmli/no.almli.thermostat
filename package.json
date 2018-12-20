@@ -9,7 +9,7 @@
   "author": "Bjørnar Almli",
   "license": "ISC",
   "dependencies": {
-    "athom-api": "^2.0.138",
+    "athom-api": "^2.1.145",
     "lodash": "^4.17.11"
   }
 }

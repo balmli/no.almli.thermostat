@@ -99,7 +99,13 @@
       ],
       "capabilitiesOptions": {
         "vt_onoff": {
-          "greyout": true
+          "greyout": true,
+          "titleTrue": {
+            "en": "Active"
+          },
+          "titleFalse": {
+            "en": "Idle"
+          }
         },
         "target_temperature": {
           "decimals": 1,
@@ -186,6 +192,17 @@
   "capabilities": {
     "vt_onoff": {
       "type": "boolean",
+      "icon": "/drivers/VThermo/assets/images/onoff.svg",
+      "noblink": false,
+      "greyout": true,
+      "label": {
+        "true": {
+          "en": "Active"
+        },
+        "false": {
+          "en": "Idle"
+        }
+      },
       "title": {
         "en": "State"
       },
@@ -193,8 +210,7 @@
         "en": "State of the device"
       },
       "getable": true,
-      "setable": false,
-      "greyout": true
+      "setable": false
     }
   }
 }

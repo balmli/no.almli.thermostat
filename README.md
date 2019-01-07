@@ -30,6 +30,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 0.3.0
+
+- Updated athom-api 
+
 #### 0.2.0
 
 - Beta version for app store

@@ -30,6 +30,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.0.1
+
+- Changed min. temperature from 5 to 1 deg.
+
 #### 1.0.0
 
 - Stable for app store

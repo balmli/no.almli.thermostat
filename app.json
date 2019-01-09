@@ -1,6 +1,6 @@
 {
   "id": "no.almli.thermostat",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "compatibility": ">=2.0.0",
   "sdk": 2,
   "name": {
@@ -109,7 +109,7 @@
         },
         "target_temperature": {
           "decimals": 1,
-          "min": 5,
+          "min": 1,
           "max": 40,
           "step": 0.5
         }

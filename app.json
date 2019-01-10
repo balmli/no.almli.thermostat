@@ -114,44 +114,6 @@
           "step": 0.5
         }
       },
-      "mobile": {
-        "components": [
-          {
-            "id": "icon",
-            "capabilities": []
-          },
-          {
-            "id": "sensor",
-            "capabilities": [
-              "measure_temperature",
-              "vt_onoff"
-            ],
-            "options": {
-              "icons": {
-                "vt_onoff": "/drivers/VThermo/assets/images/onoff.svg"
-              },
-              "vt_onoff": {
-                "noblink": false,
-                "greyout": true,
-                "label": {
-                  "true": {
-                    "en": "On"
-                  },
-                  "false": {
-                    "en": "Off"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "id": "thermostat",
-            "capabilities": [
-              "target_temperature"
-            ]
-          }
-        ]
-      },
       "settings": [
         {
           "type": "group",

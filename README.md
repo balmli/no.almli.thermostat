@@ -19,6 +19,25 @@ Add a virtual thermostat to a zone with a temperature sensor and it will turn on
 
 - Set the target temperature.
 
+## Device: VHumidity
+
+Add a virtual humidity controller to a zone with a humidity sensor and it will turn on / off fans in the same zone.
+
+#### Triggers
+
+- The humidity has changed.
+- The target humidity has changed.
+- The humidity device turned off.
+- The humidity device turned on.
+
+#### Conditions
+
+- The humidity device is on / off.
+
+#### Actions
+
+- Set the target humidity.
+
 ## Acknowledgements:
 
 Development has been supported by:   
@@ -29,6 +48,10 @@ Development has been supported by:
 Please report issues at the [issues section on Github](https://github.com/balmli/no.almli.thermostat/issues).
 
 ## Release Notes:
+
+#### 1.1.0
+
+- Added VHumidity device
 
 #### 1.0.1
 

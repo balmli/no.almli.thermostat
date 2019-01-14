@@ -1,6 +1,6 @@
 {
   "id": "no.almli.thermostat",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "compatibility": ">=2.0.0",
   "sdk": 2,
   "name": {
@@ -31,6 +31,13 @@
   "author": {
     "name": "Bjørnar Almli",
     "email": "bjornar.almli@gmail.com"
+  },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "bjornaralmli"
+      }
+    }
   },
   "contributors": {
     "developers": [
@@ -67,6 +74,78 @@
             "filter": "driver_id=VThermo"
           }
         ]
+      },
+      {
+        "id": "vh_humidity_changed",
+        "title": {
+          "en": "Humidity changed"
+        },
+        "tokens": [
+          {
+            "name": "humidity",
+            "type": "number",
+            "title": {
+              "en": "Humidity"
+            },
+            "example": 35
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VHumidity"
+          }
+        ]
+      },
+      {
+        "id": "vh_target_humidity_changed",
+        "title": {
+          "en": "Target humidity changed"
+        },
+        "tokens": [
+          {
+            "name": "humidity",
+            "type": "number",
+            "title": {
+              "en": "Humidity"
+            },
+            "example": 35
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VHumidity"
+          }
+        ]
+      },
+      {
+        "id": "vh_onoff_true",
+        "title": {
+          "en": "Humidity device turned on"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VHumidity"
+          }
+        ]
+      },
+      {
+        "id": "vh_onoff_false",
+        "title": {
+          "en": "Humidity device turned off"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VHumidity"
+          }
+        ]
       }
     ],
     "conditions": [
@@ -80,6 +159,49 @@
             "name": "device",
             "type": "device",
             "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vh_onoff_is_on",
+        "title": {
+          "en": "VHumidity is !{{on|off}}"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VHumidity"
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "vh_set_target_humidity",
+        "title": {
+          "en": "Set the target humidity"
+        },
+        "hint": {
+          "en": "Set the target humidity"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=VHumidity"
+          },
+          {
+            "name": "vh_target_humidity",
+            "title": {
+              "en": "Target humidity"
+            },
+            "type": "range",
+            "min": 1,
+            "max": 90,
+            "step": 1,
+            "label": "%",
+            "labelDecimals": 0
           }
         ]
       }
@@ -149,6 +271,64 @@
         "large": "/drivers/VThermo/assets/images/large.png",
         "small": "/drivers/VThermo/assets/images/small.png"
       }
+    },
+    {
+      "id": "VHumidity",
+      "name": {
+        "en": "VHumidity"
+      },
+      "class": "thermostat",
+      "capabilities": [
+        "vt_onoff",
+        "vh_target_humidity",
+        "measure_humidity"
+      ],
+      "capabilitiesOptions": {
+        "vt_onoff": {
+          "greyout": true
+        },
+        "vh_target_humidity": {
+          "decimals": 0,
+          "min": 1,
+          "max": 90,
+          "step": 1
+        }
+      },
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "General settings"
+          },
+          "children": [
+            {
+              "id": "hysteresis",
+              "type": "number",
+              "label": {
+                "en": "Hysteresis"
+              },
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_my_devices"
+          }
+        },
+        {
+          "id": "add_my_devices",
+          "template": "add_devices"
+        }
+      ],
+      "images": {
+        "large": "/drivers/VHumidity/assets/images/large.png",
+        "small": "/drivers/VHumidity/assets/images/small.png"
+      }
     }
   ],
   "capabilities": {
@@ -173,6 +353,26 @@
       },
       "getable": true,
       "setable": false
+    },
+    "vh_target_humidity": {
+      "type": "number",
+      "min": 1,
+      "max": 90,
+      "title": {
+        "en": "Target humidity"
+      },
+      "desc": {
+        "en": "Target humidity in percent (%)"
+      },
+      "units": {
+        "en": "%"
+      },
+      "chartType": "stepLine",
+      "decimals": 0,
+      "insights": true,
+      "getable": true,
+      "setable": true,
+      "uiComponent": "slider"
     }
   }
 }

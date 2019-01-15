@@ -62,13 +62,13 @@ class VThermoDevice extends Homey.Device {
         let hysteresis = settings.hysteresis || 0.5;
 
         let targetTemp = this.findTargetTemperature(opts);
-        if (!targetTemp) {
+        if (targetTemp === undefined || targetTemp === null) {
             this.scheduleCheckTemp(60);
             return Promise.resolve();
         }
 
         let temperature = this.findTemperature(zoneId, devices);
-        if (!temperature) {
+        if (temperature === undefined || temperature === null) {
             this.scheduleCheckTemp(60);
             return Promise.resolve();
         }
@@ -133,7 +133,7 @@ class VThermoDevice extends Homey.Device {
         }
         let temperature = sumTemp / numTemp;
         let currentTemperature = this.getCapabilityValue('measure_temperature');
-        if (!currentTemperature || currentTemperature !== temperature) {
+        if (currentTemperature === undefined || currentTemperature === null || currentTemperature !== temperature) {
             this.setCapabilityValue('measure_temperature', temperature);
             this.log('trigged temperature change', temperature);
         }

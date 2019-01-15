@@ -80,13 +80,13 @@ class VHumidityDevice extends Homey.Device {
         let hysteresis = settings.hysteresis || 1;
 
         let targetHumidity = this.findTargetHumidity(opts);
-        if (!targetHumidity) {
+        if (targetHumidity === undefined || targetHumidity === null) {
             this.scheduleCheckHumidity(60);
             return Promise.resolve();
         }
 
         let humidity = this.findHumidity(zoneId, devices);
-        if (!humidity) {
+        if (humidity === undefined || humidity === null) {
             this.scheduleCheckHumidity(60);
             return Promise.resolve();
         }
@@ -151,7 +151,7 @@ class VHumidityDevice extends Homey.Device {
         }
         let humidity = sumHumidity / numHumidity;
         let currentHumidity = this.getCapabilityValue('measure_humidity');
-        if (!currentHumidity || currentHumidity !== humidity) {
+        if (currentHumidity === undefined || currentHumidity === null || currentHumidity !== humidity) {
             this.setCapabilityValue('measure_humidity', humidity);
             this._humidityChangedTrigger.trigger(this, {
                 humidity: humidity

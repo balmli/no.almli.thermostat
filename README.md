@@ -49,6 +49,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.1.2
+
+- Catch errors when switching heaters and fans on or off.
+
 #### 1.1.1
 
 - Fix if zero (0) degrees.

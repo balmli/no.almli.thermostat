@@ -81,11 +81,11 @@ class VThermoDevice extends Homey.Device {
         }
 
         if (onoff !== undefined) {
-            this.setCapabilityValue('vt_onoff', onoff);
+            this.setCapabilityValue('vt_onoff', onoff).catch(console.error);
             for (let device in devices) {
                 let d = devices[device];
                 if (d.zone === zoneId && d.virtualClass === 'heater' && d.capabilitiesObj.onoff.value !== onoff) {
-                    await d.setCapabilityValue('onoff', onoff);
+                    await d.setCapabilityValue('onoff', onoff).catch(console.error);
                     this.log(d.name + ' set to ' + onoff);
                 }
             }
@@ -127,14 +127,14 @@ class VThermoDevice extends Homey.Device {
             }
         }
         if (numTemp === 0) {
-            this.setCapabilityValue('measure_temperature', null);
+            this.setCapabilityValue('measure_temperature', null).catch(console.error);
             this.log('no temperature sensor in zone', zoneId);
             return;
         }
         let temperature = sumTemp / numTemp;
         let currentTemperature = this.getCapabilityValue('measure_temperature');
         if (currentTemperature === undefined || currentTemperature === null || currentTemperature !== temperature) {
-            this.setCapabilityValue('measure_temperature', temperature);
+            this.setCapabilityValue('measure_temperature', temperature).catch(console.error);
             this.log('trigged temperature change', temperature);
         }
         this.log('temperature', temperature);

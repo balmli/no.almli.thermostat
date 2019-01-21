@@ -32,7 +32,7 @@ class VHumidityDevice extends Homey.Device {
         this._setTargetHumidityAction = new Homey.FlowCardAction('vh_set_target_humidity')
             .register()
             .registerRunListener((args, state) => {
-                args.device.setCapabilityValue('vh_target_humidity', args.vh_target_humidity);
+                args.device.setCapabilityValue('vh_target_humidity', args.vh_target_humidity).catch(console.error);
                 return this.checkHumidity({vh_target_humidity: args.vh_target_humidity});
             });
 
@@ -99,11 +99,11 @@ class VHumidityDevice extends Homey.Device {
         }
 
         if (onoff !== undefined) {
-            this.setCapabilityValue('vt_onoff', onoff);
+            this.setCapabilityValue('vt_onoff', onoff).catch(console.error);
             for (let device in devices) {
                 let d = devices[device];
                 if (d.zone === zoneId && d.virtualClass === 'fan' && d.capabilitiesObj.onoff.value !== onoff) {
-                    await d.setCapabilityValue('onoff', onoff);
+                    await d.setCapabilityValue('onoff', onoff).catch(console.error);
                     this.log(d.name + ' set to ' + onoff);
                 }
             }
@@ -145,14 +145,14 @@ class VHumidityDevice extends Homey.Device {
             }
         }
         if (numHumidity === 0) {
-            this.setCapabilityValue('measure_humidity', null);
+            this.setCapabilityValue('measure_humidity', null).catch(console.error);
             this.log('no humidity sensor in zone', zoneId);
             return;
         }
         let humidity = sumHumidity / numHumidity;
         let currentHumidity = this.getCapabilityValue('measure_humidity');
         if (currentHumidity === undefined || currentHumidity === null || currentHumidity !== humidity) {
-            this.setCapabilityValue('measure_humidity', humidity);
+            this.setCapabilityValue('measure_humidity', humidity).catch(console.error);
             this._humidityChangedTrigger.trigger(this, {
                 humidity: humidity
             });

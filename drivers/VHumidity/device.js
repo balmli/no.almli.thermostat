@@ -102,7 +102,9 @@ class VHumidityDevice extends Homey.Device {
             this.setCapabilityValue('vt_onoff', onoff).catch(console.error);
             for (let device in devices) {
                 let d = devices[device];
-                if (d.zone === zoneId && d.virtualClass === 'fan' && d.capabilitiesObj.onoff.value !== onoff) {
+                if (d.zone === zoneId &&
+                    (d.class === 'fan' || d.virtualClass === 'fan') &&
+                    d.capabilitiesObj.onoff.value !== onoff) {
                     await d.setCapabilityValue('onoff', onoff).catch(console.error);
                     this.log(d.name + ' set to ' + onoff);
                 }

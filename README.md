@@ -51,7 +51,7 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 #### 1.1.2
 
-- Support switching virtual devices (heater and fans).
+- Support switching virtual devices (heaters and fans).
 - Catch errors when switching heaters and fans on or off.
 
 #### 1.1.1

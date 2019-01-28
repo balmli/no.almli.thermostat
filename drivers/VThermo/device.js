@@ -86,6 +86,7 @@ class VThermoDevice extends Homey.Device {
                 let d = devices[device];
                 if (d.zone === zoneId &&
                     (d.class === 'heater' || d.virtualClass === 'heater') &&
+                    d.capabilitiesObj &&
                     d.capabilitiesObj.onoff.value !== onoff) {
                     await d.setCapabilityValue('onoff', onoff).catch(console.error);
                     this.log(d.name + ' set to ' + onoff);
@@ -123,7 +124,10 @@ class VThermoDevice extends Homey.Device {
         let numTemp = 0;
         for (let device in devices) {
             let d = devices[device];
-            if (d.zone === zoneId && d.class === 'sensor' && d.capabilitiesObj.measure_temperature) {
+            if (d.zone === zoneId &&
+                d.class === 'sensor' &&
+                d.capabilitiesObj &&
+                d.capabilitiesObj.measure_temperature) {
                 sumTemp += d.capabilitiesObj.measure_temperature.value;
                 numTemp++;
             }

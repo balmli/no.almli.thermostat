@@ -67,11 +67,30 @@ class VHumidityDevice extends Homey.Device {
         this.curTimeout = setTimeout(this.checkHumidity.bind(this), seconds * 1000);
     }
 
+    async getApi() {
+        if (!this._api) {
+            this._api = await HomeyAPI.forCurrentHomey();
+        }
+        return this._api;
+    }
+
+    async getDevices() {
+        try {
+            const api = await this.getApi();
+            return await api.devices.getDevices();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     async checkHumidity(opts) {
         this.clearCheckTime();
 
-        let currentHomey = await HomeyAPI.forCurrentHomey();
-        let devices = await currentHomey.devices.getDevices();
+        let devices = await this.getDevices();
+        if (!devices) {
+            this.scheduleCheckHumidity(60);
+            return Promise.resolve();
+        }
 
         let thisDevice = _(devices).find(d => d.data && d.data.id === this.getData().id);
         let zoneId = thisDevice.zone;

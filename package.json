@@ -4,12 +4,18 @@
   "description": "Virtual thermostat",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "eslint --ignore-path .gitignore app.js drivers lib test",
+    "test": "./node_modules/.bin/mocha --reporter spec",
+    "posttest": "athom app validate --level publish"
   },
   "author": "Bjørnar Almli",
   "license": "ISC",
   "dependencies": {
-    "athom-api": "^2.1.147",
-    "lodash": "^4.17.11"
+    "athom-api": "^2.1.156"
+  },
+  "devDependencies": {
+    "eslint": "^5.12.1",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
   }
 }

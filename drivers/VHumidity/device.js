@@ -1,8 +1,8 @@
 'use strict';
 
 const Homey = require('homey'),
-    {HomeyAPI} = require('athom-api'),
-    _ = require('lodash');
+    devicesLib = require('../../lib/devices'),
+    humidityLib = require('../../lib/humidity');
 
 class VHumidityDevice extends Homey.Device {
 
@@ -67,44 +67,26 @@ class VHumidityDevice extends Homey.Device {
         this.curTimeout = setTimeout(this.checkHumidity.bind(this), seconds * 1000);
     }
 
-    async getApi() {
-        if (!this._api) {
-            this._api = await HomeyAPI.forCurrentHomey();
-        }
-        return this._api;
-    }
-
-    async getDevices() {
-        try {
-            const api = await this.getApi();
-            return await api.devices.getDevices();
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     async checkHumidity(opts) {
         this.clearCheckTime();
 
-        let devices = await this.getDevices();
+        let devices = await devicesLib.getDevices(this);
         if (!devices) {
             this.scheduleCheckHumidity(60);
             return Promise.resolve();
         }
 
-        let thisDevice = _(devices).find(d => d.data && d.data.id === this.getData().id);
-        let zoneId = thisDevice.zone;
-
+        let zoneId = devicesLib.getDeviceByDeviceId(this.getData().id, devices).zone;
         let settings = this.getSettings();
         let hysteresis = settings.hysteresis || 1;
 
-        let targetHumidity = this.findTargetHumidity(opts);
+        let targetHumidity = humidityLib.findTargetHumidity(this, opts);
         if (targetHumidity === undefined || targetHumidity === null) {
             this.scheduleCheckHumidity(60);
             return Promise.resolve();
         }
 
-        let humidity = this.findHumidity(zoneId, devices);
+        let humidity = humidityLib.findHumidity(this, zoneId, devices);
         if (humidity === undefined || humidity === null) {
             this.scheduleCheckHumidity(60);
             return Promise.resolve();
@@ -117,74 +99,10 @@ class VHumidityDevice extends Homey.Device {
             onoff = false;
         }
 
-        if (onoff !== undefined) {
-            this.setCapabilityValue('vt_onoff', onoff).catch(console.error);
-            for (let device in devices) {
-                let d = devices[device];
-                if (d.zone === zoneId &&
-                    (d.class === 'fan' || d.virtualClass === 'fan') &&
-                    d.capabilitiesObj &&
-                    d.capabilitiesObj.onoff.value !== onoff) {
-                    await d.setCapabilityValue('onoff', onoff).catch(console.error);
-                    this.log(d.name + ' set to ' + onoff);
-                }
-            }
-            if (onoff) {
-                this._turnedOnTrigger.trigger(this);
-                this.log('trigged fan turned on');
-            } else {
-                this._turnedOffTrigger.trigger(this);
-                this.log('trigged fan turned off');
-            }
-        }
+        humidityLib.switchFanDevices(this, zoneId, devices, onoff);
 
         this.scheduleCheckHumidity(60);
-
         return Promise.resolve();
-    }
-
-    findTargetHumidity(opts) {
-        let targetHumidity = opts && opts.vh_target_humidity ? opts.vh_target_humidity : undefined;
-        if (!targetHumidity) {
-            targetHumidity = this.getCapabilityValue('vh_target_humidity');
-        }
-        if (!targetHumidity) {
-            this.log('no target humidity defined');
-        } else {
-            this.log('target humidity', targetHumidity);
-        }
-        return targetHumidity;
-    }
-
-    findHumidity(zoneId, devices) {
-        let sumHumidity = 0;
-        let numHumidity = 0;
-        for (let device in devices) {
-            let d = devices[device];
-            if (d.zone === zoneId &&
-                d.class === 'sensor' &&
-                d.capabilitiesObj &&
-                d.capabilitiesObj.measure_humidity) {
-                sumHumidity += d.capabilitiesObj.measure_humidity.value;
-                numHumidity++;
-            }
-        }
-        if (numHumidity === 0) {
-            this.setCapabilityValue('measure_humidity', null).catch(console.error);
-            this.log('no humidity sensor in zone', zoneId);
-            return;
-        }
-        let humidity = sumHumidity / numHumidity;
-        let currentHumidity = this.getCapabilityValue('measure_humidity');
-        if (currentHumidity === undefined || currentHumidity === null || currentHumidity !== humidity) {
-            this.setCapabilityValue('measure_humidity', humidity).catch(console.error);
-            this._humidityChangedTrigger.trigger(this, {
-                humidity: humidity
-            });
-            this.log('trigged humidity change', humidity);
-        }
-        this.log('humidity', humidity);
-        return humidity;
     }
 
 }

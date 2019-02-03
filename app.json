@@ -1,6 +1,6 @@
 {
   "id": "no.almli.thermostat",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "compatibility": ">=2.0.0",
   "sdk": 2,
   "name": {
@@ -308,6 +308,14 @@
                 "en": "Hysteresis"
               },
               "value": 1
+            },
+            {
+              "id": "invert",
+              "type": "checkbox",
+              "label": {
+                "en": "Invert for humidifier"
+              },
+              "value": false
             }
           ]
         }

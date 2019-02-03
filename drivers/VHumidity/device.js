@@ -77,8 +77,6 @@ class VHumidityDevice extends Homey.Device {
         }
 
         let zoneId = devicesLib.getDeviceByDeviceId(this.getData().id, devices).zone;
-        let settings = this.getSettings();
-        let hysteresis = settings.hysteresis || 1;
 
         let targetHumidity = humidityLib.findTargetHumidity(this, opts);
         if (targetHumidity === undefined || targetHumidity === null) {
@@ -92,12 +90,7 @@ class VHumidityDevice extends Homey.Device {
             return Promise.resolve();
         }
 
-        let onoff = undefined;
-        if (humidity > (targetHumidity + hysteresis)) {
-            onoff = true;
-        } else if (humidity < (targetHumidity - hysteresis)) {
-            onoff = false;
-        }
+        let onoff = humidityLib.resolveOnoff(humidity, targetHumidity, this.getSettings());
 
         humidityLib.switchFanDevices(this, zoneId, devices, onoff);
 

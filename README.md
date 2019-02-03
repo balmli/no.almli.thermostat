@@ -23,6 +23,8 @@ Add a virtual thermostat to a zone with a temperature sensor and it will turn on
 
 Add a virtual humidity controller to a zone with a humidity sensor and it will turn on / off fans in the same zone.
 
+Fans will turn on if the humidity is larger than the target humidity, and off if less than the target humidity.  For humidifiers the logic can be inverted, by selecting the 'Invert for humidifier' - checkbox in 'Advanced settings'.
+
 #### Triggers
 
 - The humidity has changed.
@@ -48,6 +50,10 @@ Development has been supported by:
 Please report issues at the [issues section on Github](https://github.com/balmli/no.almli.thermostat/issues).
 
 ## Release Notes:
+
+#### 1.1.4
+
+- VHumidity: Added an option to support humidifiers.
 
 #### 1.1.3
 

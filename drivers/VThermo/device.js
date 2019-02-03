@@ -59,8 +59,6 @@ class VThermoDevice extends Homey.Device {
         }
 
         let zoneId = devicesLib.getDeviceByDeviceId(this.getData().id, devices).zone;
-        let settings = this.getSettings();
-        let hysteresis = settings.hysteresis || 0.5;
 
         let targetTemp = temperatureLib.findTargetTemperature(this, opts);
         if (targetTemp === undefined || targetTemp === null) {
@@ -74,12 +72,7 @@ class VThermoDevice extends Homey.Device {
             return Promise.resolve();
         }
 
-        let onoff = undefined;
-        if (temperature > (targetTemp + hysteresis)) {
-            onoff = false;
-        } else if (temperature < (targetTemp - hysteresis)) {
-            onoff = true;
-        }
+        let onoff = temperatureLib.resolveOnoff(temperature, targetTemp, this.getSettings());
 
         temperatureLib.switchHeaterDevices(this, zoneId, devices, onoff);
 

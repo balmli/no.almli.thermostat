@@ -58,7 +58,12 @@ class VThermoDevice extends Homey.Device {
             return Promise.resolve();
         }
 
-        let zoneId = devicesLib.getDeviceByDeviceId(this.getData().id, devices).zone;
+        let device = devicesLib.getDeviceByDeviceId(this.getData().id, devices);
+        if (!device) {
+            this.scheduleCheckTemp(60);
+            return Promise.resolve();
+        }
+        let zoneId = device.zone;
 
         let targetTemp = temperatureLib.findTargetTemperature(this, opts);
         if (targetTemp === undefined || targetTemp === null) {

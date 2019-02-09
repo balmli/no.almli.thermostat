@@ -76,7 +76,12 @@ class VHumidityDevice extends Homey.Device {
             return Promise.resolve();
         }
 
-        let zoneId = devicesLib.getDeviceByDeviceId(this.getData().id, devices).zone;
+        let device = devicesLib.getDeviceByDeviceId(this.getData().id, devices);
+        if (!device) {
+            this.scheduleCheckHumidity(60);
+            return Promise.resolve();
+        }
+        let zoneId = device.zone;
 
         let targetHumidity = humidityLib.findTargetHumidity(this, opts);
         if (targetHumidity === undefined || targetHumidity === null) {

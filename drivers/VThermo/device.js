@@ -21,6 +21,12 @@ class VThermoDevice extends Homey.Device {
             .register()
             .registerRunListener((args, state) => args.device.getCapabilityValue('vt_onoff'));
 
+        if (this.hasCapability('onoff')) {
+            this.registerCapabilityListener('onoff', async (value, opts) => {
+                return this.checkTemp({onoff: value});
+            });
+        }
+
         this.registerCapabilityListener('target_temperature', (value, opts) => {
             return this.checkTemp({target_temperature: value});
         });
@@ -28,8 +34,9 @@ class VThermoDevice extends Homey.Device {
         this.checkTemp();
     }
 
-    onAdded() {
+    async onAdded() {
         this.log('virtual device added:', this.getData().id);
+        await this.setCapabilityValue('onoff', true);
     }
 
     onDeleted() {
@@ -77,7 +84,9 @@ class VThermoDevice extends Homey.Device {
             return Promise.resolve();
         }
 
-        let onoff = temperatureLib.resolveOnoff(temperature, targetTemp, this.getSettings());
+        let onoff = this.hasCapability('onoff') && (opts && opts.onoff !== undefined ? opts.onoff : this.getCapabilityValue('onoff')) === false ?
+            (this.getCapabilityValue('vt_onoff') === true ? false : undefined) :
+            temperatureLib.resolveOnoff(temperature, targetTemp, this.getSettings());
 
         temperatureLib.switchHeaterDevices(this, zoneId, devices, onoff);
 

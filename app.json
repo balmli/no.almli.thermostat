@@ -215,6 +215,7 @@
       },
       "class": "thermostat",
       "capabilities": [
+        "onoff",
         "vt_onoff",
         "target_temperature",
         "measure_temperature"

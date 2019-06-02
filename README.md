@@ -54,6 +54,7 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 #### 1.1.5
 
 - Updated athom-api
+- Possible to turn on / off directly from the app (quick-toggle, device must be reinstalled)
 
 #### 1.1.4
 

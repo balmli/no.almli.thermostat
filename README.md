@@ -51,6 +51,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.1.5
+
+- Updated athom-api
+
 #### 1.1.4
 
 - VHumidity: Added an option to support humidifiers.

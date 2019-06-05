@@ -51,6 +51,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.1.6
+
+- Bugfix, ref. issue #18
+
 #### 1.1.5
 
 - Updated athom-api

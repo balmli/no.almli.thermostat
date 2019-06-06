@@ -16,10 +16,12 @@ describe("Logging", function () {
 });
 
 describe("CapabilityValue", function () {
-    describe("set get test", function () {
+    describe("set get has test", function () {
         it("Check", function () {
             const device = devs.getDevice();
+            assert.isFalse(device.hasCapability('measure_temperature'));
             device.setCapabilityValue('measure_temperature', null);
+            assert.isTrue(device.hasCapability('measure_temperature'));
             assert.isNull(device.getCapabilityValue('measure_temperature'), 'measure_temperature is not null');
             device.setCapabilityValue('measure_temperature', 22.5);
             assert.isNotNull(device.getCapabilityValue('measure_temperature'), 'measure_temperature is null');

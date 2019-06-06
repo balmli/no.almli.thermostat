@@ -84,14 +84,7 @@ class VThermoDevice extends Homey.Device {
             return Promise.resolve();
         }
 
-        let onoff = undefined;
-        if (this.hasCapability('onoff')) {
-            let mainOnoff = opts && opts.onoff !== undefined ? opts.onoff : this.getCapabilityValue('onoff');
-            onoff = mainOnoff ? temperatureLib.resolveOnoff(temperature, targetTemp, this.getSettings()) :
-                (this.getCapabilityValue('vt_onoff') === true ? false : undefined);
-        } else {
-            onoff = temperatureLib.resolveOnoff(temperature, targetTemp, this.getSettings());
-        }
+        let onoff = temperatureLib.resolveOnoff(this, temperature, targetTemp, this.getSettings(), opts);
 
         temperatureLib.switchHeaterDevices(this, zoneId, devices, onoff);
 

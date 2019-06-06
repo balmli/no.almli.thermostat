@@ -51,7 +51,7 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
-#### 1.1.6
+#### 1.1.7
 
 - Bugfix, ref. issue #18
 

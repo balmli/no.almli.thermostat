@@ -21,6 +21,9 @@ const getDevice = function () {
         getCapabilityValue: function (cap) {
             return capabilities[cap];
         },
+        hasCapability: function (cap) {
+            return cap in capabilities;
+        },
         _turnedOnTrigger: {
             trigger: function (device) {
             }

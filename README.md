@@ -28,6 +28,8 @@ Fans will turn on if the humidity is larger than the target humidity, and off if
 #### Triggers
 
 - The humidity has changed.
+- Humidity has increased more than [x] % points last [y] minutes.
+- Humidity has decreased more than [x] % points last [y] minutes.
 - The target humidity has changed.
 - The humidity device turned off.
 - The humidity device turned on.
@@ -50,6 +52,11 @@ Development has been supported by:
 Please report issues at the [issues section on Github](https://github.com/balmli/no.almli.thermostat/issues).
 
 ## Release Notes:
+
+#### 1.1.8
+
+- VHumidity: Added trigger 'Humidity has increased more than [x] % points last [y] minutes'
+- VHumidity: Added trigger 'Humidity has decreased more than [x] % points last [y] minutes'
 
 #### 1.1.7
 

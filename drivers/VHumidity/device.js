@@ -2,12 +2,15 @@
 
 const Homey = require('homey'),
     devicesLib = require('../../lib/devices'),
-    humidityLib = require('../../lib/humidity');
+    humidityLib = require('../../lib/humidity'),
+    ValueStore = require('../../lib/value_store');
 
 class VHumidityDevice extends Homey.Device {
 
     onInit() {
         this.log('virtual device initialized');
+
+        this._humidityStore = new ValueStore();
 
         this._humidityChangedTrigger = new Homey.FlowCardTriggerDevice('vh_humidity_changed');
         this._humidityChangedTrigger
@@ -28,6 +31,26 @@ class VHumidityDevice extends Homey.Device {
         this._onoffCondition = new Homey.FlowCardCondition('vh_onoff_is_on')
             .register()
             .registerRunListener((args, state) => args.device.getCapabilityValue('vt_onoff'));
+
+        new Homey.FlowCardCondition('vh_humidity_increased_last_mins')
+            .register()
+            .registerRunListener((args, state) => {
+                if (!args.change_pct_points || !args.minutes) {
+                    return false;
+                }
+                const changeLastMinutes = args.device._humidityStore.changePctPointsLastMinutes(args.minutes);
+                return changeLastMinutes !== undefined && changeLastMinutes >= args.change_pct_points;
+            });
+
+        new Homey.FlowCardCondition('vh_humidity_decreased_last_mins')
+            .register()
+            .registerRunListener((args, state) => {
+                if (!args.change_pct_points || !args.minutes) {
+                    return false;
+                }
+                const changeLastMinutes = args.device._humidityStore.changePctPointsLastMinutes(args.minutes);
+                return changeLastMinutes !== undefined && (-1.0 * changeLastMinutes) >= args.change_pct_points;
+            });
 
         this._setTargetHumidityAction = new Homey.FlowCardAction('vh_set_target_humidity')
             .register()
@@ -94,6 +117,8 @@ class VHumidityDevice extends Homey.Device {
             this.scheduleCheckHumidity(60);
             return Promise.resolve();
         }
+
+        this._humidityStore.addValue(humidity);
 
         let onoff = humidityLib.resolveOnoff(humidity, targetHumidity, this.getSettings());
 

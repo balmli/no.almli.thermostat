@@ -17,7 +17,7 @@ class VThermoDevice extends Homey.Device {
         this._turnedOffTrigger
             .register();
 
-        this._onoffCondition = new Homey.FlowCardCondition('vt_onoff_is_on')
+        new Homey.FlowCardCondition('vt_onoff_is_on')
             .register()
             .registerRunListener((args, state) => args.device.getCapabilityValue('vt_onoff'));
 
@@ -50,7 +50,7 @@ class VThermoDevice extends Homey.Device {
         }
     }
 
-    scheduleCheckTemp(seconds) {
+    scheduleCheckTemp(seconds = 60) {
         this.clearCheckTime();
         this.log(`Checking temp in ${seconds} seconds`);
         this.curTimeout = setTimeout(this.checkTemp.bind(this), seconds * 1000);
@@ -61,26 +61,26 @@ class VThermoDevice extends Homey.Device {
 
         let devices = await devicesLib.getDevices(this);
         if (!devices) {
-            this.scheduleCheckTemp(60);
+            this.scheduleCheckTemp();
             return Promise.resolve();
         }
 
         let device = devicesLib.getDeviceByDeviceId(this.getData().id, devices);
         if (!device) {
-            this.scheduleCheckTemp(60);
+            this.scheduleCheckTemp();
             return Promise.resolve();
         }
         let zoneId = device.zone;
 
         let targetTemp = temperatureLib.findTargetTemperature(this, opts);
         if (targetTemp === undefined || targetTemp === null) {
-            this.scheduleCheckTemp(60);
+            this.scheduleCheckTemp();
             return Promise.resolve();
         }
 
         let temperature = temperatureLib.findTemperature(this, zoneId, devices);
         if (temperature === undefined || temperature === null) {
-            this.scheduleCheckTemp(60);
+            this.scheduleCheckTemp();
             return Promise.resolve();
         }
 
@@ -88,7 +88,7 @@ class VThermoDevice extends Homey.Device {
 
         temperatureLib.switchHeaterDevices(this, zoneId, devices, onoff);
 
-        this.scheduleCheckTemp(60);
+        this.scheduleCheckTemp();
         return Promise.resolve();
     }
 

@@ -53,6 +53,11 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.1.9
+
+- VThermo: only trigger on/off if on/off has changed. 
+- VHumidity: only trigger on/off if on/off has changed. 
+
 #### 1.1.8
 
 - VHumidity: Added condition 'Humidity has increased more than [x] % points last [y] minutes'

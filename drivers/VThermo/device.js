@@ -78,7 +78,7 @@ class VThermoDevice extends Homey.Device {
             return Promise.resolve();
         }
 
-        let temperature = temperatureLib.findTemperature(this, zoneId, devices);
+        let temperature = await temperatureLib.findTemperature(this, zoneId, devices);
         if (temperature === undefined || temperature === null) {
             this.scheduleCheckTemp();
             return Promise.resolve();
@@ -86,7 +86,7 @@ class VThermoDevice extends Homey.Device {
 
         let onoff = temperatureLib.resolveOnoff(this, temperature, targetTemp, this.getSettings(), opts);
 
-        temperatureLib.switchHeaterDevices(this, zoneId, devices, onoff);
+        await temperatureLib.switchHeaterDevices(this, zoneId, devices, onoff);
 
         this.scheduleCheckTemp();
         return Promise.resolve();

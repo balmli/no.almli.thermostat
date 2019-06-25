@@ -112,7 +112,7 @@ class VHumidityDevice extends Homey.Device {
             return Promise.resolve();
         }
 
-        let humidity = humidityLib.findHumidity(this, zoneId, devices);
+        let humidity = await humidityLib.findHumidity(this, zoneId, devices);
         if (humidity === undefined || humidity === null) {
             this.scheduleCheckHumidity();
             return Promise.resolve();
@@ -120,7 +120,7 @@ class VHumidityDevice extends Homey.Device {
 
         let onoff = humidityLib.resolveOnoff(humidity, targetHumidity, this.getSettings());
 
-        humidityLib.switchFanDevices(this, zoneId, devices, onoff);
+        await humidityLib.switchFanDevices(this, zoneId, devices, onoff);
 
         this.scheduleCheckHumidity();
         return Promise.resolve();

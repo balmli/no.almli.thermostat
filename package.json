@@ -11,7 +11,7 @@
   "author": "Bjørnar Almli",
   "license": "ISC",
   "dependencies": {
-    "athom-api": "^2.1.192"
+    "athom-api": "^2.1.193"
   },
   "devDependencies": {
     "eslint": "^5.12.1",

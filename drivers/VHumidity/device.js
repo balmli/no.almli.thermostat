@@ -59,7 +59,7 @@ class VHumidityDevice extends Homey.Device {
                 return this.checkHumidity({vh_target_humidity: args.vh_target_humidity});
             });
 
-        this.registerCapabilityListener('vh_target_humidity', (value, opts) => {
+        this.registerCapabilityListener('vh_target_humidity', async (value, opts) => {
             this._targetHumidityChangedTrigger.trigger(this, {
                 humidity: value
             });

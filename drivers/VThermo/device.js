@@ -27,7 +27,7 @@ class VThermoDevice extends Homey.Device {
             });
         }
 
-        this.registerCapabilityListener('target_temperature', (value, opts) => {
+        this.registerCapabilityListener('target_temperature', async (value, opts) => {
             return this.checkTemp({target_temperature: value});
         });
 

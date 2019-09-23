@@ -4,6 +4,8 @@
 
 Add a virtual thermostat to a zone with a temperature sensor and it will turn on / off heaters in the same zone.
 
+Use a door/window sensor in the same zone to automatically turn off the heater on a contact alarm. This can be enabled with the 'Turn off if contact alarm' - checkbox in 'Advanced settings'.
+
 #### Triggers
 
 - The temperature has changed.
@@ -55,7 +57,8 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 #### 1.1.11
 
-- Updated Athom api 
+- Updated Athom api.
+- VThermo: added option to turn off if contact alarm.
 
 #### 1.1.10
 

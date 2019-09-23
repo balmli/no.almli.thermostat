@@ -331,6 +331,14 @@
                 "en": "Hysteresis"
               },
               "value": 0.5
+            },
+            {
+              "id": "contact_alarm",
+              "type": "checkbox",
+              "label": {
+                "en": "Turn off if contact alarm"
+              },
+              "value": false
             }
           ]
         }

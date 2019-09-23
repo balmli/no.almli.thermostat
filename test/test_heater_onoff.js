@@ -136,4 +136,24 @@ describe("heater resolveOnoff", function () {
         });
     });
 
+    describe("Check contact alarm", function () {
+        it("Should turn off", function () {
+            const device = devs.getDevice();
+            device.setCapabilityValue('onoff', true);
+            device.setCapabilityValue('vt_onoff', true);
+            expect(temperatureLib.resolveOnoff(device, 20, 20, {hysteresis: 0.5}, undefined, true)).to.equal(false);
+        });
+        it("Should not switch if no contact alarm", function () {
+            const device = devs.getDevice();
+            device.setCapabilityValue('onoff', true);
+            device.setCapabilityValue('vt_onoff', true);
+            expect(temperatureLib.resolveOnoff(device, 20, 20, {hysteresis: 0.5}, undefined, false)).to.equal(undefined);
+        });
+        it("Should not switch if already off", function () {
+            const device = devs.getDevice();
+            device.setCapabilityValue('onoff', true);
+            device.setCapabilityValue('vt_onoff', false);
+            expect(temperatureLib.resolveOnoff(device, 20, 20, {hysteresis: 0.5}, undefined, true)).to.equal(undefined);
+        });
+    });
 });

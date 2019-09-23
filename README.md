@@ -53,6 +53,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.1.11
+
+- Updated Athom api 
+
 #### 1.1.10
 
 - VHumidity: Added condition 'Humidity has increased more than [x] % points last [y] minutes'

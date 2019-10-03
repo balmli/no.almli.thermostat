@@ -55,6 +55,11 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.1.12
+
+- Updated Athom api.
+- Fix timeouts, issue #23.
+
 #### 1.1.11
 
 - Updated Athom api.

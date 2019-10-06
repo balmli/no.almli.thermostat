@@ -55,6 +55,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.1.14
+
+- VThermo: Added an option to invert switching.
+
 #### 1.1.13
 
 - Updated Athom api.

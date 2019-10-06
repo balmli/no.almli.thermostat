@@ -35,6 +35,39 @@ describe("heater resolveOnoff", function () {
         });
     });
 
+    describe("Check invert undefined", function () {
+        it("Should turn on", function () {
+            const device = devs.getDevice();
+            expect(temperatureLib.resolveOnoff(device, 10, 20, {hysteresis: 0.5, invert: undefined})).to.equal(true);
+        });
+        it("Should turn off", function () {
+            const device = devs.getDevice();
+            expect(temperatureLib.resolveOnoff(device, 20, 10, {hysteresis: 0.5, invert: undefined})).to.equal(false);
+        });
+    });
+
+    describe("Check invert false", function () {
+        it("Should turn on", function () {
+            const device = devs.getDevice();
+            expect(temperatureLib.resolveOnoff(device, 10, 20, {hysteresis: 0.5, invert: false})).to.equal(true);
+        });
+        it("Should turn off", function () {
+            const device = devs.getDevice();
+            expect(temperatureLib.resolveOnoff(device, 20, 10, {hysteresis: 0.5, invert: false})).to.equal(false);
+        });
+    });
+
+    describe("Check invert true", function () {
+        it("Should turn off", function () {
+            const device = devs.getDevice();
+            expect(temperatureLib.resolveOnoff(device, 10, 20, {hysteresis: 0.5, invert: true})).to.equal(false);
+        });
+        it("Should turn on", function () {
+            const device = devs.getDevice();
+            expect(temperatureLib.resolveOnoff(device, 20, 10, {hysteresis: 0.5, invert: true})).to.equal(true);
+        });
+    });
+
     describe("Check no change", function () {
         it("Equal", function () {
             const device = devs.getDevice();

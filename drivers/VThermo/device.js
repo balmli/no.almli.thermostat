@@ -64,6 +64,11 @@ class VThermoDevice extends Homey.Device {
     async checkTemp(opts) {
         this.clearCheckTime();
 
+        if (!this.getAvailable()) {
+            this.log('device set to available');
+            await this.setAvailable();
+        }
+
         let devices = await devicesLib.getDevices(this);
         if (!devices) {
             this.scheduleCheckTemp();

@@ -6,7 +6,7 @@ const Homey = require('homey'),
 
 class VThermoDevice extends Homey.Device {
 
-    onInit() {
+    async onInit() {
         this.log('virtual device initialized');
 
         this._turnedOnTrigger = new Homey.FlowCardTriggerDevice('vt_onoff_true');
@@ -30,6 +30,11 @@ class VThermoDevice extends Homey.Device {
         this.registerCapabilityListener('target_temperature', async (value, opts) => {
             return this.checkTemp({target_temperature: value});
         });
+
+        if (!this.getAvailable()) {
+            this.log('device set to available');
+            await this.setAvailable();
+        }
 
         this.checkTemp();
     }

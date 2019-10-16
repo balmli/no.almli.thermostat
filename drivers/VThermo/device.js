@@ -55,13 +55,14 @@ class VThermoDevice extends Homey.Device {
 
     scheduleCheckAvailable() {
         this.clearCheckAvailable();
-        this.curCheckAvailableTimeout = setTimeout(this.checkAvailable.bind(this), 15000);
+        this.curCheckAvailableTimeout = setTimeout(this.checkAvailable.bind(this), 180000);
     }
 
     async checkAvailable() {
-        this.log(`checkAvailable 1: ${this.getAvailable()}`);
+        if (this.getAvailable() !== true) {
+            this.log(`checkAvailable: ${this.getAvailable()}`);
+        }
         await this.setAvailable();
-        this.log(`checkAvailable 2: ${this.getAvailable()}`);
         this.scheduleCheckAvailable();
     }
 

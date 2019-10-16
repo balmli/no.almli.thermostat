@@ -66,6 +66,7 @@ class VHumidityDevice extends Homey.Device {
             return this.checkHumidity({vh_target_humidity: value});
         });
 
+        this.checkAvailable();
         this.checkHumidity();
     }
 
@@ -74,7 +75,29 @@ class VHumidityDevice extends Homey.Device {
     }
 
     onDeleted() {
+        this.clearCheckAvailable();
+        this.clearCheckTime();
         this.log('virtual device deleted');
+    }
+
+    clearCheckAvailable() {
+        if (this.curCheckAvailableTimeout) {
+            clearTimeout(this.curCheckAvailableTimeout);
+            this.curCheckAvailableTimeout = undefined;
+        }
+    }
+
+    scheduleCheckAvailable() {
+        this.clearCheckAvailable();
+        this.curCheckAvailableTimeout = setTimeout(this.checkAvailable.bind(this), 180000);
+    }
+
+    async checkAvailable() {
+        if (this.getAvailable() !== true) {
+            this.log(`checkAvailable: ${this.getAvailable()}`);
+        }
+        await this.setAvailable();
+        this.scheduleCheckAvailable();
     }
 
     clearCheckTime() {

@@ -31,11 +31,7 @@ class VThermoDevice extends Homey.Device {
             return this.checkTemp({target_temperature: value});
         });
 
-        if (!this.getAvailable()) {
-            this.log('device set to available');
-            await this.setAvailable();
-        }
-
+        this.checkAvailable();
         this.checkTemp();
     }
 
@@ -45,7 +41,28 @@ class VThermoDevice extends Homey.Device {
     }
 
     onDeleted() {
+        this.clearCheckAvailable();
+        this.clearCheckTime();
         this.log('virtual device deleted');
+    }
+
+    clearCheckAvailable() {
+        if (this.curCheckAvailableTimeout) {
+            clearTimeout(this.curCheckAvailableTimeout);
+            this.curCheckAvailableTimeout = undefined;
+        }
+    }
+
+    scheduleCheckAvailable() {
+        this.clearCheckAvailable();
+        this.curCheckAvailableTimeout = setTimeout(this.checkAvailable.bind(this), 15000);
+    }
+
+    async checkAvailable() {
+        this.log(`checkAvailable 1: ${this.getAvailable()}`);
+        await this.setAvailable();
+        this.log(`checkAvailable 2: ${this.getAvailable()}`);
+        this.scheduleCheckAvailable();
     }
 
     clearCheckTime() {
@@ -63,11 +80,6 @@ class VThermoDevice extends Homey.Device {
 
     async checkTemp(opts) {
         this.clearCheckTime();
-
-        if (!this.getAvailable()) {
-            this.log('device set to available');
-            await this.setAvailable();
-        }
 
         let devices = await devicesLib.getDevices(this);
         if (!devices) {

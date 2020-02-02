@@ -56,18 +56,17 @@ class VHumidityDevice extends Homey.Device {
             .register()
             .registerRunListener((args, state) => {
                 args.device.setCapabilityValue('vh_target_humidity', args.vh_target_humidity).catch(console.error);
-                return this.checkHumidity({vh_target_humidity: args.vh_target_humidity});
+                return this.handleCheckHumidity({ vh_target_humidity: args.vh_target_humidity });
             });
 
         this.registerCapabilityListener('vh_target_humidity', async (value, opts) => {
             this._targetHumidityChangedTrigger.trigger(this, {
                 humidity: value
             });
-            return this.checkHumidity({vh_target_humidity: value});
+            return this.handleCheckHumidity({ vh_target_humidity: value });
         });
 
         this.checkAvailable();
-        this.checkHumidity();
     }
 
     onAdded() {
@@ -76,7 +75,6 @@ class VHumidityDevice extends Homey.Device {
 
     onDeleted() {
         this.clearCheckAvailable();
-        this.clearCheckTime();
         this.log('virtual device deleted');
     }
 
@@ -100,53 +98,35 @@ class VHumidityDevice extends Homey.Device {
         this.scheduleCheckAvailable();
     }
 
-    clearCheckTime() {
-        if (this.curTimeout) {
-            clearTimeout(this.curTimeout);
-            this.curTimeout = undefined;
-        }
-    }
-
-    scheduleCheckHumidity(seconds = 60) {
-        this.clearCheckTime();
-        this.log(`Checking humidity in ${seconds} seconds`);
-        this.curTimeout = setTimeout(this.checkHumidity.bind(this), seconds * 1000);
+    async handleCheckHumidity(opts) {
+      this._devices = await devicesLib.getDevices(this);
+      await this.checkHumidity(opts);
     }
 
     async checkHumidity(opts) {
-        this.clearCheckTime();
-
-        let devices = await devicesLib.getDevices(this);
-        if (!devices) {
-            this.scheduleCheckHumidity();
-            return Promise.resolve();
+        if (!this._devices) {
+            return;
         }
 
-        let device = devicesLib.getDeviceByDeviceId(this.getData().id, devices);
+        let device = devicesLib.getDeviceByDeviceId(this.getData().id, this._devices);
         if (!device) {
-            this.scheduleCheckHumidity();
-            return Promise.resolve();
+            return;
         }
         let zoneId = device.zone;
 
         let targetHumidity = humidityLib.findTargetHumidity(this, opts);
         if (targetHumidity === undefined || targetHumidity === null) {
-            this.scheduleCheckHumidity();
-            return Promise.resolve();
+            return;
         }
 
-        let humidity = await humidityLib.findHumidity(this, zoneId, devices);
+        let humidity = await humidityLib.findHumidity(this, zoneId, this._devices);
         if (humidity === undefined || humidity === null) {
-            this.scheduleCheckHumidity();
-            return Promise.resolve();
+            return;
         }
 
         let onoff = humidityLib.resolveOnoff(humidity, targetHumidity, this.getSettings());
 
-        await humidityLib.switchFanDevices(this, zoneId, devices, onoff);
-
-        this.scheduleCheckHumidity();
-        return Promise.resolve();
+        await humidityLib.switchFanDevices(this, zoneId, this._devices, onoff);
     }
 
 }

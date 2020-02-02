@@ -23,16 +23,15 @@ class VThermoDevice extends Homey.Device {
 
         if (this.hasCapability('onoff')) {
             this.registerCapabilityListener('onoff', async (value, opts) => {
-                return this.checkTemp({onoff: value});
+                return this.handleCheckTemp({ onoff: value });
             });
         }
 
         this.registerCapabilityListener('target_temperature', async (value, opts) => {
-            return this.checkTemp({target_temperature: value});
+            return this.handleCheckTemp({ target_temperature: value });
         });
 
         this.checkAvailable();
-        this.checkTemp();
     }
 
     async onAdded() {
@@ -42,7 +41,6 @@ class VThermoDevice extends Homey.Device {
 
     onDeleted() {
         this.clearCheckAvailable();
-        this.clearCheckTime();
         this.log('virtual device deleted');
     }
 
@@ -66,54 +64,36 @@ class VThermoDevice extends Homey.Device {
         this.scheduleCheckAvailable();
     }
 
-    clearCheckTime() {
-        if (this.curTimeout) {
-            clearTimeout(this.curTimeout);
-            this.curTimeout = undefined;
-        }
-    }
-
-    scheduleCheckTemp(seconds = 60) {
-        this.clearCheckTime();
-        this.log(`Checking temp in ${seconds} seconds`);
-        this.curTimeout = setTimeout(this.checkTemp.bind(this), seconds * 1000);
+    async handleCheckTemp(opts) {
+        this._devices = await devicesLib.getDevices(this);
+        await this.checkTemp(opts);
     }
 
     async checkTemp(opts) {
-        this.clearCheckTime();
-
-        let devices = await devicesLib.getDevices(this);
-        if (!devices) {
-            this.scheduleCheckTemp();
-            return Promise.resolve();
+        if (!this._devices) {
+            return;
         }
 
-        let device = devicesLib.getDeviceByDeviceId(this.getData().id, devices);
+        let device = devicesLib.getDeviceByDeviceId(this.getData().id, this._devices);
         if (!device) {
-            this.scheduleCheckTemp();
-            return Promise.resolve();
+            return;
         }
         let zoneId = device.zone;
 
         let targetTemp = temperatureLib.findTargetTemperature(this, opts);
         if (targetTemp === undefined || targetTemp === null) {
-            this.scheduleCheckTemp();
-            return Promise.resolve();
+            return;
         }
 
-        let temperature = await temperatureLib.findTemperature(this, zoneId, devices);
+        let temperature = await temperatureLib.findTemperature(this, zoneId, this._devices);
         if (temperature === undefined || temperature === null) {
-            this.scheduleCheckTemp();
-            return Promise.resolve();
+            return;
         }
 
-        let contactAlarm = temperatureLib.hasContactAlarm(this, zoneId, devices, this.getSettings());
+        let contactAlarm = temperatureLib.hasContactAlarm(this, zoneId, this._devices, this.getSettings());
         let onoff = temperatureLib.resolveOnoff(this, temperature, targetTemp, this.getSettings(), opts, contactAlarm);
 
-        await temperatureLib.switchHeaterDevices(this, zoneId, devices, onoff);
-
-        this.scheduleCheckTemp();
-        return Promise.resolve();
+        await temperatureLib.switchHeaterDevices(this, zoneId, this._devices, onoff);
     }
 
 }

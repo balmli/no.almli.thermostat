@@ -1,0 +1,8 @@
+{
+  "1.1.16": {
+    "en": "Fixes to avoid timeouts"
+  },
+  "1.1.14": {
+    "en": "VThermo: Added an option to invert switching"
+  }
+}

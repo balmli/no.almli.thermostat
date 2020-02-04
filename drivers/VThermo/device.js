@@ -85,7 +85,7 @@ class VThermoDevice extends Homey.Device {
             return;
         }
 
-        let temperature = await temperatureLib.findTemperature(this, zoneId, this._devices);
+        let temperature = await temperatureLib.findTemperature(this, zoneId, this._devices, this.getSettings());
         if (temperature === undefined || temperature === null) {
             return;
         }

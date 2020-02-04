@@ -93,7 +93,7 @@ class VThermoDevice extends Homey.Device {
         let contactAlarm = temperatureLib.hasContactAlarm(this, zoneId, this._devices, this.getSettings());
         let onoff = temperatureLib.resolveOnoff(this, temperature, targetTemp, this.getSettings(), opts, contactAlarm);
 
-        await temperatureLib.switchHeaterDevices(this, zoneId, this._devices, onoff);
+        await temperatureLib.switchHeaterDevices(this, zoneId, this._devices, onoff, this.getSettings());
     }
 
 }

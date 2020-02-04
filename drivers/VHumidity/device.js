@@ -126,7 +126,7 @@ class VHumidityDevice extends Homey.Device {
 
         let onoff = humidityLib.resolveOnoff(humidity, targetHumidity, this.getSettings());
 
-        await humidityLib.switchFanDevices(this, zoneId, this._devices, onoff);
+        await humidityLib.switchFanDevices(this, zoneId, this._devices, onoff, this.getSettings());
     }
 
 }

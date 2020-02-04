@@ -1,6 +1,6 @@
 {
   "id": "no.almli.thermostat",
-  "version": "1.1.16",
+  "version": "1.1.17",
   "compatibility": ">=2.0.0",
   "sdk": 2,
   "name": {
@@ -347,6 +347,17 @@
                 "en": "Turn off if contact alarm"
               },
               "value": false
+            },
+            {
+              "id": "device_delay",
+              "type": "number",
+              "min": 0,
+              "max:": 5000,
+              "step": 1,
+              "label": {
+                "en": "Delay in milliseconds between switching devices"
+              },
+              "value": 0
             }
           ]
         }
@@ -413,6 +424,17 @@
                 "en": "Invert for humidifier"
               },
               "value": false
+            },
+            {
+              "id": "device_delay",
+              "type": "number",
+              "min": 0,
+              "max:": 5000,
+              "step": 1,
+              "label": {
+                "en": "Delay in milliseconds between switching devices"
+              },
+              "value": 0
             }
           ]
         }

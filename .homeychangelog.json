@@ -1,4 +1,7 @@
 {
+  "1.1.17": {
+    "en": "You can set a delay after each device has been switched on / off."
+  },
   "1.1.16": {
     "en": "Fixes to avoid timeouts"
   },

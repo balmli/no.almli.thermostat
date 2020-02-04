@@ -353,11 +353,35 @@
               "type": "number",
               "min": 0,
               "max:": 5000,
-              "step": 1,
+              "units": {
+                "en": "ms"
+              },
               "label": {
                 "en": "Delay in milliseconds between switching devices"
               },
-              "value": 0
+              "value": 0,
+              "hint": {
+                "en": "You can add a delay after each device has been switched on / off."
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Sensors"
+          },
+          "children": [
+            {
+              "id": "thermostat",
+              "type": "checkbox",
+              "label": {
+                "en": "Temperature from thermostat"
+              },
+              "value": false,
+              "hint": {
+                "en": "Select this if you want to use thermostats in the same zone as temperature sensors."
+              }
             }
           ]
         }
@@ -430,11 +454,16 @@
               "type": "number",
               "min": 0,
               "max:": 5000,
-              "step": 1,
+              "units": {
+                "en": "ms"
+              },
               "label": {
                 "en": "Delay in milliseconds between switching devices"
               },
-              "value": 0
+              "value": 0,
+              "hint": {
+                "en": "You can add a delay after each device has been switched on / off."
+              }
             }
           ]
         }

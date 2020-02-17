@@ -2,7 +2,7 @@
 
 ## Device: VThermo
 
-Add a virtual thermostat to a zone with a temperature sensor and it will turn on / off heaters in the same zone.
+Add a virtual thermostat to a zone with a temperature sensor and it will turn on / off heaters in the same zone.  The virtual thermostat will start operating when the target temperature has been set.
 
 Use a door/window sensor in the same zone to automatically turn off the heater on a contact alarm. This can be enabled with the 'Turn off if contact alarm' - checkbox in 'Advanced settings'.
 
@@ -55,9 +55,22 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.1.18
+
+- Update temperature and humidity even if the target has not been set.
+
+#### 1.1.17
+
+- You can set a delay after each device has been switched on / off.
+- Thermostats can be used as temperature sensors.
+
+#### 1.1.16
+
+- Fixes to avoid timeouts.
+
 #### 1.1.15
 
-- Timeout fixes
+- Timeout fixes.
 
 #### 1.1.14
 

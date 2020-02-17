@@ -1,4 +1,7 @@
 {
+  "1.1.18": {
+    "en": "Update temperature and humidity even if the target has not been set."
+  },
   "1.1.17": {
     "en": "You can set a delay after each device has been switched on / off. Thermostats can be used as temperature sensors."
   },

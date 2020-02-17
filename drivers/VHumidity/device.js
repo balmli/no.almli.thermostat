@@ -114,13 +114,13 @@ class VHumidityDevice extends Homey.Device {
         }
         let zoneId = device.zone;
 
-        let targetHumidity = humidityLib.findTargetHumidity(this, opts);
-        if (targetHumidity === undefined || targetHumidity === null) {
+        let humidity = await humidityLib.findHumidity(this, zoneId, this._devices);
+        if (humidity === undefined || humidity === null) {
             return;
         }
 
-        let humidity = await humidityLib.findHumidity(this, zoneId, this._devices);
-        if (humidity === undefined || humidity === null) {
+        let targetHumidity = humidityLib.findTargetHumidity(this, opts);
+        if (targetHumidity === undefined || targetHumidity === null) {
             return;
         }
 

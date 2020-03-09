@@ -1,4 +1,7 @@
 {
+  "1.1.19": {
+    "en": "Avoid triggers firing two times."
+  },
   "1.1.18": {
     "en": "Update temperature and humidity even if the target has not been set."
   },

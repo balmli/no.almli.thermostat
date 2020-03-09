@@ -1,6 +1,6 @@
 {
   "id": "no.almli.thermostat",
-  "version": "1.1.18",
+  "version": "1.1.19",
   "compatibility": ">=2.0.0",
   "sdk": 2,
   "name": {
@@ -54,6 +54,16 @@
         "title": {
           "en": "Thermostat turned on"
         },
+        "tokens": [
+          {
+            "name": "state",
+            "type": "number",
+            "title": {
+              "en": "State"
+            },
+            "example": 1
+          }
+        ],
         "args": [
           {
             "name": "device",
@@ -67,6 +77,16 @@
         "title": {
           "en": "Thermostat turned off"
         },
+        "tokens": [
+          {
+            "name": "state",
+            "type": "number",
+            "title": {
+              "en": "State"
+            },
+            "example": 0
+          }
+        ],
         "args": [
           {
             "name": "device",
@@ -126,6 +146,16 @@
         "title": {
           "en": "Humidity device turned on"
         },
+        "tokens": [
+          {
+            "name": "state",
+            "type": "number",
+            "title": {
+              "en": "State"
+            },
+            "example": 1
+          }
+        ],
         "args": [
           {
             "name": "device",
@@ -139,6 +169,16 @@
         "title": {
           "en": "Humidity device turned off"
         },
+        "tokens": [
+          {
+            "name": "state",
+            "type": "number",
+            "title": {
+              "en": "State"
+            },
+            "example": 0
+          }
+        ],
         "args": [
           {
             "name": "device",

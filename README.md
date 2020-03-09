@@ -55,6 +55,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.1.19
+
+- Avoid triggers firing two times.
+
 #### 1.1.18
 
 - Update temperature and humidity even if the target has not been set.

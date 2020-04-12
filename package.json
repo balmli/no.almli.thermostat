@@ -1,6 +1,6 @@
 {
   "name": "no.almli.thermostat",
-  "version": "1.1.19",
+  "version": "1.1.20",
   "description": "Virtual thermostat",
   "main": "app.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "author": "Bjørnar Almli",
   "license": "ISC",
   "dependencies": {
-    "athom-api": "^3.1.20"
+    "athom-api": "^3.2.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",

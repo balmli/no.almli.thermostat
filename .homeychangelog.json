@@ -1,4 +1,7 @@
 {
+  "1.1.20": {
+    "en": "Updated Athom api."
+  },
   "1.1.19": {
     "en": "Avoid triggers firing two times."
   },

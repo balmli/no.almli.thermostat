@@ -55,6 +55,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.1.20
+
+- Updated Athom api.
+
 #### 1.1.19
 
 - Avoid triggers firing two times.

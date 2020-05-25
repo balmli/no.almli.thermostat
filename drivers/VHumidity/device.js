@@ -7,8 +7,17 @@ const Homey = require('homey'),
 
 class VHumidityDevice extends Homey.Device {
 
-    onInit() {
+    async onInit() {
         this.log('virtual device initialized');
+
+        try {
+            if (!this.hasCapability('onoff')) {
+                await this.addCapability('onoff');
+                await this.setCapabilityValue('onoff', true);
+            }
+        } catch (err) {
+            this.log('migration failed', err);
+        }
 
         this._humidityStore = new ValueStore();
 
@@ -59,6 +68,15 @@ class VHumidityDevice extends Homey.Device {
                 return this.handleCheckHumidity({ vh_target_humidity: args.vh_target_humidity });
             });
 
+        if (this.hasCapability('onoff')) {
+            this.registerCapabilityListener('onoff', async (value, opts) => {
+                if (!this.getSetting('onoff_enabled')) {
+                    throw new Error('Switching the device off has been disabled');
+                }
+                return this.handleCheckHumidity({ onoff: value });
+            });
+        }
+
         this.registerCapabilityListener('vh_target_humidity', async (value, opts) => {
             this._targetHumidityChangedTrigger.trigger(this, {
                 humidity: value
@@ -69,13 +87,24 @@ class VHumidityDevice extends Homey.Device {
         this.checkAvailable();
     }
 
-    onAdded() {
+    async onAdded() {
         this.log('virtual device added:', this.getData().id);
+        await this.setCapabilityValue('onoff', true);
     }
 
     onDeleted() {
         this.clearCheckAvailable();
         this.log('virtual device deleted');
+    }
+
+    onSettings(oldSettingsObj, newSettingsObj, changedKeysArr, callback) {
+        if (changedKeysArr.includes('onoff_enabled') &&
+          !newSettingsObj.onoff_enabled &&
+          this.hasCapability('onoff') &&
+          this.getCapabilityValue('onoff') !== true) {
+            this.setCapabilityValue('onoff', true).catch(err => this.log(err));
+        }
+        callback(null, true);
     }
 
     clearCheckAvailable() {
@@ -108,6 +137,12 @@ class VHumidityDevice extends Homey.Device {
             return;
         }
 
+        if (this.hasCapability('onoff') &&
+          this.getCapabilityValue('onoff') !== true &&
+          !this.getSetting('onoff_enabled')) {
+            this.setCapabilityValue('onoff', true).catch(err => this.log(err));
+        }
+
         let device = devicesLib.getDeviceByDeviceId(this.getData().id, this._devices);
         if (!device) {
             return;
@@ -124,7 +159,7 @@ class VHumidityDevice extends Homey.Device {
             return;
         }
 
-        let onoff = humidityLib.resolveOnoff(humidity, targetHumidity, this.getSettings());
+        let onoff = humidityLib.resolveOnoff(this, humidity, targetHumidity, this.getSettings(), opts);
 
         await humidityLib.switchFanDevices(this, zoneId, this._devices, onoff, this.getSettings());
     }

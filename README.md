@@ -55,6 +55,11 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.1.21
+
+- Added setting to disable switching devices off.
+- Added on / off capability for VHumidity.
+
 #### 1.1.20
 
 - Updated Athom api.

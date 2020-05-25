@@ -344,6 +344,7 @@
       },
       "class": "thermostat",
       "capabilities": [
+        "onoff",
         "vt_onoff",
         "vh_target_humidity",
         "measure_humidity"
@@ -394,6 +395,17 @@
               },
               "type": "checkbox",
               "value": false
+            },
+            {
+              "id": "onoff_enabled",
+              "type": "checkbox",
+              "label": {
+                "en": "On / off enabled"
+              },
+              "value": true,
+              "hint": {
+                "en": "By unchecking this switch, the device cannot be turned off."
+              }
             }
           ]
         },
@@ -500,6 +512,17 @@
                 "en": "Turn off if contact alarm"
               },
               "value": false
+            },
+            {
+              "id": "onoff_enabled",
+              "type": "checkbox",
+              "label": {
+                "en": "On / off enabled"
+              },
+              "value": true,
+              "hint": {
+                "en": "By unchecking this switch, the device cannot be turned off."
+              }
             }
           ]
         },

@@ -10,6 +10,7 @@
   },
   "class": "thermostat",
   "capabilities": [
+    "onoff",
     "vt_onoff",
     "vh_target_humidity",
     "measure_humidity"

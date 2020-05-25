@@ -1,0 +1,11 @@
+{
+  "id": "onoff_enabled",
+  "type": "checkbox",
+  "label": {
+    "en": "On / off enabled"
+  },
+  "value": true,
+  "hint": {
+    "en": "By unchecking this switch, the device cannot be turned off."
+  }
+}

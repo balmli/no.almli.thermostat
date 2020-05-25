@@ -23,6 +23,9 @@ class VThermoDevice extends Homey.Device {
 
         if (this.hasCapability('onoff')) {
             this.registerCapabilityListener('onoff', async (value, opts) => {
+                if (!this.getSetting('onoff_enabled')) {
+                    throw new Error('Switching the device off has been disabled');
+                }
                 return this.handleCheckTemp({ onoff: value });
             });
         }
@@ -42,6 +45,16 @@ class VThermoDevice extends Homey.Device {
     onDeleted() {
         this.clearCheckAvailable();
         this.log('virtual device deleted');
+    }
+
+    onSettings(oldSettingsObj, newSettingsObj, changedKeysArr, callback) {
+        if (changedKeysArr.includes('onoff_enabled') &&
+          !newSettingsObj.onoff_enabled &&
+          this.hasCapability('onoff') &&
+          this.getCapabilityValue('onoff') !== true) {
+            this.setCapabilityValue('onoff', true).catch(err => this.log(err));
+        }
+        callback(null, true);
     }
 
     clearCheckAvailable() {
@@ -72,6 +85,12 @@ class VThermoDevice extends Homey.Device {
     async checkTemp(opts) {
         if (!this._devices) {
             return;
+        }
+
+        if (this.hasCapability('onoff') &&
+          this.getCapabilityValue('onoff') !== true &&
+          !this.getSetting('onoff_enabled')) {
+            this.setCapabilityValue('onoff', true).catch(err => this.log(err));
         }
 
         let device = devicesLib.getDeviceByDeviceId(this.getData().id, this._devices);

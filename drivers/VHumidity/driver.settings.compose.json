@@ -16,6 +16,10 @@
         "label": {
           "en": "Invert for humidifier"
         }
+      },
+      {
+        "$extends": "onoff_enabled",
+        "id": "onoff_enabled"
       }
     ]
   },

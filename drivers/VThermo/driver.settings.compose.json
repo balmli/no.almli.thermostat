@@ -16,6 +16,10 @@
       {
         "$extends": "contact_alarm",
         "id": "contact_alarm"
+      },
+      {
+        "$extends": "onoff_enabled",
+        "id": "onoff_enabled"
       }
     ]
   },

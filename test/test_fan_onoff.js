@@ -6,46 +6,57 @@ const humidityLib = require('../lib/humidity');
 describe("fan resolveOnoff", function () {
     describe("Check invert undefined", function () {
         it("Should turn off", function () {
-            expect(humidityLib.resolveOnoff(10, 20, {hysteresis: 1, invert: undefined})).to.equal(false);
+            const device = devs.getDevice();
+            expect(humidityLib.resolveOnoff(device, 10, 20, {onoff_enabled: true, hysteresis: 1, invert: undefined})).to.equal(false);
         });
         it("Should turn on", function () {
-            expect(humidityLib.resolveOnoff(20, 10, {hysteresis: 1, invert: undefined})).to.equal(true);
+            const device = devs.getDevice();
+            expect(humidityLib.resolveOnoff(device, 20, 10, {onoff_enabled: true, hysteresis: 1, invert: undefined})).to.equal(true);
         });
     });
 
     describe("Check invert false", function () {
         it("Should turn off", function () {
-            expect(humidityLib.resolveOnoff(10, 20, {hysteresis: 1, invert: false})).to.equal(false);
+            const device = devs.getDevice();
+            expect(humidityLib.resolveOnoff(device, 10, 20, {onoff_enabled: true, hysteresis: 1, invert: false})).to.equal(false);
         });
         it("Should turn on", function () {
-            expect(humidityLib.resolveOnoff(20, 10, {hysteresis: 1, invert: false})).to.equal(true);
+            const device = devs.getDevice();
+            expect(humidityLib.resolveOnoff(device, 20, 10, {onoff_enabled: true, hysteresis: 1, invert: false})).to.equal(true);
         });
     });
 
     describe("Check invert true", function () {
         it("Should turn on", function () {
-            expect(humidityLib.resolveOnoff(10, 20, {hysteresis: 1, invert: true})).to.equal(true);
+            const device = devs.getDevice();
+            expect(humidityLib.resolveOnoff(device, 10, 20, {onoff_enabled: true, hysteresis: 1, invert: true})).to.equal(true);
         });
         it("Should turn off", function () {
-            expect(humidityLib.resolveOnoff(20, 10, {hysteresis: 1, invert: true})).to.equal(false);
+            const device = devs.getDevice();
+            expect(humidityLib.resolveOnoff(device, 20, 10, {onoff_enabled: true, hysteresis: 1, invert: true})).to.equal(false);
         });
     });
 
     describe("Check no change", function () {
         it("Equal", function () {
-            expect(humidityLib.resolveOnoff(20, 20, {hysteresis: 1, invert: false})).to.equal(undefined);
+            const device = devs.getDevice();
+            expect(humidityLib.resolveOnoff(device, 20, 20, {onoff_enabled: true, hysteresis: 1, invert: false})).to.equal(undefined);
         });
         it("Less", function () {
-            expect(humidityLib.resolveOnoff(20, 21, {hysteresis: 1, invert: false})).to.equal(undefined);
+            const device = devs.getDevice();
+            expect(humidityLib.resolveOnoff(device, 20, 21, {onoff_enabled: true, hysteresis: 1, invert: false})).to.equal(undefined);
         });
         it("Larger", function () {
-            expect(humidityLib.resolveOnoff(21, 20, {hysteresis: 1, invert: false})).to.equal(undefined);
+            const device = devs.getDevice();
+            expect(humidityLib.resolveOnoff(device, 21, 20, {onoff_enabled: true, hysteresis: 1, invert: false})).to.equal(undefined);
         });
         it("Less", function () {
-            expect(humidityLib.resolveOnoff(20.5, 21, {hysteresis: 0.5, invert: false})).to.equal(undefined);
+            const device = devs.getDevice();
+            expect(humidityLib.resolveOnoff(device, 20.5, 21, {onoff_enabled: true, hysteresis: 0.5, invert: false})).to.equal(undefined);
         });
         it("Larger", function () {
-            expect(humidityLib.resolveOnoff(21, 20.5, {hysteresis: 0.5, invert: false})).to.equal(undefined);
+            const device = devs.getDevice();
+            expect(humidityLib.resolveOnoff(device, 21, 20.5, {onoff_enabled: true, hysteresis: 0.5, invert: false})).to.equal(undefined);
         });
     });
 

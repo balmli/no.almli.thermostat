@@ -1,0 +1,17 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Target humidity"
+  },
+  "desc": {
+    "en": "Target humidity in percent (%)"
+  },
+  "units": {
+    "en": "%"
+  },
+  "insights": false,
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/target.svg"
+}

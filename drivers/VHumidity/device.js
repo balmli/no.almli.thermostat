@@ -15,6 +15,10 @@ class VHumidityDevice extends Homey.Device {
                 await this.addCapability('onoff');
                 await this.setCapabilityValue('onoff', true);
             }
+            if (!this.hasCapability('vh_target_humidity_view')) {
+                await this.addCapability('vh_target_humidity_view');
+                await this.setCapabilityValue('vh_target_humidity_view', this.getCapabilityValue('vh_target_humidity'));
+            }
         } catch (err) {
             this.log('migration failed', err);
         }
@@ -64,7 +68,8 @@ class VHumidityDevice extends Homey.Device {
         new Homey.FlowCardAction('vh_set_target_humidity')
             .register()
             .registerRunListener((args, state) => {
-                args.device.setCapabilityValue('vh_target_humidity', args.vh_target_humidity).catch(console.error);
+                args.device.setCapabilityValue('vh_target_humidity', args.vh_target_humidity).catch(err => args.device.log(err));
+                args.device.setCapabilityValue('vh_target_humidity_view', args.vh_target_humidity).catch(err => args.device.log(err));
                 return this.handleCheckHumidity({ vh_target_humidity: args.vh_target_humidity });
             });
 
@@ -81,6 +86,7 @@ class VHumidityDevice extends Homey.Device {
             this._targetHumidityChangedTrigger.trigger(this, {
                 humidity: value
             });
+            this.setCapabilityValue('vh_target_humidity_view', value).catch(err => this.log(err));
             return this.handleCheckHumidity({ vh_target_humidity: value });
         });
 

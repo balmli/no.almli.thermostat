@@ -13,7 +13,8 @@
     "onoff",
     "vt_onoff",
     "vh_target_humidity",
-    "measure_humidity"
+    "measure_humidity",
+    "vh_target_humidity_view"
   ],
   "capabilitiesOptions": {
     "vt_onoff": {

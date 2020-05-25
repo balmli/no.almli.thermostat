@@ -59,6 +59,7 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 - Added setting to disable switching devices off.
 - Added on / off capability for VHumidity.
+- Added view for the target humidity for VHumidity.
 
 #### 1.1.20
 

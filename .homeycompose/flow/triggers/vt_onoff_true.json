@@ -1,0 +1,23 @@
+{
+  "id": "vt_onoff_true",
+  "title": {
+    "en": "Thermostat turned on"
+  },
+  "tokens": [
+    {
+      "name": "state",
+      "type": "number",
+      "title": {
+        "en": "State"
+      },
+      "example": 1
+    }
+  ],
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "thermostat",
+  "type": "checkbox",
+  "label": {
+    "en": "Temperature from thermostat"
+  },
+  "value": false,
+  "hint": {
+    "en": "Select this if you want to use thermostats in the same zone as temperature sensors."
+  }
+}

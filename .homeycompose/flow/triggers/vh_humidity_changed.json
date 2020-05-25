@@ -1,0 +1,23 @@
+{
+  "id": "vh_humidity_changed",
+  "title": {
+    "en": "Humidity changed"
+  },
+  "tokens": [
+    {
+      "name": "humidity",
+      "type": "number",
+      "title": {
+        "en": "Humidity"
+      },
+      "example": 35
+    }
+  ],
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VHumidity"
+    }
+  ]
+}

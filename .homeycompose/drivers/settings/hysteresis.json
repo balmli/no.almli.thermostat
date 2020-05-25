@@ -1,0 +1,8 @@
+{
+  "id": "hysteresis",
+  "type": "number",
+  "label": {
+    "en": "Hysteresis"
+  },
+  "value": 0.5
+}

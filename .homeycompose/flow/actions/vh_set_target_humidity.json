@@ -1,0 +1,28 @@
+{
+  "id": "vh_set_target_humidity",
+  "title": {
+    "en": "Set the target humidity"
+  },
+  "hint": {
+    "en": "Set the target humidity"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=VHumidity"
+    },
+    {
+      "name": "vh_target_humidity",
+      "title": {
+        "en": "Target humidity"
+      },
+      "type": "range",
+      "min": 1,
+      "max": 90,
+      "step": 1,
+      "label": "%",
+      "labelDecimals": 0
+    }
+  ]
+}

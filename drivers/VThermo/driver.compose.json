@@ -1,0 +1,48 @@
+{
+  "id": "VThermo",
+  "name": {
+    "en": "VThermo"
+  },
+  "icon": "{{driverAssetsPath}}/icon.svg",
+  "images": {
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "small": "{{driverAssetsPath}}/images/small.png"
+  },
+  "class": "thermostat",
+  "capabilities": [
+    "onoff",
+    "vt_onoff",
+    "target_temperature",
+    "measure_temperature"
+  ],
+  "capabilitiesOptions": {
+    "vt_onoff": {
+      "greyout": true,
+      "titleTrue": {
+        "en": "Active"
+      },
+      "titleFalse": {
+        "en": "Idle"
+      }
+    },
+    "target_temperature": {
+      "decimals": 1,
+      "min": 1,
+      "max": 40,
+      "step": 0.5
+    }
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_my_devices"
+      }
+    },
+    {
+      "id": "add_my_devices",
+      "template": "add_devices"
+    }
+  ]
+}

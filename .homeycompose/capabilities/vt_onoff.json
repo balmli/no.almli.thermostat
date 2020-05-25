@@ -1,0 +1,22 @@
+{
+  "type": "boolean",
+  "icon": "/drivers/VThermo/assets/images/onoff.svg",
+  "noblink": false,
+  "greyout": true,
+  "label": {
+    "true": {
+      "en": "Active"
+    },
+    "false": {
+      "en": "Idle"
+    }
+  },
+  "title": {
+    "en": "State"
+  },
+  "desc": {
+    "en": "State of the device"
+  },
+  "getable": true,
+  "setable": false
+}

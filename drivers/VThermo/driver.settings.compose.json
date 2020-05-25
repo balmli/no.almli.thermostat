@@ -1,0 +1,46 @@
+[
+  {
+    "type": "group",
+    "label": {
+      "en": "General settings"
+    },
+    "children": [
+      {
+        "$extends": "hysteresis",
+        "id": "hysteresis"
+      },
+      {
+        "$extends": "invert",
+        "id": "invert"
+      },
+      {
+        "$extends": "contact_alarm",
+        "id": "contact_alarm"
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "Sensors"
+    },
+    "children": [
+      {
+        "$extends": "thermostat",
+        "id": "thermostat"
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "Timing"
+    },
+    "children": [
+      {
+        "$extends": "device_delay",
+        "id": "device_delay"
+      }
+    ]
+  }
+]

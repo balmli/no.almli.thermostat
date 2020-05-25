@@ -1,0 +1,54 @@
+{
+  "id": "no.almli.thermostat",
+  "version": "1.1.21",
+  "compatibility": ">=2.0.0",
+  "sdk": 2,
+  "name": {
+    "en": "VThermo"
+  },
+  "description": {
+    "en": "Virtual thermostat and humidity controller"
+  },
+  "category": [
+    "tools"
+  ],
+  "tags": {
+    "en": [
+      "thermostat",
+      "temperature control",
+      "heating",
+      "virtual",
+      "humidity"
+    ]
+  },
+  "images": {
+    "large": "/assets/images/large.png",
+    "small": "/assets/images/small.png"
+  },
+  "permissions": [
+    "homey:manager:api"
+  ],
+  "author": {
+    "name": "Bjørnar Almli",
+    "email": "bjornar.almli@gmail.com"
+  },
+  "contributors": {
+    "developers": [
+      {
+        "name": "Bjørnar Almli",
+        "email": "bjornar.almli@gmail.com"
+      }
+    ]
+  },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "bjornaralmli"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/balmli/no.almli.thermostat/issues"
+  },
+  "source": "https://github.com/balmli/no.almli.thermostat"
+}

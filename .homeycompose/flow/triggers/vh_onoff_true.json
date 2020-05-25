@@ -1,0 +1,23 @@
+{
+  "id": "vh_onoff_true",
+  "title": {
+    "en": "Humidity device turned on"
+  },
+  "tokens": [
+    {
+      "name": "state",
+      "type": "number",
+      "title": {
+        "en": "State"
+      },
+      "example": 1
+    }
+  ],
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VHumidity"
+    }
+  ]
+}

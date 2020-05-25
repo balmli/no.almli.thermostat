@@ -1,0 +1,16 @@
+{
+  "id": "device_delay",
+  "type": "number",
+  "min": 0,
+  "max": 5000,
+  "units": {
+    "en": "ms"
+  },
+  "label": {
+    "en": "Delay in milliseconds between switching devices"
+  },
+  "value": 0,
+  "hint": {
+    "en": "You can add a delay after each device has been switched on / off."
+  }
+}

@@ -2,10 +2,10 @@
   "id": "target_zone_to_other",
   "type": "checkbox",
   "label": {
-    "en": "To other thermostat"
+    "en": "Update other thermostats"
   },
   "value": false,
   "hint": {
-    "en": "Update target temperature from this VThermo to another thermostat in the same zone."
+    "en": "Update target temperature to other thermostats (not VThermos) in the same zone."
   }
 }

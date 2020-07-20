@@ -5,6 +5,7 @@ const { HomeyAPI } = require('athom-api');
 const DeviceHandler = require('./lib/DeviceHandler');
 const VThermoHandler = require('./lib/VThermoHandler');
 const VHumidityHandler = require('./lib/VHumidityHandler');
+const constants = require('./lib/constants');
 const util = require('./lib/util');
 
 module.exports = class VThermoApp extends Homey.App {
@@ -129,9 +130,9 @@ module.exports = class VThermoApp extends Homey.App {
 
     async registerDriver(driver) {
         const driverManifest = driver.getManifest();
-        if (driverManifest.id === 'VThermo') {
+        if (driverManifest.id === constants.DRIVER_VTHERMO) {
             await this.getVThermoHandler().registerDriver(driver);
-        } else if (driverManifest.id === 'VHumidity') {
+        } else if (driverManifest.id === constants.DRIVER_VHUMIDITY) {
             await this.getVHumidityHandler().registerDriver(driver);
         }
     }
@@ -139,9 +140,9 @@ module.exports = class VThermoApp extends Homey.App {
     async refreshDevice(device, opts) {
         const driver = device.getDriver();
         const driverManifest = driver.getManifest();
-        if (driverManifest.id === 'VThermo') {
+        if (driverManifest.id === constants.DRIVER_VTHERMO) {
             await this.getVThermoHandler().refreshDevice(device, opts);
-        } else if (driverManifest.id === 'VHumidity') {
+        } else if (driverManifest.id === constants.DRIVER_VHUMIDITY) {
             await this.getVThermoHandler().refreshDevice(device, opts);
         }
     }

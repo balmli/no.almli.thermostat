@@ -20,6 +20,7 @@ Use a door/window sensor in the same zone to automatically turn off the heater o
 #### Actions
 
 - Set the target temperature.
+- Turn on / off.
 
 ## Device: VHumidity
 
@@ -43,6 +44,7 @@ Fans will turn on if the humidity is larger than the target humidity, and off if
 #### Actions
 
 - Set the target humidity.
+- Turn on / off.
 
 ## Acknowledgements:
 
@@ -54,6 +56,13 @@ Development has been supported by:
 Please report issues at the [issues section on Github](https://github.com/balmli/no.almli.thermostat/issues).
 
 ## Release Notes:
+
+#### 1.2.0
+
+- Added support for master thermostats, e.g. update target temperatures on other thermostats.
+- Added support for temperatures from other zones. 
+- Added calculation methods for temperature and humidity (average, minimum, maximum).
+- Reduced memory consumption.
 
 #### 1.1.21
 

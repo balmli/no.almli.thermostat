@@ -1,0 +1,11 @@
+{
+  "id": "parent_vthermo",
+  "type": "checkbox",
+  "label": {
+    "en": "Other VThermos"
+  },
+  "value": false,
+  "hint": {
+    "en": "Other VThermos in the parent zone."
+  }
+}

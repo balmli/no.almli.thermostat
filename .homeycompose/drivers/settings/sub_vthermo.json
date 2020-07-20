@@ -1,0 +1,11 @@
+{
+  "id": "sub_vthermo",
+  "type": "checkbox",
+  "label": {
+    "en": "Other VThermos"
+  },
+  "value": false,
+  "hint": {
+    "en": "Other VThermos in sub zones (one level down)."
+  }
+}

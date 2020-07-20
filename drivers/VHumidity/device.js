@@ -18,8 +18,6 @@ module.exports = class VHumidityDevice extends BaseDevice {
             this.setCapabilityValue('vh_target_humidity_view', value).catch(err => this.log(err));
             return Promise.resolve();
         });
-
-        this.log('onInit: end');
     }
 
     async migrate() {

@@ -630,6 +630,17 @@
                   }
                 },
                 {
+                  "id": "parent_vthermo",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Other VThermos"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Other VThermos in the parent zone."
+                  }
+                },
+                {
                   "id": "parent_other",
                   "type": "checkbox",
                   "label": {
@@ -668,6 +679,17 @@
                   "value": false,
                   "hint": {
                     "en": "Other thermostats with temperature sensors in sub zones (one level down)."
+                  }
+                },
+                {
+                  "id": "sub_vthermo",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Other VThermos"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Other VThermos in sub zones (one level down)."
                   }
                 },
                 {
@@ -749,17 +771,6 @@
               },
               "children": [
                 {
-                  "id": "target_zone_to_other",
-                  "type": "checkbox",
-                  "label": {
-                    "en": "To other thermostat"
-                  },
-                  "value": false,
-                  "hint": {
-                    "en": "Update target temperature from this VThermo to another thermostat in the same zone."
-                  }
-                },
-                {
                   "id": "target_zone_from_other",
                   "type": "checkbox",
                   "label": {
@@ -768,6 +779,17 @@
                   "value": false,
                   "hint": {
                     "en": "Update target temperature from another thermostat to this VThermo in the same zone."
+                  }
+                },
+                {
+                  "id": "target_zone_to_other",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Update other thermostats"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Update target temperature to other thermostats (not VThermos) in the same zone."
                   }
                 }
               ]

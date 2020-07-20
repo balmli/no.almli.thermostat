@@ -44,6 +44,10 @@
             "id": "parent_thermostat"
           },
           {
+            "$extends": "parent_vthermo",
+            "id": "parent_vthermo"
+          },
+          {
             "$extends": "parent_other",
             "id": "parent_other"
           }
@@ -62,6 +66,10 @@
           {
             "$extends": "sub_thermostat",
             "id": "sub_thermostat"
+          },
+          {
+            "$extends": "sub_vthermo",
+            "id": "sub_vthermo"
           },
           {
             "$extends": "sub_other",
@@ -96,12 +104,12 @@
         },
         "children": [
           {
-            "$extends": "target_zone_to_other",
-            "id": "target_zone_to_other"
-          },
-          {
             "$extends": "target_zone_from_other",
             "id": "target_zone_from_other"
+          },
+          {
+            "$extends": "target_zone_to_other",
+            "id": "target_zone_to_other"
           }
         ]
       },

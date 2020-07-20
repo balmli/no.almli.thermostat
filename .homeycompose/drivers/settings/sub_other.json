@@ -1,0 +1,11 @@
+{
+  "id": "sub_other",
+  "type": "checkbox",
+  "label": {
+    "en": "Other devices"
+  },
+  "value": false,
+  "hint": {
+    "en": "Other devices with temperature sensors in sub zones (one level down)."
+  }
+}

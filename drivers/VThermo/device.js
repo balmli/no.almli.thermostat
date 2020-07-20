@@ -1,120 +1,82 @@
 'use strict';
 
-const Homey = require('homey'),
-    devicesLib = require('../../lib/devices'),
-    temperatureLib = require('../../lib/temperature');
+const Homey = require('homey');
+const BaseDevice = require('../../lib/BaseDevice');
 
-class VThermoDevice extends Homey.Device {
+module.exports = class VThermoDevice extends BaseDevice {
 
     async onInit() {
-        this.log('virtual device initialized');
+        await this.migrate();
+        this.log('onInit: end');
+    }
 
-        this._turnedOnTrigger = new Homey.FlowCardTriggerDevice('vt_onoff_true');
-        this._turnedOnTrigger
-            .register();
-
-        this._turnedOffTrigger = new Homey.FlowCardTriggerDevice('vt_onoff_false');
-        this._turnedOffTrigger
-            .register();
-
-        new Homey.FlowCardCondition('vt_onoff_is_on')
-            .register()
-            .registerRunListener((args, state) => args.device.getCapabilityValue('vt_onoff'));
-
-        if (this.hasCapability('onoff')) {
-            this.registerCapabilityListener('onoff', async (value, opts) => {
-                if (!this.getSetting('onoff_enabled')) {
-                    throw new Error('Switching the device off has been disabled');
-                }
-                return this.handleCheckTemp({ onoff: value });
-            });
+    async migrate() {
+        try {
+            if (!this.hasCapability('onoff')) {
+                await this.addCapability('onoff');
+                await this.setCapabilityValue('onoff', true);
+            }
+        } catch (err) {
+            this.log('migration failed', err);
         }
-
-        this.registerCapabilityListener('target_temperature', async (value, opts) => {
-            return this.handleCheckTemp({ target_temperature: value });
-        });
-
-        this.checkAvailable();
     }
 
     async onAdded() {
-        this.log('virtual device added:', this.getData().id);
         await this.setCapabilityValue('onoff', true);
-    }
-
-    onDeleted() {
-        this.clearCheckAvailable();
-        this.log('virtual device deleted');
     }
 
     onSettings(oldSettingsObj, newSettingsObj, changedKeysArr, callback) {
         if (changedKeysArr.includes('onoff_enabled') &&
-          !newSettingsObj.onoff_enabled &&
-          this.hasCapability('onoff') &&
-          this.getCapabilityValue('onoff') !== true) {
+            !newSettingsObj.onoff_enabled &&
+            this.getCapabilityValue('onoff') !== true) {
             this.setCapabilityValue('onoff', true).catch(err => this.log(err));
         }
+        setTimeout(() => {
+            Homey.app.refreshDevice(this);
+        }, 1000);
         callback(null, true);
     }
 
-    clearCheckAvailable() {
-        if (this.curCheckAvailableTimeout) {
-            clearTimeout(this.curCheckAvailableTimeout);
-            this.curCheckAvailableTimeout = undefined;
-        }
+    getTemperatureSettings() {
+        const settings = this.getSettings();
+        return {
+            calcMethod: settings.calc_method,
+            zone: {
+                sensor: settings.zone_sensors,
+                thermostat: settings.thermostat,
+                other: settings.zone_other
+            },
+            parent: {
+                sensor: settings.parent_sensors,
+                thermostat: settings.parent_thermostat,
+                other: settings.parent_other
+            },
+            children: {
+                sensor: settings.sub_sensors,
+                thermostat: settings.sub_thermostat,
+                other: settings.sub_other
+            }
+        };
     }
 
-    scheduleCheckAvailable() {
-        this.clearCheckAvailable();
-        this.curCheckAvailableTimeout = setTimeout(this.checkAvailable.bind(this), 180000);
+    getTargetSettings() {
+        const settings = this.getSettings();
+        return {
+            offset: settings.target_diff_temp,
+            min: settings.target_min_temp,
+            max: settings.target_max_temp,
+            zone: {
+                other: settings.target_zone_to_other,
+                from_other: settings.target_zone_from_other
+            },
+            sub_zones: {
+                vthermo: settings.target_sub_zones_to_vthermo,
+                other: settings.target_sub_zones_to_other
+            },
+            all_sub_zones: {
+                vthermo: settings.target_all_sub_zones_to_vthermo,
+                other: settings.target_all_sub_zones_to_other
+            }
+        };
     }
-
-    async checkAvailable() {
-        if (this.getAvailable() !== true) {
-            this.log(`checkAvailable: ${this.getAvailable()}`);
-        }
-        await this.setAvailable();
-        this.scheduleCheckAvailable();
-    }
-
-    async handleCheckTemp(opts) {
-        this._devices = await devicesLib.getDevices(this);
-        await this.checkTemp(opts);
-    }
-
-    async checkTemp(opts) {
-        if (!this._devices) {
-            return;
-        }
-
-        if (this.hasCapability('onoff') &&
-          this.getCapabilityValue('onoff') !== true &&
-          !this.getSetting('onoff_enabled')) {
-            this.setCapabilityValue('onoff', true).catch(err => this.log(err));
-        }
-
-        let device = devicesLib.getDeviceByDeviceId(this.getData().id, this._devices);
-        if (!device) {
-            return;
-        }
-        let zoneId = device.zone;
-
-        let temperature = await temperatureLib.findTemperature(this, zoneId, this._devices, this.getSettings());
-        if (temperature === undefined || temperature === null) {
-            return;
-        }
-
-        let targetTemp = temperatureLib.findTargetTemperature(this, opts);
-        if (targetTemp === undefined || targetTemp === null) {
-            return;
-        }
-
-        let contactAlarm = temperatureLib.hasContactAlarm(this, zoneId, this._devices, this.getSettings());
-        let onoff = temperatureLib.resolveOnoff(this, temperature, targetTemp, this.getSettings(), opts, contactAlarm);
-
-        await temperatureLib.switchHeaterDevices(this, zoneId, this._devices, onoff, this.getSettings());
-    }
-
-}
-
-module.exports = VThermoDevice;
+};

@@ -1,0 +1,11 @@
+{
+  "id": "target_all_sub_zones_to_vthermo",
+  "type": "checkbox",
+  "label": {
+    "en": "Update other VThermos"
+  },
+  "value": false,
+  "hint": {
+    "en": "Update target temperature to other VThermos in all sub zones (all levels down)."
+  }
+}

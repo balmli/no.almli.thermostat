@@ -1,0 +1,11 @@
+{
+  "id": "target_zone_from_other",
+  "type": "checkbox",
+  "label": {
+    "en": "From other thermostat"
+  },
+  "value": false,
+  "hint": {
+    "en": "Update target temperature from another thermostat to this VThermo in the same zone."
+  }
+}

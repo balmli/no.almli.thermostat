@@ -1,0 +1,11 @@
+{
+  "id": "parent_sensors",
+  "type": "checkbox",
+  "label": {
+    "en": "Temperature sensors"
+  },
+  "value": false,
+  "hint": {
+    "en": "Standard temperature sensors in the parent zone."
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "target_sub_zones_to_other",
+  "type": "checkbox",
+  "label": {
+    "en": "Update other thermostats"
+  },
+  "value": false,
+  "hint": {
+    "en": "Update target temperature to other thermostats (not VThermos) in sub zones (one level down)."
+  }
+}

@@ -2,6 +2,18 @@
   {
     "type": "group",
     "label": {
+      "en": "Humidity"
+    },
+    "children": [
+      {
+        "$extends": "calc_method_humidity",
+        "id": "calc_method_humidity"
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
       "en": "General settings"
     },
     "children": [

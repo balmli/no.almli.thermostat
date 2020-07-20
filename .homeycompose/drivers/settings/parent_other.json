@@ -1,0 +1,11 @@
+{
+  "id": "parent_other",
+  "type": "checkbox",
+  "label": {
+    "en": "Other devices"
+  },
+  "value": false,
+  "hint": {
+    "en": "Other devices with temperature sensors in the parent zone."
+  }
+}

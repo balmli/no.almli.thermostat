@@ -2,6 +2,158 @@
   {
     "type": "group",
     "label": {
+      "en": "Temperature"
+    },
+    "children": [
+      {
+        "$extends": "calc_method",
+        "id": "calc_method"
+      },
+      {
+        "type": "group",
+        "label": {
+          "en": "Temperature sensors in the same zone"
+        },
+        "children": [
+          {
+            "$extends": "zone_sensors",
+            "id": "zone_sensors"
+          },
+          {
+            "$extends": "thermostat",
+            "id": "thermostat"
+          },
+          {
+            "$extends": "zone_other",
+            "id": "zone_other"
+          }
+        ]
+      },
+      {
+        "type": "group",
+        "label": {
+          "en": "Temperature from parent zone"
+        },
+        "children": [
+          {
+            "$extends": "parent_sensors",
+            "id": "parent_sensors"
+          },
+          {
+            "$extends": "parent_thermostat",
+            "id": "parent_thermostat"
+          },
+          {
+            "$extends": "parent_other",
+            "id": "parent_other"
+          }
+        ]
+      },
+      {
+        "type": "group",
+        "label": {
+          "en": "Temperature from sub zones (one level)"
+        },
+        "children": [
+          {
+            "$extends": "sub_sensors",
+            "id": "sub_sensors"
+          },
+          {
+            "$extends": "sub_thermostat",
+            "id": "sub_thermostat"
+          },
+          {
+            "$extends": "sub_other",
+            "id": "sub_other"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "Target temperature"
+    },
+    "children": [
+      {
+        "$extends": "target_diff_temp",
+        "id": "target_diff_temp"
+      },
+      {
+        "$extends": "target_min_temp",
+        "id": "target_min_temp"
+      },
+      {
+        "$extends": "target_max_temp",
+        "id": "target_max_temp"
+      },
+      {
+        "type": "group",
+        "label": {
+          "en": "Target temperature in the same zone"
+        },
+        "children": [
+          {
+            "$extends": "target_zone_to_other",
+            "id": "target_zone_to_other"
+          },
+          {
+            "$extends": "target_zone_from_other",
+            "id": "target_zone_from_other"
+          }
+        ]
+      },
+      {
+        "type": "group",
+        "label": {
+          "en": "Target temperature to sub zones (one level)"
+        },
+        "children": [
+          {
+            "$extends": "target_sub_zones_to_vthermo",
+            "id": "target_sub_zones_to_vthermo"
+          },
+          {
+            "$extends": "target_sub_zones_to_other",
+            "id": "target_sub_zones_to_other"
+          }
+        ]
+      },
+      {
+        "type": "group",
+        "label": {
+          "en": "Target temperature to sub zones (all levels)"
+        },
+        "children": [
+          {
+            "$extends": "target_all_sub_zones_to_vthermo",
+            "id": "target_all_sub_zones_to_vthermo"
+          },
+          {
+            "$extends": "target_all_sub_zones_to_other",
+            "id": "target_all_sub_zones_to_other"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "Contact alarm"
+    },
+    "children": [
+      {
+        "$extends": "contact_alarm",
+        "id": "contact_alarm"
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
       "en": "General settings"
     },
     "children": [
@@ -14,24 +166,8 @@
         "id": "invert"
       },
       {
-        "$extends": "contact_alarm",
-        "id": "contact_alarm"
-      },
-      {
         "$extends": "onoff_enabled",
         "id": "onoff_enabled"
-      }
-    ]
-  },
-  {
-    "type": "group",
-    "label": {
-      "en": "Sensors"
-    },
-    "children": [
-      {
-        "$extends": "thermostat",
-        "id": "thermostat"
       }
     ]
   },

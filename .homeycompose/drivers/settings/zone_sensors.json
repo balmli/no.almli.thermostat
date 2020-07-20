@@ -1,0 +1,11 @@
+{
+  "id": "zone_sensors",
+  "type": "checkbox",
+  "label": {
+    "en": "Temperature sensors"
+  },
+  "value": true,
+  "hint": {
+    "en": "Standard temperature sensors in the same zone."
+  }
+}

@@ -1,13 +1,12 @@
 'use strict';
 
-const Homey = require('homey'),
-    devicesLib = require('../../lib/devices');
+const Homey = require('homey');
+const math = require('../../lib/math');
 
-class VThermoDriver extends Homey.Driver {
+module.exports = class VThermoDriver extends Homey.Driver {
 
     onInit() {
-        this.log('VThermo driver has been initialized');
-        this.checkDevices();
+        Homey.app.registerDriver(this);
     }
 
     onPairListDevices(data, callback) {
@@ -15,48 +14,12 @@ class VThermoDriver extends Homey.Driver {
             {
                 "name": "VThermo",
                 "data": {
-                    "id": guid()
+                    "id": math.guid()
                 }
             }
         ];
         callback(null, devices);
     }
 
-    clearCheckDevices() {
-        if (this.curTimeout) {
-            clearTimeout(this.curTimeout);
-            this.curTimeout = undefined;
-        }
-    }
+};
 
-    scheduleCheckDevices(seconds = 60) {
-        this.clearCheckDevices();
-        this.curTimeout = setTimeout(this.checkDevices.bind(this), seconds * 1000);
-    }
-
-    async checkDevices() {
-        try {
-            this.clearCheckDevices();
-            let allDevices = await devicesLib.getDevices(this);
-            for (let device of this.getDevices()) {
-                device._devices = allDevices;
-                await device.checkTemp();
-            }
-        } catch (err) {
-            this.log('checkDevices', err);
-        } finally {
-            this.scheduleCheckDevices();
-        }
-    }
-
-}
-
-module.exports = VThermoDriver;
-
-function guid() {
-    function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-    }
-
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-}

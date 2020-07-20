@@ -1,0 +1,31 @@
+{
+  "id": "calc_method",
+  "type": "dropdown",
+  "label": {
+    "en": "Temperature calculation method"
+  },
+  "value": "AVERAGE",
+  "values": [
+    {
+      "id": "AVERAGE",
+      "label": {
+        "en": "Average"
+      }
+    },
+    {
+      "id": "MIN",
+      "label": {
+        "en": "Minimum"
+      }
+    },
+    {
+      "id": "MAX",
+      "label": {
+        "en": "Maximum"
+      }
+    }
+  ],
+  "hint": {
+    "en": "Method for calculating the temperature if there are several temperature sensors."
+  }
+}

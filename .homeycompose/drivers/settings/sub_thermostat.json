@@ -1,0 +1,11 @@
+{
+  "id": "sub_thermostat",
+  "type": "checkbox",
+  "label": {
+    "en": "Other thermostats"
+  },
+  "value": false,
+  "hint": {
+    "en": "Other thermostats with temperature sensors in sub zones (one level down)."
+  }
+}

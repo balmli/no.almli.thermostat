@@ -1,0 +1,11 @@
+{
+  "id": "sub_sensors",
+  "type": "checkbox",
+  "label": {
+    "en": "Temperature sensors"
+  },
+  "value": false,
+  "hint": {
+    "en": "Standard temperature sensors in sub zones (one level down)."
+  }
+}

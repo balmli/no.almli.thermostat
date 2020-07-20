@@ -1,11 +1,11 @@
 {
-  "id": "thermostat",
+  "id": "parent_thermostat",
   "type": "checkbox",
   "label": {
     "en": "Other thermostats"
   },
   "value": false,
   "hint": {
-    "en": "Other thermostats with temperature sensors in the same zone."
+    "en": "Other thermostats with temperature sensors in the parent zone."
   }
 }

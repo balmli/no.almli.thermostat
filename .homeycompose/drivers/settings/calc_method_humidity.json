@@ -1,0 +1,31 @@
+{
+  "id": "calc_method_humidity",
+  "type": "dropdown",
+  "label": {
+    "en": "Humidity calculation method"
+  },
+  "value": "AVERAGE",
+  "values": [
+    {
+      "id": "AVERAGE",
+      "label": {
+        "en": "Average"
+      }
+    },
+    {
+      "id": "MIN",
+      "label": {
+        "en": "Minimum"
+      }
+    },
+    {
+      "id": "MAX",
+      "label": {
+        "en": "Maximum"
+      }
+    }
+  ],
+  "hint": {
+    "en": "Method for calculating the humidity if there are several humidity sensors."
+  }
+}

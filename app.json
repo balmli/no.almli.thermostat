@@ -1,6 +1,6 @@
 {
   "id": "no.almli.thermostat",
-  "version": "1.1.21",
+  "version": "1.2.0",
   "compatibility": ">=2.0.0",
   "sdk": 2,
   "name": {
@@ -378,6 +378,45 @@
         {
           "type": "group",
           "label": {
+            "en": "Humidity"
+          },
+          "children": [
+            {
+              "id": "calc_method_humidity",
+              "type": "dropdown",
+              "label": {
+                "en": "Humidity calculation method"
+              },
+              "value": "AVERAGE",
+              "values": [
+                {
+                  "id": "AVERAGE",
+                  "label": {
+                    "en": "Average"
+                  }
+                },
+                {
+                  "id": "MIN",
+                  "label": {
+                    "en": "Minimum"
+                  }
+                },
+                {
+                  "id": "MAX",
+                  "label": {
+                    "en": "Maximum"
+                  }
+                }
+              ],
+              "hint": {
+                "en": "Method for calculating the humidity if there are several humidity sensors."
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
             "en": "General settings"
           },
           "children": [
@@ -487,6 +526,333 @@
         {
           "type": "group",
           "label": {
+            "en": "Temperature"
+          },
+          "children": [
+            {
+              "id": "calc_method",
+              "type": "dropdown",
+              "label": {
+                "en": "Temperature calculation method"
+              },
+              "value": "AVERAGE",
+              "values": [
+                {
+                  "id": "AVERAGE",
+                  "label": {
+                    "en": "Average"
+                  }
+                },
+                {
+                  "id": "MIN",
+                  "label": {
+                    "en": "Minimum"
+                  }
+                },
+                {
+                  "id": "MAX",
+                  "label": {
+                    "en": "Maximum"
+                  }
+                }
+              ],
+              "hint": {
+                "en": "Method for calculating the temperature if there are several temperature sensors."
+              }
+            },
+            {
+              "type": "group",
+              "label": {
+                "en": "Temperature sensors in the same zone"
+              },
+              "children": [
+                {
+                  "id": "zone_sensors",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Temperature sensors"
+                  },
+                  "value": true,
+                  "hint": {
+                    "en": "Standard temperature sensors in the same zone."
+                  }
+                },
+                {
+                  "id": "thermostat",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Other thermostats"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Other thermostats with temperature sensors in the same zone."
+                  }
+                },
+                {
+                  "id": "zone_other",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Other devices"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Other devices with temperature sensors in the same zone."
+                  }
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "label": {
+                "en": "Temperature from parent zone"
+              },
+              "children": [
+                {
+                  "id": "parent_sensors",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Temperature sensors"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Standard temperature sensors in the parent zone."
+                  }
+                },
+                {
+                  "id": "parent_thermostat",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Other thermostats"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Other thermostats with temperature sensors in the parent zone."
+                  }
+                },
+                {
+                  "id": "parent_other",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Other devices"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Other devices with temperature sensors in the parent zone."
+                  }
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "label": {
+                "en": "Temperature from sub zones (one level)"
+              },
+              "children": [
+                {
+                  "id": "sub_sensors",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Temperature sensors"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Standard temperature sensors in sub zones (one level down)."
+                  }
+                },
+                {
+                  "id": "sub_thermostat",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Other thermostats"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Other thermostats with temperature sensors in sub zones (one level down)."
+                  }
+                },
+                {
+                  "id": "sub_other",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Other devices"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Other devices with temperature sensors in sub zones (one level down)."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Target temperature"
+          },
+          "children": [
+            {
+              "id": "target_diff_temp",
+              "type": "number",
+              "label": {
+                "en": "Target temperature offset (°C)"
+              },
+              "hint": {
+                "en": "Offset when target temperature is updated from another VThermo"
+              },
+              "value": 0,
+              "min": -30,
+              "max": 30,
+              "step": 0.5,
+              "units": {
+                "en": "°C"
+              }
+            },
+            {
+              "id": "target_min_temp",
+              "type": "number",
+              "label": {
+                "en": "Minimum target temperature"
+              },
+              "hint": {
+                "en": "Minimum target temperature when target temperature is updated from another VThermo"
+              },
+              "value": 1,
+              "min": 1,
+              "max": 40,
+              "step": 0.5,
+              "units": {
+                "en": "°C"
+              }
+            },
+            {
+              "id": "target_max_temp",
+              "type": "number",
+              "label": {
+                "en": "Maximum target temperature"
+              },
+              "hint": {
+                "en": "Maximum target temperature when target temperature is updated from another VThermo"
+              },
+              "value": 40,
+              "min": 1,
+              "max": 40,
+              "step": 0.5,
+              "units": {
+                "en": "°C"
+              }
+            },
+            {
+              "type": "group",
+              "label": {
+                "en": "Target temperature in the same zone"
+              },
+              "children": [
+                {
+                  "id": "target_zone_to_other",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "To other thermostat"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Update target temperature from this VThermo to another thermostat in the same zone."
+                  }
+                },
+                {
+                  "id": "target_zone_from_other",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "From other thermostat"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Update target temperature from another thermostat to this VThermo in the same zone."
+                  }
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "label": {
+                "en": "Target temperature to sub zones (one level)"
+              },
+              "children": [
+                {
+                  "id": "target_sub_zones_to_vthermo",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Update other VThermos"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Update target temperature to other VThermos in sub zones (one level down)."
+                  }
+                },
+                {
+                  "id": "target_sub_zones_to_other",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Update other thermostats"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Update target temperature to other thermostats (not VThermos) in sub zones (one level down)."
+                  }
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "label": {
+                "en": "Target temperature to sub zones (all levels)"
+              },
+              "children": [
+                {
+                  "id": "target_all_sub_zones_to_vthermo",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Update other VThermos"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Update target temperature to other VThermos in all sub zones (all levels down)."
+                  }
+                },
+                {
+                  "id": "target_all_sub_zones_to_other",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Update other thermostats"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Update target temperature to other thermostats (not VThermos) in all sub zones (all levels down)."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Contact alarm"
+          },
+          "children": [
+            {
+              "id": "contact_alarm",
+              "type": "checkbox",
+              "label": {
+                "en": "Turn off if contact alarm"
+              },
+              "value": false
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
             "en": "General settings"
           },
           "children": [
@@ -507,14 +873,6 @@
               "value": false
             },
             {
-              "id": "contact_alarm",
-              "type": "checkbox",
-              "label": {
-                "en": "Turn off if contact alarm"
-              },
-              "value": false
-            },
-            {
               "id": "onoff_enabled",
               "type": "checkbox",
               "label": {
@@ -523,25 +881,6 @@
               "value": true,
               "hint": {
                 "en": "By unchecking this switch, the device cannot be turned off."
-              }
-            }
-          ]
-        },
-        {
-          "type": "group",
-          "label": {
-            "en": "Sensors"
-          },
-          "children": [
-            {
-              "id": "thermostat",
-              "type": "checkbox",
-              "label": {
-                "en": "Temperature from thermostat"
-              },
-              "value": false,
-              "hint": {
-                "en": "Select this if you want to use thermostats in the same zone as temperature sensors."
               }
             }
           ]

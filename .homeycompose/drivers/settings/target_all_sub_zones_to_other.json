@@ -6,6 +6,6 @@
   },
   "value": false,
   "hint": {
-    "en": "Update target temperature to other thermostats (not VThermos) in all sub zones (all levels down)."
+    "en": "Update target temperature of other thermostats (not VThermos) in all sub zones (all levels down)."
   }
 }

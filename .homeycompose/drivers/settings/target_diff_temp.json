@@ -5,7 +5,7 @@
     "en": "Target temperature offset (°C)"
   },
   "hint": {
-    "en": "Offset when target temperature is updated from another VThermo"
+    "en": "Offset when target temperature is updated from a master VThermo - thermostat"
   },
   "value": 0,
   "min": -30,

@@ -45,9 +45,6 @@ module.exports = class VThermoApp extends Homey.App {
             .register()
             .registerRunListener((args, state) => args.device.getCapabilityValue('vt_onoff'));
 
-        this._humidityChangedTrigger = new Homey.FlowCardTriggerDevice('vh_humidity_changed');
-        await this._humidityChangedTrigger.register();
-
         this._targetHumidityChangedTrigger = new Homey.FlowCardTriggerDevice('vh_target_humidity_changed');
         await this._targetHumidityChangedTrigger.register();
 

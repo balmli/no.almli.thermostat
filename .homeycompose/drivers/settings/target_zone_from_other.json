@@ -6,6 +6,6 @@
   },
   "value": false,
   "hint": {
-    "en": "Update target temperature from another thermostat to this VThermo in the same zone."
+    "en": "Update target temperature on this VThermo from another thermostat in the same zone."
   }
 }

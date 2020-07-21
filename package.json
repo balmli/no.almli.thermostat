@@ -3,20 +3,10 @@
   "version": "1.2.0",
   "description": "Virtual thermostat",
   "main": "app.js",
-  "scripts": {
-    "pretest": "eslint --ignore-path .gitignore app.js drivers lib test",
-    "test": "./node_modules/.bin/mocha --reporter spec",
-    "posttest": "athom app validate --level publish"
-  },
+  "scripts": {},
   "author": "Bjørnar Almli",
   "license": "ISC",
   "dependencies": {
     "athom-api": "^3.2.3"
-  },
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "eslint": "^5.12.1",
-    "homey": "^2.1.3",
-    "mocha": "^5.2.0"
   }
 }

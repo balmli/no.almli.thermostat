@@ -25,23 +25,15 @@ module.exports = class VThermoDevice extends BaseDevice {
     }
 
     onSettings(oldSettingsObj, newSettingsObj, changedKeysArr, callback) {
-        let ok = true;
         if (changedKeysArr.includes('onoff_enabled') &&
             !newSettingsObj.onoff_enabled &&
             this.getCapabilityValue('onoff') !== true) {
             this.setCapabilityValue('onoff', true).catch(err => this.log(err));
-        } else if ((changedKeysArr.includes('target_zone_to_other') || changedKeysArr.includes('target_zone_from_other')) &&
-            newSettingsObj.target_zone_to_other &&
-            newSettingsObj.target_zone_from_other) {
-            callback(new Error(`Choose either "From other thermostat" or "Update other thermostat"`), null);
-            ok = false;
         }
-        if (ok) {
-            setTimeout(() => {
-                Homey.app.refreshDevice(this);
-            }, 1000);
-            callback(null, true);
-        }
+        setTimeout(() => {
+            Homey.app.refreshDevice(this);
+        }, 1000);
+        callback(null, true);
     }
 
     getTemperatureSettings() {
@@ -76,7 +68,7 @@ module.exports = class VThermoDevice extends BaseDevice {
             min: settings.target_min_temp,
             max: settings.target_max_temp,
             zone: {
-                from_other: !settings.target_zone_to_other && settings.target_zone_from_other,
+                from_other: settings.target_zone_from_other,
                 to_other: settings.target_zone_to_other
             },
             sub_zones: {

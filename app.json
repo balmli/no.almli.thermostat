@@ -1,6 +1,6 @@
 {
   "id": "no.almli.thermostat",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "compatibility": ">=2.0.0",
   "sdk": 2,
   "name": {

@@ -1,4 +1,7 @@
 {
+  "1.2.2": {
+    "en": "Fixed refresh bug in VHumidity. "
+  },
   "1.2.1": {
     "en": "Added support for master thermostats, e.g. update target temperatures on other thermostats. Added support for temperatures from other zones. Added calculation methods for temperature and humidity (average, minimum, maximum). Reduced memory consumption. "
   },

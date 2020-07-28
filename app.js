@@ -140,7 +140,7 @@ module.exports = class VThermoApp extends Homey.App {
         if (driverManifest.id === constants.DRIVER_VTHERMO) {
             await this.getVThermoHandler().refreshDevice(device, opts);
         } else if (driverManifest.id === constants.DRIVER_VHUMIDITY) {
-            await this.getVThermoHandler().refreshDevice(device, opts);
+            await this.getVHumidityHandler().refreshDevice(device, opts);
         }
     }
 

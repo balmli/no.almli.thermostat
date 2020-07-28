@@ -130,6 +130,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.2.2
+
+- Fixed refresh bug in VHumidity.
+
 #### 1.2.1
 
 - Allow update both from and to another thermostat.

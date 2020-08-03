@@ -130,6 +130,11 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.2.3
+
+- Handle adding several devices at the same time. 
+- Updated Athom api.
+
 #### 1.2.2
 
 - Fixed refresh bug in VHumidity.

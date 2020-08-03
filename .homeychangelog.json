@@ -1,4 +1,7 @@
 {
+  "1.2.3": {
+    "en": "Handle adding several devices at the same time. Updated Athom api. "
+  },
   "1.2.2": {
     "en": "Fixed refresh bug in VHumidity. "
   },

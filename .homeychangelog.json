@@ -1,6 +1,6 @@
 {
   "1.2.3": {
-    "en": "Handle adding several devices at the same time. Updated Athom api. "
+    "en": "Added 'Newest' as calculation method for temperature and humidity. Handle adding several devices at the same time. Updated Athom api. "
   },
   "1.2.2": {
     "en": "Fixed refresh bug in VHumidity. "

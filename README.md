@@ -132,6 +132,7 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 #### 1.2.3
 
+- Added 'Newest' as calculation method for temperature and humidity.
 - Handle adding several devices at the same time. 
 - Updated Athom api.
 

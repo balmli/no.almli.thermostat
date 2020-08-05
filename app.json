@@ -384,6 +384,12 @@
                   "label": {
                     "en": "Maximum"
                   }
+                },
+                {
+                  "id": "NEWEST",
+                  "label": {
+                    "en": "Newest"
+                  }
                 }
               ],
               "hint": {
@@ -531,6 +537,12 @@
                   "id": "MAX",
                   "label": {
                     "en": "Maximum"
+                  }
+                },
+                {
+                  "id": "NEWEST",
+                  "label": {
+                    "en": "Newest"
                   }
                 }
               ],

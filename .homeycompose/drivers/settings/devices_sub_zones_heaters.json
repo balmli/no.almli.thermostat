@@ -1,0 +1,11 @@
+{
+  "id": "devices_sub_zones_heaters",
+  "type": "checkbox",
+  "label": {
+    "en": "Heaters"
+  },
+  "value": false,
+  "hint": {
+    "en": "Will control heaters in sub zones (one level down)."
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "devices_zone_thermostats",
+  "type": "checkbox",
+  "label": {
+    "en": "Other thermostats"
+  },
+  "value": false,
+  "hint": {
+    "en": "Will control thermostats in the same zone, provided they have a on/off capability."
+  }
+}

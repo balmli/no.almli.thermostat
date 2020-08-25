@@ -1,6 +1,6 @@
 {
   "id": "no.almli.thermostat",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "compatibility": ">=2.0.0",
   "sdk": 2,
   "name": {
@@ -691,6 +691,74 @@
                   "value": false,
                   "hint": {
                     "en": "Other devices with temperature sensors in sub zones (one level down)."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Devices"
+          },
+          "children": [
+            {
+              "type": "group",
+              "label": {
+                "en": "Control devices in the same zone"
+              },
+              "children": [
+                {
+                  "id": "devices_zone_heaters",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Heaters"
+                  },
+                  "value": true,
+                  "hint": {
+                    "en": "Will control heaters in the same zone."
+                  }
+                },
+                {
+                  "id": "devices_zone_thermostats",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Other thermostats"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Will control thermostats in the same zone, provided they have a on/off capability."
+                  }
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "label": {
+                "en": "Control devices in sub zones (one level)"
+              },
+              "children": [
+                {
+                  "id": "devices_sub_zones_heaters",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Heaters"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Will control heaters in sub zones (one level down)."
+                  }
+                },
+                {
+                  "id": "devices_sub_zones_thermostats",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Other thermostats"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Will control thermostats in sub zones (one level down), provided they have a on/off capability."
                   }
                 }
               ]

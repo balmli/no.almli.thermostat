@@ -130,9 +130,8 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
-#### 1.3.0
+#### 1.3.1
 
-- Added support to control thermostats in the same zone and sub zones (one level down), provided they have a on/off capability.
 - Added support to control heaters in sub zones (one level down).
 
 #### 1.2.3

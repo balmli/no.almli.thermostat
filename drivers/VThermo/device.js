@@ -65,12 +65,10 @@ module.exports = class VThermoDevice extends BaseDevice {
         const settings = this.getSettings();
         return {
             zone: {
-                clazz: settings.devices_zone_heaters,
-                thermostats: settings.devices_zone_thermostats
+                clazz: true
             },
             sub_zones: {
-                clazz: settings.devices_sub_zones_heaters,
-                thermostats: settings.devices_sub_zones_thermostats
+                clazz: settings.devices_sub_zones_heaters
             }
         };
     }

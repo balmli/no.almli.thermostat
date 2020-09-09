@@ -94,6 +94,9 @@ Select temperature sensors from the sub zones of the virtual thermostat,  just o
 - other VThermo - thermostats
 - other devices with a temperature capability
 
+#### Control devices in sub zones (one level)
+- Heaters: check this to control heaters in sub zones (one level down)
+
 #### Target temperature
 
 - Target temperature offset (°C): offset when the target temperature is updated from a master VThermo - thermostat.

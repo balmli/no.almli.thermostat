@@ -5,10 +5,6 @@ const math = require('../../lib/math');
 
 module.exports = class VHumidityDriver extends Homey.Driver {
 
-    onInit() {
-        Homey.app.registerDriver(this);
-    }
-
     onPairListDevices(data, callback) {
         let devices = [
             {

@@ -114,6 +114,7 @@ module.exports = class VThermoApp extends Homey.App {
     getVThermoHandler() {
         if (!this._vThermoHandler) {
             this._vThermoHandler = new VThermoHandler({ log: this.log, error: this.error });
+            this._vThermoHandler.registerDriver(Homey.ManagerDrivers.getDriver(constants.DRIVER_VTHERMO));
         }
         return this._vThermoHandler;
     }
@@ -121,17 +122,9 @@ module.exports = class VThermoApp extends Homey.App {
     getVHumidityHandler() {
         if (!this._vHumidityHandler) {
             this._vHumidityHandler = new VHumidityHandler({ log: this.log, error: this.error });
+            this._vHumidityHandler.registerDriver(Homey.ManagerDrivers.getDriver(constants.DRIVER_VHUMIDITY));
         }
         return this._vHumidityHandler;
-    }
-
-    async registerDriver(driver) {
-        const driverManifest = driver.getManifest();
-        if (driverManifest.id === constants.DRIVER_VTHERMO) {
-            await this.getVThermoHandler().registerDriver(driver);
-        } else if (driverManifest.id === constants.DRIVER_VHUMIDITY) {
-            await this.getVHumidityHandler().registerDriver(driver);
-        }
     }
 
     async refreshDevice(device, opts) {

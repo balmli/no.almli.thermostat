@@ -1,4 +1,7 @@
 {
+  "1.3.3": {
+    "en": "Added support to control heaters in sub zones (one level down). Fixed initialization bug. "
+  },
   "1.3.2": {
     "en": "Fixed initialization bug. "
   },

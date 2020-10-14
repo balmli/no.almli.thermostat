@@ -1,6 +1,6 @@
 {
   "name": "no.almli.thermostat",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Virtual thermostat",
   "main": "app.js",
   "scripts": {},

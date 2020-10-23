@@ -11,6 +11,15 @@ module.exports = class VHumidityDevice extends BaseDevice {
 
         this._humidityStore = new ValueStore();
 
+        this.registerCapabilityListener('onoff', async (value, opts) => {
+            if (!this.getSetting('onoff_enabled')) {
+                if (this.getCapabilityValue('onoff') !== true) {
+                    await this.setCapabilityValue('onoff', true).catch(err => this.log(err));
+                }
+                throw new Error('Switching the device off has been disabled');
+            }
+        });
+
         this.registerCapabilityListener('vh_target_humidity', async (value, opts) => {
             Homey.app._targetHumidityChangedTrigger.trigger(this, {
                 humidity: value

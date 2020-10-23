@@ -7,6 +7,14 @@ module.exports = class VThermoDevice extends BaseDevice {
 
     async onInit() {
         await this.migrate();
+        this.registerCapabilityListener('onoff', async (value, opts) => {
+            if (!this.getSetting('onoff_enabled')) {
+                if (this.getCapabilityValue('onoff') !== true) {
+                    await this.setCapabilityValue('onoff', true).catch(err => this.log(err));
+                }
+                throw new Error('Switching the device off has been disabled');
+            }
+        });
     }
 
     async migrate() {

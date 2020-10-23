@@ -133,6 +133,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.3.4
+
+- Fixed bug in 'On / off enabled'
+
 #### 1.3.3
 
 - Fixed change log.

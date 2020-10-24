@@ -28,6 +28,7 @@ module.exports = class VThermoApp extends Homey.App {
             this._devices.on('devices_registered', this._onDevicesRegistered.bind(this));
             this._devices.on('capability', this._onCapability.bind(this));
             await this._devices.registerDevices();
+            this.scheduleRegister();
             this.log('VThermoApp is running...');
         } catch (err) {
             this.log('onInit error', err);
@@ -137,8 +138,30 @@ module.exports = class VThermoApp extends Homey.App {
         }
     }
 
+    _clearRegister() {
+        if (this._timeoutRegister) {
+            clearTimeout(this._timeoutRegister);
+            this._timeoutRegister = undefined;
+        }
+    }
+
+    scheduleRegister(interval = 3600) {
+        this._clearRegister();
+        this._timeoutRegister = setTimeout(this._onRegister.bind(this), interval * 1000);
+    }
+
+    async _onRegister() {
+        try {
+            this._clearRegister();
+            await this._devices.registerDevices();
+        } finally {
+            this.scheduleRegister();
+        }
+    }
+
     _onUninstall() {
         try {
+            this._clearRegister();
             this._devices.unregisterDevices();
             delete this._devices;
         } catch (err) {

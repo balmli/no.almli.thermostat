@@ -133,6 +133,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.3.7
+
+- Updated community id.
+
 #### 1.3.6
 
 - Fix to refresh devices on app updates

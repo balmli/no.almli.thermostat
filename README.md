@@ -133,6 +133,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.3.6
+
+- Fix to refresh devices on app updates
+
 #### 1.3.5
 
 - Fix to refresh devices on a fixed interval

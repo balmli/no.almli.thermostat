@@ -1,4 +1,7 @@
 {
+  "1.3.7": {
+    "en": "Fixed bug in 'On / off enabled'. Fix to refresh devices on app updates and a fixed interval. "
+  },
   "1.3.6": {
     "en": "Fixed bug in 'On / off enabled'. Fix to refresh devices on app updates and a fixed interval. "
   },

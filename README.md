@@ -133,9 +133,13 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.3.8
+
+- Skip values from unavailable devices
+
 #### 1.3.7
 
-- Updated community id.
+- Updated community id
 
 #### 1.3.6
 

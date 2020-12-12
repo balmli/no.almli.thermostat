@@ -1,0 +1,22 @@
+{
+  "id": "target_step",
+  "type": "dropdown",
+  "label": {
+    "en": "Target temperature step (°C)"
+  },
+  "value": "STEP50",
+  "values": [
+    {
+      "id": "STEP50",
+      "label": {
+        "en": "0.50 °C"
+      }
+    },
+    {
+      "id": "STEP25",
+      "label": {
+        "en": "0.25 °C"
+      }
+    }
+  ]
+}

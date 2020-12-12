@@ -79,6 +79,10 @@ module.exports = class VThermoApp extends Homey.App {
                 return changeLastMinutes !== undefined && (-1.0 * changeLastMinutes) >= args.change_pct_points;
             });
 
+        new Homey.FlowCardAction('update_invert_switch')
+            .register()
+            .registerRunListener((args, state) => args.device.updateInvertSwitch(args.invert_switch === 'true'));
+
         new Homey.FlowCardAction('vh_set_target_humidity')
             .register()
             .registerRunListener((args, state) => {

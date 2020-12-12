@@ -1,0 +1,37 @@
+{
+  "id": "update_invert_switch",
+  "title": {
+    "en": "Update 'Invert switch'"
+  },
+  "hint": {
+    "en": "Select 'Yes' and the thermostat will switch on if above the target, and switch off if below the target."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=VThermo"
+    },
+    {
+      "name": "invert_switch",
+      "title": {
+        "en": "Invert switch"
+      },
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "false",
+          "label": {
+            "en": "No"
+          }
+        },
+        {
+          "id": "true",
+          "label": {
+            "en": "Yes"
+          }
+        }
+      ]
+    }
+  ]
+}

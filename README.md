@@ -41,6 +41,7 @@ You can use temperature sensors from the same zone, from the parent zone, and fr
 
 - Set the target temperature.
 - Turn on / off.
+- Update 'Invert switch'.
 
 ## Device: VHumidity
 
@@ -102,6 +103,7 @@ Select temperature sensors from the sub zones of the virtual thermostat,  just o
 - Target temperature offset (°C): offset when the target temperature is updated from a master VThermo - thermostat.
 - Minimum target temperature (°C): minimum value for the target temperature, when updated from a master VThermo - thermostat.
 - Maximum target temperature (°C): maximum value for the target temperature, when updated from a master VThermo - thermostat.
+- Target temperature step (°C): select between step of 0.25 °C and 0.50 °C for the target temperature. 
 
 #### Target temperature in the same zone
 - From other thermostat: check this to update target temperature on this VThermo from another thermostat in the same zone.
@@ -132,6 +134,11 @@ Select temperature sensors from the sub zones of the virtual thermostat,  just o
 Please report issues at the [issues section on Github](https://github.com/balmli/no.almli.thermostat/issues).
 
 ## Release Notes:
+
+#### 1.4.0
+
+- Added setting to change step for target temperature
+- Added flow to update 'Invert switch'
 
 #### 1.3.8
 

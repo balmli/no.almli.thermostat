@@ -38,10 +38,37 @@ module.exports = class VThermoDevice extends BaseDevice {
             this.getCapabilityValue('onoff') !== true) {
             this.setCapabilityValue('onoff', true).catch(err => this.log(err));
         }
+        if (changedKeysArr.includes('target_step')) {
+            const step = parseInt(newSettingsObj.target_step.substr(4)) / 100;
+            this.updateTargetTempStep(step);
+        }
         setTimeout(() => {
             Homey.app.refreshDevice(this);
         }, 1000);
         callback(null, true);
+    }
+
+    async updateTargetTempStep(step) {
+        let capOptions = this.getCapabilityOptions('target_temperature');
+        if (capOptions.step !== step) {
+            try {
+                capOptions.step = step;
+                capOptions.decimals = step >= 0.5 ? 1 : 2;
+                await this.setCapabilityOptions('target_temperature', capOptions);
+                this.log('Updated cap options for target_temperature = ', this.getCapabilityOptions('target_temperature'));
+            } catch (err) {
+                this.log('updateTargetTempStep ERROR', err);
+            }
+        }
+    }
+
+    async updateInvertSwitch(invert) {
+        try {
+            await this.setSettings({ invert });
+            Homey.app.refreshDevice(this);
+        } catch (err) {
+            this.log('updateInvertSwitch ERROR', err);
+        }
     }
 
     getTemperatureSettings() {

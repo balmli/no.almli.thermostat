@@ -118,6 +118,10 @@
         "id": "target_max_temp"
       },
       {
+        "$extends": "target_step",
+        "id": "target_step"
+      },
+      {
         "type": "group",
         "label": {
           "en": "Target temperature in the same zone"

@@ -1,1 +1,6 @@
-{}
+{
+  "error": {
+    "switching_disabled": "Switching the device off has been disabled",
+    "invalid_target_temps": "Invalid minimum or maximum target temperatures"
+  }
+}

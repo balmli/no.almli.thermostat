@@ -1,0 +1,63 @@
+{
+  "id": "update_target_temp_min_max_step",
+  "title": {
+    "en": "Update target temperature min, max and step"
+  },
+  "hint": {
+    "en": "Update minimum, maximum and step for target temperature"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=VThermo"
+    },
+    {
+      "name": "temp_min",
+      "title": {
+        "en": "Target temperature minimum"
+      },
+      "type": "range",
+      "value": 1,
+      "min": -10,
+      "max": 60,
+      "step": 0.5,
+      "label": " °C",
+      "labelDecimals": 1
+    },
+    {
+      "name": "temp_max",
+      "title": {
+        "en": "Target temperature maximum"
+      },
+      "type": "range",
+      "value": 40,
+      "min": -10,
+      "max": 60,
+      "step": 0.5,
+      "label": " °C",
+      "labelDecimals": 1
+    },
+    {
+      "name": "temp_step",
+      "title": {
+        "en": "Target temperature step (°C)"
+      },
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "STEP50",
+          "label": {
+            "en": "0.50 °C"
+          }
+        },
+        {
+          "id": "STEP25",
+          "label": {
+            "en": "0.25 °C"
+          }
+        }
+      ]
+    }
+  ]
+}

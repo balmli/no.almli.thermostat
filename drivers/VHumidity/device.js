@@ -16,7 +16,7 @@ module.exports = class VHumidityDevice extends BaseDevice {
                 if (this.getCapabilityValue('onoff') !== true) {
                     await this.setCapabilityValue('onoff', true).catch(err => this.log(err));
                 }
-                throw new Error('Switching the device off has been disabled');
+                throw new Error(Homey.__('error.switching_disabled'));
             }
         });
 

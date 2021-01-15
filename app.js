@@ -83,6 +83,14 @@ module.exports = class VThermoApp extends Homey.App {
             .register()
             .registerRunListener((args, state) => args.device.updateInvertSwitch(args.invert_switch === 'true'));
 
+        new Homey.FlowCardAction('update_target_temp_min_max_step')
+            .register()
+            .registerRunListener((args, state) => args.device.updateTargetTempMinMaxStep(args.temp_min, args.temp_max, args.temp_step));
+
+        new Homey.FlowCardAction('update_target_temp_offset')
+            .register()
+            .registerRunListener((args, state) => args.device.updateTargetTempOffset(args.temp_offset));
+
         new Homey.FlowCardAction('vh_set_target_humidity')
             .register()
             .registerRunListener((args, state) => {
@@ -130,6 +138,14 @@ module.exports = class VThermoApp extends Homey.App {
             this._vHumidityHandler.registerDriver(Homey.ManagerDrivers.getDriver(constants.DRIVER_VHUMIDITY));
         }
         return this._vHumidityHandler;
+    }
+
+    async updateAllTargetTemperatures(device) {
+        const driver = device.getDriver();
+        const driverManifest = driver.getManifest();
+        if (driverManifest.id === constants.DRIVER_VTHERMO) {
+            await this.getVThermoHandler().updateAllTargetTemperatures();
+        }
     }
 
     async refreshDevice(device, opts) {

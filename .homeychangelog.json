@@ -1,4 +1,7 @@
 {
+  "1.5.0": {
+    "en": "Min. and max. target temperature can be updated between -10 °C and +60 °C. Added flow to update 'Target temperature min, max and step'. Added flow to update 'Target temperature offset'. "
+  },
   "1.4.0": {
     "en": "Added setting to change step for target temperature. Added flow to update 'Invert switch'. "
   },

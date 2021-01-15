@@ -7,6 +7,6 @@
   "author": "Bjørnar Almli",
   "license": "ISC",
   "dependencies": {
-    "athom-api": "^3.2.13"
+    "athom-api": "^3.2.14"
   }
 }

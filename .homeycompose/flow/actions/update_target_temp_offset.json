@@ -1,0 +1,29 @@
+{
+  "id": "update_target_temp_offset",
+  "title": {
+    "en": "Update target temperature offset"
+  },
+  "hint": {
+    "en": "Update the offset when target temperature is updated from a master VThermo - thermostat"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=VThermo"
+    },
+    {
+      "name": "temp_offset",
+      "title": {
+        "en": "Target temperature offset"
+      },
+      "type": "range",
+      "value": 0,
+      "min": -30,
+      "max": 30,
+      "step": 0.5,
+      "label": " °C",
+      "labelDecimals": 1
+    }
+  ]
+}

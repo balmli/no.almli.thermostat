@@ -41,6 +41,8 @@ You can use temperature sensors from the same zone, from the parent zone, and fr
 
 - Set the target temperature.
 - Turn on / off.
+- Update 'Target temperature min, max and step'
+- Update 'Target temperature offset'
 - Update 'Invert switch'.
 
 ## Device: VHumidity

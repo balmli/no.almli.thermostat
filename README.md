@@ -103,8 +103,8 @@ Select temperature sensors from the sub zones of the virtual thermostat,  just o
 #### Target temperature
 
 - Target temperature offset (°C): offset when the target temperature is updated from a master VThermo - thermostat.
-- Minimum target temperature (°C): minimum value for the target temperature between -10 °C and 60 °C.
-- Maximum target temperature (°C): maximum value for the target temperature between -10 °C and 60 °C.
+- Minimum target temperature (°C): minimum value for the target temperature between -10 °C and 150 °C.
+- Maximum target temperature (°C): maximum value for the target temperature between -10 °C and 150 °C.
 - Target temperature step (°C): select between step of 0.25 °C and 0.50 °C for the target temperature. 
 
 #### Target temperature in the same zone
@@ -136,6 +136,10 @@ Select temperature sensors from the sub zones of the virtual thermostat,  just o
 Please report issues at the [issues section on Github](https://github.com/balmli/no.almli.thermostat/issues).
 
 ## Release Notes:
+
+#### 1.5.1
+
+- Min. and max. target temperatures can be updated between -10 °C and +150 °C
 
 #### 1.5.0
 

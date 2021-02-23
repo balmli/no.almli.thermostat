@@ -1,0 +1,11 @@
+{
+  "id": "target_update_enabled",
+  "type": "checkbox",
+  "label": {
+    "en": "Target temperature update enabled"
+  },
+  "value": true,
+  "hint": {
+    "en": "Uncheck this to disable being updating from a master VThermo - thermostat."
+  }
+}

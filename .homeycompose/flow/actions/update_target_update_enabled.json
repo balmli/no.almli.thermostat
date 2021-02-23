@@ -1,0 +1,37 @@
+{
+  "id": "update_target_update_enabled",
+  "title": {
+    "en": "Target temperature update enabled"
+  },
+  "hint": {
+    "en": "Enable or disable being updating from a master VThermo - thermostat."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=VThermo"
+    },
+    {
+      "name": "enabled",
+      "title": {
+        "en": "Target temperature update enabled"
+      },
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "false",
+          "label": {
+            "en": "Disabled"
+          }
+        },
+        {
+          "id": "true",
+          "label": {
+            "en": "Enabled"
+          }
+        }
+      ]
+    }
+  ]
+}

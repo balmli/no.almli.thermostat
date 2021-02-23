@@ -1,4 +1,7 @@
 {
+  "1.6.0": {
+    "en": "Added setting and action to update 'Target temperature update enabled'. Added setting to turn on if motion alarm in the same zone. "
+  },
   "1.5.1": {
     "en": "Min. and max. target temperature can be updated between -10 °C and +150 °C. Added flow to update 'Target temperature min, max and step'. Added flow to update 'Target temperature offset'. "
   },

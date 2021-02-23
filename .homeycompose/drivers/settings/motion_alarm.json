@@ -1,0 +1,11 @@
+{
+  "id": "motion_alarm",
+  "type": "checkbox",
+  "label": {
+    "en": "Turn on if motion alarm"
+  },
+  "value": false,
+  "hint": {
+    "en": "Will turn on if motion alarm in the same zone."
+  }
+}

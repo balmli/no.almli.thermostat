@@ -4,5 +4,8 @@
   "label": {
     "en": "Turn off if contact alarm"
   },
-  "value": false
+  "value": false,
+  "hint": {
+    "en": "Will turn off if contact alarm in the same zone."
+  }
 }

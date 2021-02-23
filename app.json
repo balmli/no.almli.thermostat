@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "no.almli.thermostat",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "compatibility": ">=2.0.0",
   "sdk": 2,
   "name": {
@@ -406,6 +406,43 @@
             "step": 0.5,
             "label": " °C",
             "labelDecimals": 1
+          }
+        ]
+      },
+      {
+        "id": "update_target_update_enabled",
+        "title": {
+          "en": "Target temperature update enabled"
+        },
+        "hint": {
+          "en": "Enable or disable being updating from a master VThermo - thermostat."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=VThermo"
+          },
+          {
+            "name": "enabled",
+            "title": {
+              "en": "Target temperature update enabled"
+            },
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "false",
+                "label": {
+                  "en": "Disabled"
+                }
+              },
+              {
+                "id": "true",
+                "label": {
+                  "en": "Enabled"
+                }
+              }
+            ]
           }
         ]
       },
@@ -878,6 +915,17 @@
               }
             },
             {
+              "id": "target_update_enabled",
+              "type": "checkbox",
+              "label": {
+                "en": "Target temperature update enabled"
+              },
+              "value": true,
+              "hint": {
+                "en": "Uncheck this to disable being updating from a master VThermo - thermostat."
+              }
+            },
+            {
               "id": "target_min_temp",
               "type": "number",
               "label": {
@@ -1028,7 +1076,7 @@
         {
           "type": "group",
           "label": {
-            "en": "Contact alarm"
+            "en": "Contact and motion alarms"
           },
           "children": [
             {
@@ -1037,7 +1085,21 @@
               "label": {
                 "en": "Turn off if contact alarm"
               },
-              "value": false
+              "value": false,
+              "hint": {
+                "en": "Will turn off if contact alarm in the same zone."
+              }
+            },
+            {
+              "id": "motion_alarm",
+              "type": "checkbox",
+              "label": {
+                "en": "Turn on if motion alarm"
+              },
+              "value": false,
+              "hint": {
+                "en": "Will turn on if motion alarm in the same zone."
+              }
             }
           ]
         },

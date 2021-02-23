@@ -41,8 +41,9 @@ You can use temperature sensors from the same zone, from the parent zone, and fr
 
 - Set the target temperature.
 - Turn on / off.
-- Update 'Target temperature min, max and step'
 - Update 'Target temperature offset'
+- Update 'Target temperature update enabled'  
+- Update 'Target temperature min, max and step'
 - Update 'Invert switch'.
 
 ## Device: VHumidity
@@ -103,6 +104,7 @@ Select temperature sensors from the sub zones of the virtual thermostat,  just o
 #### Target temperature
 
 - Target temperature offset (°C): offset when the target temperature is updated from a master VThermo - thermostat.
+- Target temperature update enabled: uncheck to disable being updated from a master VThermo - thermostat.   
 - Minimum target temperature (°C): minimum value for the target temperature between -10 °C and 150 °C.
 - Maximum target temperature (°C): maximum value for the target temperature between -10 °C and 150 °C.
 - Target temperature step (°C): select between step of 0.25 °C and 0.50 °C for the target temperature. 
@@ -119,8 +121,9 @@ Select temperature sensors from the sub zones of the virtual thermostat,  just o
 - Update other VThermos: check this to update the target temperature of other VThermo - thermostats in all sub zones (all levels down).
 - Update other thermostats: check this to update the target temperature of other thermostats in all sub zones (all levels down).
 
-#### Contact alarm
+#### Contact and motion alarms
 - Turn off if contact alarm: check this to turn off heaters if there is a contact alarm in the same zone as the virtual thermostat.
+- Turn on if motion alarm: check this to turn on heaters if there is a motion alarm in the same zone as the virtual thermostat.
 
 #### General settings
 - Hysteresis: to avoid that the thermostat will turn on and off too often, the hysteresis value must be greater than zero. Example: with a value of 0.5, and a target temperature of 20.0 °C, the thermostat will switch on if below 20.0 - 0.5, and off if above 20.0 + 0.5.  
@@ -136,6 +139,11 @@ Select temperature sensors from the sub zones of the virtual thermostat,  just o
 Please report issues at the [issues section on Github](https://github.com/balmli/no.almli.thermostat/issues).
 
 ## Release Notes:
+
+#### 1.6.0
+
+- Added setting and action to update 'Target temperature update enabled'
+- Added setting to turn on if motion alarm in the same zone
 
 #### 1.5.1
 

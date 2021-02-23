@@ -91,6 +91,10 @@ module.exports = class VThermoApp extends Homey.App {
             .register()
             .registerRunListener((args, state) => args.device.updateTargetTempOffset(args.temp_offset));
 
+        new Homey.FlowCardAction('update_target_update_enabled')
+            .register()
+            .registerRunListener((args, state) => args.device.updateTargetUpdateEnabled(args.enabled === 'true'));
+
         new Homey.FlowCardAction('vh_set_target_humidity')
             .register()
             .registerRunListener((args, state) => {

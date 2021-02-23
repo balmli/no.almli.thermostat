@@ -115,6 +115,15 @@ module.exports = class VThermoDevice extends BaseDevice {
         }
     }
 
+    async updateTargetUpdateEnabled(target_update_enabled) {
+        try {
+            await this.setSettings({ target_update_enabled });
+            this.log(`Target temperature update enabled set to ${target_update_enabled}`);
+        } catch (err) {
+            this.log('updateTargetUpdateEnabled ERROR', err);
+        }
+    }
+
     getTemperatureSettings() {
         const settings = this.getSettings();
         return {
@@ -158,6 +167,7 @@ module.exports = class VThermoDevice extends BaseDevice {
             offset: settings.target_diff_temp,
             min: settings.target_min_temp,
             max: settings.target_max_temp,
+            target_update_enabled: settings.target_update_enabled,
             zone: {
                 from_other: settings.target_zone_from_other,
                 to_other: settings.target_zone_to_other

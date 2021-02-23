@@ -110,6 +110,10 @@
         "id": "target_diff_temp"
       },
       {
+        "$extends": "target_update_enabled",
+        "id": "target_update_enabled"
+      },
+      {
         "$extends": "target_min_temp",
         "id": "target_min_temp"
       },
@@ -174,12 +178,16 @@
   {
     "type": "group",
     "label": {
-      "en": "Contact alarm"
+      "en": "Contact and motion alarms"
     },
     "children": [
       {
         "$extends": "contact_alarm",
         "id": "contact_alarm"
+      },
+      {
+        "$extends": "motion_alarm",
+        "id": "motion_alarm"
       }
     ]
   },

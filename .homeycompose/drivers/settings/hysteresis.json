@@ -4,5 +4,8 @@
   "label": {
     "en": "Hysteresis"
   },
-  "value": 0.5
+  "value": 0.5,
+  "hint": {
+    "en": "With a hysteresis value of 0.5, the temperature will vary between 0.5 below the target temperature and 0.5 above the target temperature."
+  }
 }

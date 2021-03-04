@@ -1,0 +1,32 @@
+{
+  "id": "update_measure_temperature",
+  "title": {
+    "en": "Update temperature"
+  },
+  "titleFormatted": {
+    "en": "Update temperature to [[temperature]] °C"
+  },
+  "hint": {
+    "en": "Update the temperature, e.g. from a temperature sensor in another zone"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=VThermo"
+    },
+    {
+      "name": "temperature",
+      "title": {
+        "en": "Temperature"
+      },
+      "type": "number",
+      "min": -150,
+      "max": 150,
+      "label": " °C",
+      "placeholder": {
+        "en": "Temperature..."
+      }
+    }
+  ]
+}

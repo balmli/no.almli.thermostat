@@ -20,7 +20,10 @@
       {
         "$extends": "hysteresis",
         "id": "hysteresis",
-        "value": 1
+        "value": 1,
+        "hint": {
+          "en": "With a hysteresis value of 1, the device will vary between 1 below the target humidity and 1 above the target humidity."
+        }
       },
       {
         "$extends": "invert",

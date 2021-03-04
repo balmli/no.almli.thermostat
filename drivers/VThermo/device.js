@@ -91,6 +91,23 @@ module.exports = class VThermoDevice extends BaseDevice {
         }
     }
 
+    async updateMeasureTemperature(temperature) {
+        const temp = temperature ? Math.round(100 * temperature) / 100 : undefined;
+        if (!temp || temp < -150 || temp > 150) {
+            throw new Error(Homey.__('error.invalid_temperature_input'));
+        }
+        try {
+            this.log('updateMeasureTemperature', temperature);
+            const calc_method = 'MANUAL';
+            await this.setSettings({ calc_method });
+            await this.setCapabilityValue('measure_temperature', temp);
+            Homey.app.updateTemperature(this, temperature);
+            Homey.app.refreshDevice(this);
+        } catch (err) {
+            this.log('updateMeasureTemperature ERROR', err);
+        }
+    }
+
     async updateTargetTempMinMaxStep(target_min_temp, target_max_temp, target_step) {
         const err = await this.updateTargetTemp(target_min_temp, target_max_temp, parseInt(target_step.substr(4)) / 100);
         if (err) {

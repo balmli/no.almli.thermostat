@@ -4,5 +4,8 @@
   "label": {
     "en": "Invert switch"
   },
-  "value": false
+  "value": false,
+  "hint": {
+    "en": "Check this to invert the switching of the device."
+  }
 }

@@ -318,6 +318,38 @@
         ]
       },
       {
+        "id": "update_measure_temperature",
+        "title": {
+          "en": "Update temperature"
+        },
+        "titleFormatted": {
+          "en": "Update temperature to [[temperature]] °C"
+        },
+        "hint": {
+          "en": "Update the temperature, e.g. from a temperature sensor in another zone"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=VThermo"
+          },
+          {
+            "name": "temperature",
+            "title": {
+              "en": "Temperature"
+            },
+            "type": "number",
+            "min": -150,
+            "max": 150,
+            "label": " °C",
+            "placeholder": {
+              "en": "Temperature..."
+            }
+          }
+        ]
+      },
+      {
         "id": "update_target_temp_min_max_step",
         "title": {
           "en": "Update target temperature min, max and step"
@@ -574,6 +606,9 @@
             {
               "id": "hysteresis",
               "value": 1,
+              "hint": {
+                "en": "With a hysteresis value of 1, the device will vary between 1 below the target humidity and 1 above the target humidity."
+              },
               "type": "number",
               "label": {
                 "en": "Hysteresis"
@@ -585,7 +620,10 @@
                 "en": "Invert for humidifier"
               },
               "type": "checkbox",
-              "value": false
+              "value": false,
+              "hint": {
+                "en": "Check this to invert the switching of the device."
+              }
             },
             {
               "id": "onoff_enabled",
@@ -710,6 +748,12 @@
                   "id": "NEWEST",
                   "label": {
                     "en": "Newest"
+                  }
+                },
+                {
+                  "id": "MANUAL",
+                  "label": {
+                    "en": "Manual"
                   }
                 }
               ],
@@ -1115,7 +1159,10 @@
               "label": {
                 "en": "Hysteresis"
               },
-              "value": 0.5
+              "value": 0.5,
+              "hint": {
+                "en": "With a hysteresis value of 0.5, the temperature will vary between 0.5 below the target temperature and 0.5 above the target temperature."
+              }
             },
             {
               "id": "invert",
@@ -1123,7 +1170,10 @@
               "label": {
                 "en": "Invert switch"
               },
-              "value": false
+              "value": false,
+              "hint": {
+                "en": "Check this to invert the switching of the device."
+              }
             },
             {
               "id": "onoff_enabled",

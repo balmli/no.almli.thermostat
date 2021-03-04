@@ -1,4 +1,7 @@
 {
+  "1.7.0": {
+    "en": "Added flow to manually update the temperature, e.g. from a temperature sensor in another zone. "
+  },
   "1.6.0": {
     "en": "Added setting and action to update 'Target temperature update enabled'. Added setting to turn on if motion alarm in the same zone. "
   },

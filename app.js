@@ -83,6 +83,10 @@ module.exports = class VThermoApp extends Homey.App {
             .register()
             .registerRunListener((args, state) => args.device.updateInvertSwitch(args.invert_switch === 'true'));
 
+        new Homey.FlowCardAction('update_measure_temperature')
+            .register()
+            .registerRunListener((args, state) => args.device.updateMeasureTemperature(args.temperature));
+
         new Homey.FlowCardAction('update_target_temp_min_max_step')
             .register()
             .registerRunListener((args, state) => args.device.updateTargetTempMinMaxStep(args.temp_min, args.temp_max, args.temp_step));
@@ -149,6 +153,14 @@ module.exports = class VThermoApp extends Homey.App {
         const driverManifest = driver.getManifest();
         if (driverManifest.id === constants.DRIVER_VTHERMO) {
             await this.getVThermoHandler().updateAllTargetTemperatures();
+        }
+    }
+
+    async updateTemperature(device, temperature) {
+        const driver = device.getDriver();
+        const driverManifest = driver.getManifest();
+        if (driverManifest.id === constants.DRIVER_VTHERMO) {
+            await this.getVThermoHandler().updateTemperature(device, temperature);
         }
     }
 

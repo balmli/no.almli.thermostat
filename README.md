@@ -41,6 +41,7 @@ You can use temperature sensors from the same zone, from the parent zone, and fr
 
 - Set the target temperature.
 - Turn on / off.
+- Update temperature to X °C
 - Update 'Target temperature offset'
 - Update 'Target temperature update enabled'  
 - Update 'Target temperature min, max and step'
@@ -73,7 +74,7 @@ Fans will turn on if the humidity is larger than the target humidity, and off if
 ## Details about Advanced settings
 
 #### Temperature
-- Temperature calculation method: select between 'Average', 'Minimum' or 'Maximum'.
+- Temperature calculation method: select between 'Average', 'Minimum', 'Maximum', 'Newest' or 'Manual'.  Manual is used when updating the temperature with a flow, e.g. from a temperature sensor in another zone.
 
 #### Temperature sensors in the same zone
 Select which temperature sensors to be used from the same zone as the virtual thermostat.
@@ -139,6 +140,10 @@ Select temperature sensors from the sub zones of the virtual thermostat,  just o
 Please report issues at the [issues section on Github](https://github.com/balmli/no.almli.thermostat/issues).
 
 ## Release Notes:
+
+#### 1.7.0
+
+- Added flow to manually update the temperature, e.g. from a temperature sensor in another zone
 
 #### 1.6.0
 

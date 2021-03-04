@@ -1,6 +1,7 @@
 {
   "error": {
     "switching_disabled": "Switching the device off has been disabled",
+    "invalid_temperature_input": "Invalid temperature. Must be between -150 °C and 150 °C",
     "invalid_target_temps": "Invalid minimum or maximum target temperatures"
   }
 }

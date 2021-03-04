@@ -29,6 +29,12 @@
       "label": {
         "en": "Newest"
       }
+    },
+    {
+      "id": "MANUAL",
+      "label": {
+        "en": "Manual"
+      }
     }
   ],
   "hint": {

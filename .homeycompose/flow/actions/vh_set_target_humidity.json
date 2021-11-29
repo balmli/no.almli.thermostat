@@ -3,8 +3,11 @@
   "title": {
     "en": "Set the target humidity"
   },
+  "titleFormatted": {
+    "en": "Set the target humidity to [[vh_target_humidity]]"
+  },
   "hint": {
-    "en": "Set the target humidity"
+    "en": "Set the target humidity."
   },
   "args": [
     {

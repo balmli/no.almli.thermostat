@@ -1,10 +1,13 @@
 {
   "id": "update_invert_switch",
   "title": {
-    "en": "Update 'Invert switch'"
+    "en": "Enable or disable 'Invert switch'"
+  },
+  "titleFormatted": {
+    "en": "[[invert_switch]] 'Invert switch'"
   },
   "hint": {
-    "en": "Select 'Yes' and the thermostat will switch on if above the target, and switch off if below the target."
+    "en": "Select 'Enable' and the thermostat will switch on if above the target, and switch off if below the target."
   },
   "args": [
     {
@@ -22,13 +25,13 @@
         {
           "id": "false",
           "label": {
-            "en": "No"
+            "en": "Disable"
           }
         },
         {
           "id": "true",
           "label": {
-            "en": "Yes"
+            "en": "Enable"
           }
         }
       ]

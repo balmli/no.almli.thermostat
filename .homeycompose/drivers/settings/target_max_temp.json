@@ -2,10 +2,10 @@
   "id": "target_max_temp",
   "type": "number",
   "label": {
-    "en": "Maximum target temperature (°C)"
+    "en": "Maximum target temperature"
   },
   "hint": {
-    "en": "Maximum target temperature"
+    "en": "Maximum target temperature when the target temperature is updated from a master VThermo - thermostat."
   },
   "value": 40,
   "min": -10,

@@ -3,8 +3,11 @@
   "title": {
     "en": "Update target temperature min, max and step"
   },
+  "titleFormatted": {
+    "en": "Update target temperature min to [[temp_min]], max to [[temp_max]] and step to [[temp_step]]"
+  },
   "hint": {
-    "en": "Update minimum, maximum and step for target temperature"
+    "en": "Update minimum, maximum and step for target temperature."
   },
   "args": [
     {

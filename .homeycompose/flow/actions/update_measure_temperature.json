@@ -7,7 +7,7 @@
     "en": "Update temperature to [[temperature]] °C"
   },
   "hint": {
-    "en": "Update the temperature, e.g. from a temperature sensor in another zone"
+    "en": "Update the temperature, e.g. from a temperature sensor in another zone."
   },
   "args": [
     {

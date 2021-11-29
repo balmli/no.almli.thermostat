@@ -1,12 +1,32 @@
 {
   "name": "no.almli.thermostat",
-  "version": "1.7.0",
+  "version": "1.0.0",
   "description": "Virtual thermostat",
-  "main": "app.js",
-  "scripts": {},
+  "main": "app.ts",
+  "scripts": {
+    "build": "tsc",
+    "xxx_pretest": "eslint --ignore-path .gitignore app.ts lib test",
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
+    "posttest": "homey app validate",
+    "lint": "eslint --ext .js,.ts --ignore-path .gitignore ."
+  },
   "author": "Bjørnar Almli",
   "license": "ISC",
   "dependencies": {
-    "athom-api": "^3.2.14"
+    "athom-api": "^3.7.1"
+  },
+  "devDependencies": {
+    "@tsconfig/node12": "^1.0.9",
+    "@types/chai": "^4.2.22",
+    "@types/homey": "npm:homey-apps-sdk-v3-types@^0.2.2",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.11.7",
+    "chai": "^4.3.4",
+    "chai-datetime": "^1.8.0",
+    "eslint": "^7.32.0",
+    "eslint-config-athom": "^3.0.1",
+    "mocha": "^9.1.2",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
   }
 }

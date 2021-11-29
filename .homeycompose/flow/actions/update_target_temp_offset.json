@@ -3,8 +3,11 @@
   "title": {
     "en": "Update target temperature offset"
   },
+  "titleFormatted": {
+    "en": "Update target temperature offset to [[temp_offset]]"
+  },
   "hint": {
-    "en": "Update the offset when target temperature is updated from a master VThermo - thermostat"
+    "en": "Update the offset when target temperature is updated from a master VThermo - thermostat."
   },
   "args": [
     {

@@ -2,10 +2,10 @@
   "id": "target_min_temp",
   "type": "number",
   "label": {
-    "en": "Minimum target temperature (°C)"
+    "en": "Minimum target temperature"
   },
   "hint": {
-    "en": "Minimum target temperature"
+    "en": "Minimum target temperature when the target temperature is updated from a master VThermo - thermostat."
   },
   "value": 1,
   "min": -10,

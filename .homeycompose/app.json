@@ -1,8 +1,12 @@
 {
   "id": "no.almli.thermostat",
-  "version": "1.7.0",
-  "compatibility": ">=2.0.0",
-  "sdk": 2,
+  "version": "1.8.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "brandColor": "#da2bc7",
+  "platforms": [
+    "local"
+  ],
   "name": {
     "en": "VThermo"
   },
@@ -47,9 +51,5 @@
       }
     }
   },
-  "bugs": {
-    "url": "https://github.com/balmli/no.almli.thermostat/issues"
-  },
-  "homeyCommunityTopicId": 36442,
-  "source": "https://github.com/balmli/no.almli.thermostat"
+  "homeyCommunityTopicId": 36442
 }

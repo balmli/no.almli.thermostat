@@ -2,10 +2,10 @@
   "id": "target_diff_temp",
   "type": "number",
   "label": {
-    "en": "Target temperature offset (°C)"
+    "en": "Target temperature offset"
   },
   "hint": {
-    "en": "Offset when target temperature is updated from a master VThermo - thermostat"
+    "en": "Offset when the target temperature is updated from a master VThermo - thermostat."
   },
   "value": 0,
   "min": -30,

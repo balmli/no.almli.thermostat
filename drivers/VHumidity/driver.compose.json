@@ -3,11 +3,9 @@
   "name": {
     "en": "VHumidity"
   },
-  "icon": "{{driverAssetsPath}}/icon.svg",
-  "images": {
-    "large": "{{driverAssetsPath}}/images/large.png",
-    "small": "{{driverAssetsPath}}/images/small.png"
-  },
+  "$extends": [
+    "defaults"
+  ],
   "class": "thermostat",
   "capabilities": [
     "onoff",
@@ -15,29 +13,5 @@
     "vh_target_humidity",
     "measure_humidity",
     "vh_target_humidity_view"
-  ],
-  "capabilitiesOptions": {
-    "vt_onoff": {
-      "greyout": true
-    },
-    "vh_target_humidity": {
-      "decimals": 0,
-      "min": 1,
-      "max": 90,
-      "step": 1
-    }
-  },
-  "pair": [
-    {
-      "id": "list_devices",
-      "template": "list_devices",
-      "navigation": {
-        "next": "add_my_devices"
-      }
-    },
-    {
-      "id": "add_my_devices",
-      "template": "add_devices"
-    }
   ]
 }

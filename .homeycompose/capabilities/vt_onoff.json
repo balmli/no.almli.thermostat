@@ -1,22 +1,17 @@
 {
   "type": "boolean",
-  "icon": "/drivers/VThermo/assets/images/onoff.svg",
-  "noblink": false,
-  "greyout": true,
-  "label": {
-    "true": {
-      "en": "Active"
-    },
-    "false": {
-      "en": "Idle"
-    }
-  },
   "title": {
     "en": "State"
   },
-  "desc": {
-    "en": "State of the device"
-  },
   "getable": true,
-  "setable": false
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/heating.svg",
+  "insights": true,
+  "insightsTitleTrue": {
+    "en": "Active"
+  },
+  "insightsTitleFalse": {
+    "en": "Idle"
+  }
 }

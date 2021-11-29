@@ -1,0 +1,17 @@
+{
+  "id": "validate_min_temp",
+  "type": "number",
+  "label": {
+    "en": "Minimum validate temperature"
+  },
+  "hint": {
+    "en": "Temperatures below this value will not be used when calculating the temperature."
+  },
+  "value": 1,
+  "min": -10,
+  "max": 150,
+  "step": 0.5,
+  "units": {
+    "en": "°C"
+  }
+}

@@ -1,20 +1,20 @@
 {
   "type": "number",
-  "min": 1,
-  "max": 90,
   "title": {
     "en": "Target humidity"
   },
   "desc": {
     "en": "Target humidity in percent (%)"
   },
+  "getable": true,
+  "setable": true,
   "units": {
     "en": "%"
   },
-  "chartType": "stepLine",
-  "decimals": 0,
+  "uiComponent": "slider",
   "insights": true,
-  "getable": true,
-  "setable": true,
-  "uiComponent": "slider"
+  "min": 1,
+  "max": 90,
+  "step": 1,
+  "decimals": 0
 }

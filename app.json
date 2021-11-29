@@ -1,9 +1,13 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "no.almli.thermostat",
-  "version": "1.7.0",
-  "compatibility": ">=2.0.0",
-  "sdk": 2,
+  "version": "1.8.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "brandColor": "#da2bc7",
+  "platforms": [
+    "local"
+  ],
   "name": {
     "en": "VThermo"
   },
@@ -48,11 +52,7 @@
       }
     }
   },
-  "bugs": {
-    "url": "https://github.com/balmli/no.almli.thermostat/issues"
-  },
   "homeyCommunityTopicId": 36442,
-  "source": "https://github.com/balmli/no.almli.thermostat",
   "flow": {
     "triggers": [
       {
@@ -283,10 +283,13 @@
       {
         "id": "update_invert_switch",
         "title": {
-          "en": "Update 'Invert switch'"
+          "en": "Enable or disable 'Invert switch'"
+        },
+        "titleFormatted": {
+          "en": "[[invert_switch]] 'Invert switch'"
         },
         "hint": {
-          "en": "Select 'Yes' and the thermostat will switch on if above the target, and switch off if below the target."
+          "en": "Select 'Enable' and the thermostat will switch on if above the target, and switch off if below the target."
         },
         "args": [
           {
@@ -304,13 +307,13 @@
               {
                 "id": "false",
                 "label": {
-                  "en": "No"
+                  "en": "Disable"
                 }
               },
               {
                 "id": "true",
                 "label": {
-                  "en": "Yes"
+                  "en": "Enable"
                 }
               }
             ]
@@ -326,7 +329,7 @@
           "en": "Update temperature to [[temperature]] °C"
         },
         "hint": {
-          "en": "Update the temperature, e.g. from a temperature sensor in another zone"
+          "en": "Update the temperature, e.g. from a temperature sensor in another zone."
         },
         "args": [
           {
@@ -354,8 +357,11 @@
         "title": {
           "en": "Update target temperature min, max and step"
         },
+        "titleFormatted": {
+          "en": "Update target temperature min to [[temp_min]], max to [[temp_max]] and step to [[temp_step]]"
+        },
         "hint": {
-          "en": "Update minimum, maximum and step for target temperature"
+          "en": "Update minimum, maximum and step for target temperature."
         },
         "args": [
           {
@@ -417,8 +423,11 @@
         "title": {
           "en": "Update target temperature offset"
         },
+        "titleFormatted": {
+          "en": "Update target temperature offset to [[temp_offset]]"
+        },
         "hint": {
-          "en": "Update the offset when target temperature is updated from a master VThermo - thermostat"
+          "en": "Update the offset when target temperature is updated from a master VThermo - thermostat."
         },
         "args": [
           {
@@ -444,10 +453,13 @@
       {
         "id": "update_target_update_enabled",
         "title": {
-          "en": "Target temperature update enabled"
+          "en": "Enable or disable target temperature update"
+        },
+        "titleFormatted": {
+          "en": "[[enabled]] target temperature update"
         },
         "hint": {
-          "en": "Enable or disable being updating from a master VThermo - thermostat."
+          "en": "Enable or disable being updated from a master VThermo - thermostat."
         },
         "args": [
           {
@@ -458,20 +470,20 @@
           {
             "name": "enabled",
             "title": {
-              "en": "Target temperature update enabled"
+              "en": "Target temperature update enabled or disabled"
             },
             "type": "dropdown",
             "values": [
               {
                 "id": "false",
                 "label": {
-                  "en": "Disabled"
+                  "en": "Disable"
                 }
               },
               {
                 "id": "true",
                 "label": {
-                  "en": "Enabled"
+                  "en": "Enable"
                 }
               }
             ]
@@ -483,8 +495,11 @@
         "title": {
           "en": "Set the target humidity"
         },
+        "titleFormatted": {
+          "en": "Set the target humidity to [[vh_target_humidity]]"
+        },
         "hint": {
-          "en": "Set the target humidity"
+          "en": "Set the target humidity."
         },
         "args": [
           {
@@ -510,33 +525,10 @@
   },
   "drivers": [
     {
-      "id": "VHumidity",
-      "name": {
-        "en": "VHumidity"
-      },
       "icon": "/drivers/VHumidity/assets/icon.svg",
       "images": {
         "large": "/drivers/VHumidity/assets/images/large.png",
         "small": "/drivers/VHumidity/assets/images/small.png"
-      },
-      "class": "thermostat",
-      "capabilities": [
-        "onoff",
-        "vt_onoff",
-        "vh_target_humidity",
-        "measure_humidity",
-        "vh_target_humidity_view"
-      ],
-      "capabilitiesOptions": {
-        "vt_onoff": {
-          "greyout": true
-        },
-        "vh_target_humidity": {
-          "decimals": 0,
-          "min": 1,
-          "max": 90,
-          "step": 1
-        }
       },
       "pair": [
         {
@@ -550,6 +542,18 @@
           "id": "add_my_devices",
           "template": "add_devices"
         }
+      ],
+      "id": "VHumidity",
+      "name": {
+        "en": "VHumidity"
+      },
+      "class": "thermostat",
+      "capabilities": [
+        "onoff",
+        "vt_onoff",
+        "vh_target_humidity",
+        "measure_humidity",
+        "vh_target_humidity_view"
       ],
       "settings": [
         {
@@ -665,38 +669,10 @@
       ]
     },
     {
-      "id": "VThermo",
-      "name": {
-        "en": "VThermo"
-      },
       "icon": "/drivers/VThermo/assets/icon.svg",
       "images": {
         "large": "/drivers/VThermo/assets/images/large.png",
         "small": "/drivers/VThermo/assets/images/small.png"
-      },
-      "class": "thermostat",
-      "capabilities": [
-        "onoff",
-        "vt_onoff",
-        "target_temperature",
-        "measure_temperature"
-      ],
-      "capabilitiesOptions": {
-        "vt_onoff": {
-          "greyout": true,
-          "titleTrue": {
-            "en": "Active"
-          },
-          "titleFalse": {
-            "en": "Idle"
-          }
-        },
-        "target_temperature": {
-          "decimals": 1,
-          "min": 1,
-          "max": 40,
-          "step": 0.5
-        }
       },
       "pair": [
         {
@@ -710,6 +686,17 @@
           "id": "add_my_devices",
           "template": "add_devices"
         }
+      ],
+      "id": "VThermo",
+      "name": {
+        "en": "VThermo"
+      },
+      "class": "thermostat",
+      "capabilities": [
+        "onoff",
+        "vt_onoff",
+        "target_temperature",
+        "measure_temperature"
       ],
       "settings": [
         {
@@ -945,10 +932,10 @@
               "id": "target_diff_temp",
               "type": "number",
               "label": {
-                "en": "Target temperature offset (°C)"
+                "en": "Target temperature offset"
               },
               "hint": {
-                "en": "Offset when target temperature is updated from a master VThermo - thermostat"
+                "en": "Offset when the target temperature is updated from a master VThermo - thermostat."
               },
               "value": 0,
               "min": -30,
@@ -973,10 +960,10 @@
               "id": "target_min_temp",
               "type": "number",
               "label": {
-                "en": "Minimum target temperature (°C)"
+                "en": "Minimum target temperature"
               },
               "hint": {
-                "en": "Minimum target temperature"
+                "en": "Minimum target temperature when the target temperature is updated from a master VThermo - thermostat."
               },
               "value": 1,
               "min": -10,
@@ -990,10 +977,10 @@
               "id": "target_max_temp",
               "type": "number",
               "label": {
-                "en": "Maximum target temperature (°C)"
+                "en": "Maximum target temperature"
               },
               "hint": {
-                "en": "Maximum target temperature"
+                "en": "Maximum target temperature when the target temperature is updated from a master VThermo - thermostat."
               },
               "value": 40,
               "min": -10,
@@ -1165,6 +1152,51 @@
               }
             },
             {
+              "id": "validate_temperature",
+              "type": "checkbox",
+              "label": {
+                "en": "Validate temperatures"
+              },
+              "value": false,
+              "hint": {
+                "en": "Check this to only accept temperatures in the validate min / max range. Temperatures outside this range not will be used when calculating the temperature."
+              }
+            },
+            {
+              "id": "validate_min_temp",
+              "type": "number",
+              "label": {
+                "en": "Minimum validate temperature"
+              },
+              "hint": {
+                "en": "Temperatures below this value will not be used when calculating the temperature."
+              },
+              "value": 1,
+              "min": -10,
+              "max": 150,
+              "step": 0.5,
+              "units": {
+                "en": "°C"
+              }
+            },
+            {
+              "id": "validate_max_temp",
+              "type": "number",
+              "label": {
+                "en": "Maximum validate temperature"
+              },
+              "hint": {
+                "en": "Temperatures above this value will not be used when calculating the temperature."
+              },
+              "value": 40,
+              "min": -10,
+              "max": 150,
+              "step": 0.5,
+              "units": {
+                "en": "°C"
+              }
+            },
+            {
               "id": "invert",
               "type": "checkbox",
               "label": {
@@ -1218,23 +1250,23 @@
   "capabilities": {
     "vh_target_humidity": {
       "type": "number",
-      "min": 1,
-      "max": 90,
       "title": {
         "en": "Target humidity"
       },
       "desc": {
         "en": "Target humidity in percent (%)"
       },
+      "getable": true,
+      "setable": true,
       "units": {
         "en": "%"
       },
-      "chartType": "stepLine",
-      "decimals": 0,
+      "uiComponent": "slider",
       "insights": true,
-      "getable": true,
-      "setable": true,
-      "uiComponent": "slider"
+      "min": 1,
+      "max": 90,
+      "step": 1,
+      "decimals": 0
     },
     "vh_target_humidity_view": {
       "type": "number",
@@ -1255,25 +1287,20 @@
     },
     "vt_onoff": {
       "type": "boolean",
-      "icon": "/drivers/VThermo/assets/images/onoff.svg",
-      "noblink": false,
-      "greyout": true,
-      "label": {
-        "true": {
-          "en": "Active"
-        },
-        "false": {
-          "en": "Idle"
-        }
-      },
       "title": {
         "en": "State"
       },
-      "desc": {
-        "en": "State of the device"
-      },
       "getable": true,
-      "setable": false
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/heating.svg",
+      "insights": true,
+      "insightsTitleTrue": {
+        "en": "Active"
+      },
+      "insightsTitleFalse": {
+        "en": "Idle"
+      }
     }
   }
 }

@@ -141,6 +141,12 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.8.0
+
+- Added option to validate temperatures
+- Stability improvements
+- Migrated to SDK3
+
 #### 1.7.0
 
 - Added flow to manually update the temperature, e.g. from a temperature sensor in another zone

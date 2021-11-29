@@ -1,10 +1,13 @@
 {
   "id": "update_target_update_enabled",
   "title": {
-    "en": "Target temperature update enabled"
+    "en": "Enable or disable target temperature update"
+  },
+  "titleFormatted": {
+    "en": "[[enabled]] target temperature update"
   },
   "hint": {
-    "en": "Enable or disable being updating from a master VThermo - thermostat."
+    "en": "Enable or disable being updated from a master VThermo - thermostat."
   },
   "args": [
     {
@@ -15,20 +18,20 @@
     {
       "name": "enabled",
       "title": {
-        "en": "Target temperature update enabled"
+        "en": "Target temperature update enabled or disabled"
       },
       "type": "dropdown",
       "values": [
         {
           "id": "false",
           "label": {
-            "en": "Disabled"
+            "en": "Disable"
           }
         },
         {
           "id": "true",
           "label": {
-            "en": "Enabled"
+            "en": "Enable"
           }
         }
       ]

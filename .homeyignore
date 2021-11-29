@@ -3,4 +3,6 @@
 .eslintrc.json
 *.iml
 .idea
-test/*
+docs/
+test/
+tests/

@@ -1,7 +1,7 @@
 {
   "id": "vt_onoff_is_on",
   "title": {
-    "en": "Thermostat is !{{on|off}}"
+    "en": "Thermostat is !{{active|idle}}"
   },
   "args": [
     {

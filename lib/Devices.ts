@@ -355,11 +355,19 @@ export class Devices {
      */
     async updateDevices(deviceRequests: DeviceRequests): Promise<void> {
         for (const dr of deviceRequests.getRequests()) {
+            // dataId is only set for VThermo and VHumidity
             if (dr.dataId) {
                 const localDevice = this.homey?.app.getDeviceByDataId(dr.dataId);
                 if (localDevice) {
                     try {
                         await localDevice.setCapabilityValue(dr.capabilityId, dr.value);
+                        // For VHumidity: add to value store
+                        if (localDevice.getValueStore &&
+                            (dr.capabilityId === 'measure_humidity') &&
+                            (dr.value !== undefined) &&
+                            (dr.value !== null)) {
+                            localDevice.getValueStore().add(dr.value);
+                        }
                         if (!!dr.trigger) {
                             await this.homey?.flow.getDeviceTriggerCard(dr.trigger)
                                 .trigger(localDevice, {state: dr.value ? 1 : 0}, {})
@@ -373,20 +381,18 @@ export class Devices {
                     this.logger?.warn(`Update device: Has dataId, but is not a local device`, dr);
                 }
             } else {
-                const device = this.getDevice(dr.id);
-                if (device && device.homeyDevice) {
+                if (dr.deviceDelay && dr.deviceDelay > 0) {
                     try {
-                        // @ts-ignore
-                        await device.homeyDevice.setCapabilityValue(dr.capabilityId, dr.value);
-                        if (dr.deviceDelay && dr.deviceDelay > 0) {
-                            await this.homey?.app.delay(dr.deviceDelay);
-                        }
-                        this.logger?.verbose(`Update device:(other): ${device.id}:${device.name}:${dr.capabilityId} -> ${dr.value}`);
+                        await this.homey?.app.setCapabilityValue(dr.id, dr.capabilityId, dr.value);
+                        await this.homey?.app.delay(dr.deviceDelay);
+                        this.logger?.verbose(`Update device:(other): ${dr.id}:${dr.capabilityId} -> ${dr.value}`);
                     } catch (err) {
                         this.logger?.error('Update devices: UPDATE DEVICE failed:', dr, err);
                     }
                 } else {
-                    this.logger?.warn(`Update device: Device request, but missing homey device:`, dr);
+                    this.homey?.app.setCapabilityValue(dr.id, dr.capabilityId, dr.value)
+                        .then(() => this.logger?.verbose(`Update device:(other): ${dr.id}:${dr.capabilityId} -> ${dr.value}`))
+                        .catch((err: any) => this.logger?.error('Update devices: UPDATE DEVICE failed:', dr, err));
                 }
             }
         }

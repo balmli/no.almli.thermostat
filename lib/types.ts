@@ -45,8 +45,6 @@ export class Device {
     deviceSettings?: DeviceSettings;
     targetSettings?: TargetSettings;
     humiditySettings?: HumiditySettings;
-    homeyDevice?: HomeyAPI.ManagerDevices.Device;
-
 
     isVThermo(): boolean {
         return (this.driverUri === DRIVER_URI) &&

@@ -243,6 +243,15 @@ module.exports = class VThermoApp extends Homey.App {
         }
     }
 
+    async setCapabilityValue(deviceId: string, capabilityId: string, value: any): Promise<any> {
+        const api = await this.getOrCreateHomeyApi();
+        return api.devices.setCapabilityValue({
+            deviceId,
+            capabilityId,
+            value
+        });
+    }
+
     private clearRefreshTimeout(): void {
         if (this._refreshTimeout) {
             this.homey.clearTimeout(this._refreshTimeout);

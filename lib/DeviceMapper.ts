@@ -31,7 +31,6 @@ export class DeviceMapper {
         d.deviceSettings = DeviceSettingsMapper.map(i.driverUri, i.driverId, i.settings);
         d.targetSettings = TargetSettingsMapper.map(i.driverUri, i.driverId, i.settings);
         d.humiditySettings = HumiditySettingsMapper.map(i.driverUri, i.driverId, i.settings);
-        d.homeyDevice = DeviceMapper.mapHomeyDevice(i)
         return d;
     }
 
@@ -45,17 +44,6 @@ export class DeviceMapper {
             }
         }
         return capabilities;
-    }
-
-    private static mapHomeyDevice(i: HomeyAPI.ManagerDevices.Device): HomeyAPI.ManagerDevices.Device | undefined {
-        let add = false;
-        const caps = i.capabilitiesObj
-        for (const key in caps) {
-            if (caps.hasOwnProperty(key) && SUPPORTED_UPDATE_CAPABILITIES.includes(key)) {
-                add = true;
-            }
-        }
-        return add ? i : undefined;
     }
 
 }

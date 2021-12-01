@@ -28,24 +28,31 @@ You can use temperature sensors from the same zone, from the parent zone, and fr
 
 #### Triggers
 
-- The temperature has changed.
-- The target temperature has changed.
-- The thermostat turned off.
-- The thermostat turned on.
+- Turned on
+- Turned off
+- The target temperature changed
+- The temperature became greater than X °C
+- The temperature became less than X °C
+- The temperature changed
+- Heating turned off
+- Heating turned on
 
 #### Conditions
 
-- The thermostat is on / off.
+- Is switched on / off
+- Thermostat is active / idle
 
 #### Actions
 
-- Set the target temperature.
-- Turn on / off.
+- Turn on
+- Turn off
+- Toggle on / off
+- Set the target temperature
+- Enable / disable 'Invert switch'
 - Update temperature to X °C
-- Update 'Target temperature offset'
-- Update 'Target temperature update enabled'  
-- Update 'Target temperature min, max and step'
-- Update 'Invert switch'.
+- Update target temperature min, max and step
+- Update target temperature offset
+- Enable / disable target temperature update
 
 ## Device: VHumidity
 
@@ -55,26 +62,37 @@ Fans will turn on if the humidity is larger than the target humidity, and off if
 
 #### Triggers
 
-- The humidity has changed.
-- The target humidity has changed.
-- The humidity device turned off.
-- The humidity device turned on.
+- Turn on
+- Turn off
+- Toggle on / off
+- The humidity became greater than X
+- The humidity became less than X
+- The humidity changed
+- Humidity device turned off
+- Humidity device turned on
+- Target humidity changed
 
 #### Conditions
 
-- The humidity device is on / off.
-- Humidity has increased more than [x] % points last [y] minutes.
-- Humidity has decreased more than [x] % points last [y] minutes.
+- Is switched on / off
+- Humidity has decreased more than X % points last Y minutes
+- Humidity has increased more than X % points last Y minutes
+- Humidity device is active/idle
 
 #### Actions
 
-- Set the target humidity.
-- Turn on / off.
+- Turn on
+- Turn off
+- Toggle on / off
+- Set the target humidity
 
 ## Details about Advanced settings
 
 #### Temperature
 - Temperature calculation method: select between 'Average', 'Minimum', 'Maximum', 'Newest' or 'Manual'.  Manual is used when updating the temperature with a flow, e.g. from a temperature sensor in another zone.
+- Validate temperatures: to only accept temperatures in the validate min / max range. This can be used if the temperature sensor reports invalid temperatures, eg. 0 or 100 °C.
+- Minimum validate temperature (°C): temperatures below this value will not be used when calculating the temperature.
+- Maximum validate temperature (°C): temperatures above this value will not be used when calculating the temperature.
 
 #### Temperature sensors in the same zone
 Select which temperature sensors to be used from the same zone as the virtual thermostat.
@@ -140,6 +158,10 @@ Select temperature sensors from the sub zones of the virtual thermostat,  just o
 Please report issues at the [issues section on Github](https://github.com/balmli/no.almli.thermostat/issues).
 
 ## Release Notes:
+
+#### 1.8.1
+
+- Fixed VHumidity Humidity has increased/decreased conditions
 
 #### 1.8.0
 

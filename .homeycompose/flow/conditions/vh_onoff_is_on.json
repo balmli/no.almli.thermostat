@@ -1,7 +1,7 @@
 {
   "id": "vh_onoff_is_on",
   "title": {
-    "en": "VHumidity is !{{on|off}}"
+    "en": "Humidity device is !{{active|idle}}"
   },
   "args": [
     {

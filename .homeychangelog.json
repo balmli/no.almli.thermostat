@@ -1,4 +1,7 @@
 {
+  "1.8.1": {
+    "en": "Added option to validate temperatures. Stability improvements. Migrated to SDK3."
+  },
   "1.8.0": {
     "en": "Added option to validate temperatures. Stability improvements. Migrated to SDK3."
   },

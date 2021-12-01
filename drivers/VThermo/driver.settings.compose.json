@@ -10,6 +10,18 @@
         "id": "calc_method"
       },
       {
+        "$extends": "validate_temperature",
+        "id": "validate_temperature"
+      },
+      {
+        "$extends": "validate_min_temp",
+        "id": "validate_min_temp"
+      },
+      {
+        "$extends": "validate_max_temp",
+        "id": "validate_max_temp"
+      },
+      {
         "type": "group",
         "label": {
           "en": "Temperature sensors in the same zone"
@@ -200,18 +212,6 @@
       {
         "$extends": "hysteresis",
         "id": "hysteresis"
-      },
-      {
-        "$extends": "validate_temperature",
-        "id": "validate_temperature"
-      },
-      {
-        "$extends": "validate_min_temp",
-        "id": "validate_min_temp"
-      },
-      {
-        "$extends": "validate_max_temp",
-        "id": "validate_max_temp"
       },
       {
         "$extends": "invert",

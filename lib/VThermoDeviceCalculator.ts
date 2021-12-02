@@ -171,18 +171,18 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
             ?.filter(d => d.id !== device.id &&
                 !!d.zone &&
                 !!d.driverId && (
-                (targetSettings.zone?.to_other && zone.id === d.zone && !d.isVThermo() && !d.isVHumidity())
-                || (targetSettings.sub_zones?.to_vthermo && !!childrenZoneIds && childrenZoneIds.includes(d.zone) && d.isVThermo())
-                || (targetSettings.sub_zones?.to_other && !!childrenZoneIds && childrenZoneIds.includes(d.zone) && !d.isVThermo() && !d.isVHumidity())
-                || (targetSettings.all_sub_zones?.to_vthermo && !!otherZoneIds && otherZoneIds.includes(d.zone) && d.isVThermo())
-                || (targetSettings.all_sub_zones?.to_other && !!otherZoneIds && otherZoneIds.includes(d.zone) && !d.isVThermo() && !d.isVHumidity())
-            ));
+                    (targetSettings.zone?.to_other && zone.id === d.zone && !d.isVThermo() && !d.isVHumidity())
+                    || (targetSettings.sub_zones?.to_vthermo && !!childrenZoneIds && childrenZoneIds.includes(d.zone) && d.isVThermo())
+                    || (targetSettings.sub_zones?.to_other && !!childrenZoneIds && childrenZoneIds.includes(d.zone) && !d.isVThermo() && !d.isVHumidity())
+                    || (targetSettings.all_sub_zones?.to_vthermo && !!otherZoneIds && otherZoneIds.includes(d.zone) && d.isVThermo())
+                    || (targetSettings.all_sub_zones?.to_other && !!otherZoneIds && otherZoneIds.includes(d.zone) && !d.isVThermo() && !d.isVHumidity())
+                ));
 
         if (thermostats) {
             for (const thermostat of thermostats) {
                 const targetTemp = this.calculateTargetTemperature(thermostat, targetTemperature.value);
                 const targetUpdateEnabled = !thermostat.isVThermo() ||
-                        thermostat.targetSettings && !!thermostat.targetSettings.target_update_enabled;
+                    thermostat.targetSettings && !!thermostat.targetSettings.target_update_enabled;
 
                 if (targetUpdateEnabled) {
                     const dr = this.updateAndCreateDeviceRequestIfChanged(thermostat, 'target_temperature', targetTemp);
@@ -210,7 +210,7 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
     }
 
     /**
-     * Calculate if the VThermo and heaters in the zone should be switched.
+     * Calculate if the VThermo, heaters and thermostats in the zone and sub zone (one level down) should be switched.
      * @param device
      * @param zone
      * @private
@@ -245,17 +245,66 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
             }
             requests.addRequest(dr);
 
-            const heaters = this.getHeaters(zone, this.zonesObj, device.deviceSettings);
-            for (const heater of heaters) {
-                const dr = this.updateAndCreateDeviceRequestIfChanged(heater, 'onoff', onoff);
-                if (dr && deviceSettings.deviceDelay && deviceSettings.deviceDelay > 0) {
-                    dr.deviceDelay = deviceSettings.deviceDelay;
-                }
-                requests.addRequest(dr);
-            }
+            this.heatersDeviceRequests(onoff, zone, deviceSettings, requests);
+            this.thermostatsDeviceRequests(onoff, zone, deviceSettings, requests);
         }
 
         return requests;
+    }
+
+    /**
+     * Device requests for switching heaters.
+     * @param onoff
+     * @param zone
+     * @param deviceSettings
+     * @param requests
+     * @private
+     */
+    private heatersDeviceRequests(onoff: boolean, zone: Zone, deviceSettings: DeviceSettings, requests: DeviceRequests) {
+        const heaters = this.getHeaters(zone, this.zonesObj, deviceSettings);
+        for (const heater of heaters) {
+            const dr = this.updateAndCreateDeviceRequestIfChanged(heater, 'onoff', onoff);
+            if (dr && deviceSettings.deviceDelay && deviceSettings.deviceDelay > 0) {
+                dr.deviceDelay = deviceSettings.deviceDelay;
+            }
+            requests.addRequest(dr);
+        }
+    }
+
+    /**
+     * Device requests for setting the target temperature to simulate switching thermostats on / off.
+     * @param onoff
+     * @param zone
+     * @param deviceSettings
+     * @param requests
+     * @private
+     */
+    private thermostatsDeviceRequests(onoff: boolean, zone: Zone, deviceSettings: DeviceSettings, requests: DeviceRequests) {
+        const thermostats = this.getThermostats(zone, this.zonesObj, deviceSettings);
+        for (const thermostat of thermostats) {
+            const thTargetTemperature = thermostat.getLocalCapabilityValue('target_temperature');
+            const thTemperature = thermostat.getLocalCapabilityValue('measure_temperature');
+
+            const THERMOSTAT_ONOFF = 2.0;
+            const MIN_THERMOSTAT_ONOFF = 0.25;
+
+            if (thTargetTemperature && thTargetTemperature.value &&
+                thTemperature && thTemperature.value) {
+                let newTargetTemperature;
+                if (onoff && (thTargetTemperature.value < thTemperature.value + MIN_THERMOSTAT_ONOFF)) {
+                    newTargetTemperature = Math.ceil(thTemperature.value + THERMOSTAT_ONOFF);
+                } else if (!onoff && (thTargetTemperature.value > thTemperature.value - MIN_THERMOSTAT_ONOFF)) {
+                    newTargetTemperature = Math.floor(thTemperature.value - THERMOSTAT_ONOFF);
+                }
+                if (newTargetTemperature) {
+                    const dr = this.updateAndCreateDeviceRequestIfChanged(thermostat, 'target_temperature', newTargetTemperature);
+                    if (dr && deviceSettings.deviceDelay && deviceSettings.deviceDelay > 0) {
+                        dr.deviceDelay = deviceSettings.deviceDelay;
+                    }
+                    requests.addRequest(dr);
+                }
+            }
+        }
     }
 
     /**
@@ -324,4 +373,29 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
         return dcs;
     }
 
+    /**
+     * Get thermostats for a zone, with current zone and children zones.
+     * @param zone the zone
+     * @param zonesObj zone manager
+     * @param deviceSettings device settings
+     */
+    getThermostats(zone: Zone, zonesObj: Zones, deviceSettings?: DeviceSettings): Device[] {
+        const dcs: Device[] = [];
+        if (deviceSettings && (
+            deviceSettings.zone && deviceSettings.zone.thermostats
+            || deviceSettings.sub_zones && deviceSettings.sub_zones.thermostats)) {
+            const zones = [];
+            if (deviceSettings.zone && deviceSettings.zone.thermostats) {
+                zones.push(zone);
+            }
+            if (zone.children && deviceSettings.sub_zones && deviceSettings.sub_zones.thermostats) {
+                zones.push(...zone.children);
+            }
+            const devices = this.devicesObj.getDevicesFromZones(zones, DeviceClass.thermostat);
+            if (devices) {
+                dcs.push(...devices);
+            }
+        }
+        return dcs;
+    }
 }

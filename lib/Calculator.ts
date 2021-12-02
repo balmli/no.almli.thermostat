@@ -46,7 +46,8 @@ export class Calculator {
     private async execCalculate(): Promise<void> {
         try {
             const calculationResponse = this.calculateDeviceRequests();
-            await this.devicesObj.updateDevices(calculationResponse);
+            const uniqueRequests = DeviceRequests.unique(calculationResponse);
+            await this.devicesObj.updateDevices(uniqueRequests);
         } catch (err) {
             this.logger?.error(`Calculation failed`, err);
         }

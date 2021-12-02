@@ -100,12 +100,32 @@
       {
         "type": "group",
         "label": {
+          "en": "Control devices in the same zone"
+        },
+        "children": [
+          {
+            "$extends": "devices_zone_heaters",
+            "id": "devices_zone_heaters"
+          },
+          {
+            "$extends": "devices_zone_thermostats",
+            "id": "devices_zone_thermostats"
+          }
+        ]
+      },
+      {
+        "type": "group",
+        "label": {
           "en": "Control devices in sub zones (one level)"
         },
         "children": [
           {
             "$extends": "devices_sub_zones_heaters",
             "id": "devices_sub_zones_heaters"
+          },
+          {
+            "$extends": "devices_sub_zones_thermostats",
+            "id": "devices_sub_zones_thermostats"
           }
         ]
       }

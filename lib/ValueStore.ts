@@ -40,7 +40,7 @@ export class ValueStore {
     }
 
     changePctPointsLastMinutes(minutes: number, aTimestamp: number): number | undefined {
-        const now = aTimestamp || new Date().getTime();
+        const now = aTimestamp || Date.now();
         const ts = now - (minutes * 60000);
         const newest = this.sameAgeOrOlderThan(now);
         const newestOlderThan = this.sameAgeOrOlderThan(ts);

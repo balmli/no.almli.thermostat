@@ -139,6 +139,23 @@ export class DeviceRequests {
         );
     }
 
+    findIndex(dr: DeviceRequest): number {
+        return this.requests.findIndex(drx => drx.id === dr.id && drx.capabilityId === dr.capabilityId);
+    }
+
+    static unique(requests: DeviceRequests): DeviceRequests {
+        const ret = new DeviceRequests();
+        for (const dr of requests.getRequests()) {
+            const idx = ret.findIndex(dr);
+            if (idx >= 0) {
+                ret.getRequests()[idx] = dr;
+            } else {
+                ret.addRequest(dr);
+            }
+        }
+        return ret;
+    }
+
 }
 
 export const DRIVER_URI = 'homey:app:no.almli.thermostat';
@@ -199,6 +216,7 @@ export class TemperatureSettings {
 
 export class DeviceSettingssZone {
     clazz?: boolean;
+    thermostats?: boolean;
 }
 
 export class DeviceSettings {

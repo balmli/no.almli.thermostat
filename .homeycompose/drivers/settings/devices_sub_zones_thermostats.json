@@ -1,0 +1,11 @@
+{
+  "id": "devices_sub_zones_thermostats",
+  "type": "checkbox",
+  "label": {
+    "en": "Thermostats"
+  },
+  "value": false,
+  "hint": {
+    "en": "Will control thermostats in sub zones (one level down). This is achieved by setting the target temperature above / below the measured temperature."
+  }
+}

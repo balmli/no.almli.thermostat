@@ -14,10 +14,12 @@ export class DeviceSettingsMapper {
             const t = new DeviceSettings();
 
             t.zone = new DeviceSettingssZone();
-            t.zone.clazz = true;
+            t.zone.clazz = settings.devices_zone_heaters;
+            t.zone.thermostats = settings.devices_zone_thermostats;
 
             t.sub_zones = new DeviceSettingssZone();
             t.sub_zones.clazz = settings.devices_sub_zones_heaters;
+            t.sub_zones.thermostats = settings.devices_sub_zones_thermostats;
 
             t.contactAlarm = settings.contact_alarm;
             t.motionAlarm = settings.motion_alarm;

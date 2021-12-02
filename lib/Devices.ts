@@ -366,7 +366,7 @@ export class Devices {
                             (dr.capabilityId === 'measure_humidity') &&
                             (dr.value !== undefined) &&
                             (dr.value !== null)) {
-                            localDevice.getValueStore().add(dr.value);
+                            localDevice.getValueStore().addValue(dr.value);
                         }
                         if (!!dr.trigger) {
                             await this.homey?.flow.getDeviceTriggerCard(dr.trigger)

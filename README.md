@@ -117,8 +117,15 @@ Select temperature sensors from the sub zones of the virtual thermostat,  just o
 - other VThermo - thermostats
 - other devices with a temperature capability
 
+#### Control devices in the same zone
+
+- Heaters: uncheck this if controlling heaters in the same zone is not desired.
+- Thermostats: check this to control thermostats in the same zone. This is achieved by setting the target temperature above / below the measured temperature.
+
 #### Control devices in sub zones (one level)
+
 - Heaters: check this to control heaters in sub zones (one level down)
+- Thermostats: check this to control thermostats in sub zones (one level down). This is achieved by setting the target temperature above / below the measured temperature.
 
 #### Target temperature
 
@@ -158,6 +165,10 @@ Select temperature sensors from the sub zones of the virtual thermostat,  just o
 Please report issues at the [issues section on Github](https://github.com/balmli/no.almli.thermostat/issues).
 
 ## Release Notes:
+
+#### 1.8.2
+
+- Added option to control physical thermostats
 
 #### 1.8.1
 

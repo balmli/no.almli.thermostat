@@ -1,0 +1,11 @@
+{
+  "id": "devices_zone_thermostats",
+  "type": "checkbox",
+  "label": {
+    "en": "Thermostats"
+  },
+  "value": false,
+  "hint": {
+    "en": "Will control thermostats in the same zone. This is achieved by setting the target temperature above / below the measured temperature."
+  }
+}

@@ -83,6 +83,9 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
      */
     calculateMeasureTemperature(device: Device, zone: Zone): DeviceRequest | undefined {
         const temperatureSettings = device.temperatureSettings;
+        if (temperatureSettings?.calcMethod === CalcMethod.MANUAL) {
+            return;
+        }
         const temps = this.getTemperatures(zone, this.zonesObj, temperatureSettings);
         if (temps.length > 0) {
             this.logger?.debug(`Got temperatures for VThermo: ${zone.name} - ${device.id} - ${device.name}`, temps);

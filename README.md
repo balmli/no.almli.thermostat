@@ -166,6 +166,11 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.8.3
+
+- Fixed manual setting of temperature
+- Fixed brand color
+
 #### 1.8.2
 
 - Added option to control physical thermostats

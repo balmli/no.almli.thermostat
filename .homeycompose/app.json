@@ -1,9 +1,9 @@
 {
   "id": "no.almli.thermostat",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "compatibility": ">=5.0.0",
   "sdk": 3,
-  "brandColor": "#da2bc7",
+  "brandColor": "#df20cb",
   "platforms": [
     "local"
   ],

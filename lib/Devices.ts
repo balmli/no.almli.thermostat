@@ -143,6 +143,8 @@ export class Devices {
         const newDevice = DeviceMapper.map(updatedDevice);
         if (Devices.deviceChanged(device, updatedDevice)) {
             device.name = newDevice.name;
+            device.class = newDevice.class;
+            device.virtualClass = newDevice.virtualClass;
             device.zone = newDevice.zone;
             device.ready = newDevice.ready;
             device.available = newDevice.available;

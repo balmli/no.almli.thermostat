@@ -4,7 +4,6 @@ import {
     DeviceCapabilities,
     DeviceCapability,
     SUPPORTED_CAPABILITIES,
-    SUPPORTED_UPDATE_CAPABILITIES,
 } from "./types";
 import {TemperatureSettingsMapper} from "./TemperatureSettingsMapper";
 import {TargetSettingsMapper} from "./TargetSettingsMapper";

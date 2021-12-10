@@ -2,7 +2,6 @@ import {HomeyAPI} from "athom-api";
 import {
     capabilityIdFormat,
     Device,
-    DeviceCapabilityEvent,
     DeviceClass,
     DeviceRequests,
     SUPPORTED_CAPABILITIES,
@@ -325,13 +324,6 @@ export class Devices {
     }
 
     private capabilityInstanceListener(device: HomeyAPI.ManagerDevices.Device, capabilityId: string, value: any) {
-        const event: DeviceCapabilityEvent = {
-            deviceId: device.id,
-            capId: capabilityId,
-            value: value
-        };
-        this.logger?.info(`Capability instance event: ${device.name}:`, event);
-
         const deviz = this.getDevice(device.id);
         if (deviz) {
             if (deviz.hasChangedValue(capabilityId, value)) {

@@ -166,6 +166,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.8.5
+
+- Fixed switching for fans in VHumidity
+
 #### 1.8.4
 
 - Changes to "virtual class" must be taken into account

@@ -1,4 +1,3 @@
-import {HomeyAPI} from "athom-api";
 
 export class Zone {
     id!: string;

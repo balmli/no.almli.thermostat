@@ -39,7 +39,8 @@ module.exports = class VHumidityDevice extends BaseDevice {
                 .catch(err => this.logger.error(err));
             await this.setCapabilityValue('vh_target_humidity_view', value)
                 .catch(err => this.logger.error(err));
-            return Promise.resolve();
+            // @ts-ignore
+            this.homey.app.updateByDataId(this.getData().id, 'vh_target_humidity', value);
         });
     }
 

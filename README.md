@@ -166,6 +166,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.9.0
+
+- Added option to ignore temperature measurements older than X seconds
+
 #### 1.8.5
 
 - Fixed switching for fans in VHumidity

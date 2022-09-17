@@ -4,3 +4,7 @@ env.json
 build/
 node_modules/
 tests/
+
+
+# Added by Homey CLI
+/.homeybuild/

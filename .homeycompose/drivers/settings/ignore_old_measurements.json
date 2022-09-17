@@ -1,0 +1,17 @@
+{
+  "id": "ignore_old_measurements",
+  "type": "number",
+  "label": {
+    "en": "Ignore old measurements"
+  },
+  "hint": {
+    "en": "To ignore temperature measurements older than X seconds, set a value larger than 0. Only used for Average, Minimum and Maximum. "
+  },
+  "value": 0,
+  "min": 0,
+  "max": 86400,
+  "step": 1,
+  "units": {
+    "en": "seconds"
+  }
+}

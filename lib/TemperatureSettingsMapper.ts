@@ -13,6 +13,7 @@ export class TemperatureSettingsMapper {
             && settings) {
             const t = new TemperatureSettings();
             t.calcMethod = settings.calc_method;
+            t.measurementMaxAge = !!settings.ignore_old_measurements ? settings.ignore_old_measurements * 1000 : undefined;
             t.validate = settings.validate_temperature;
             t.validate_min = settings.validate_min_temp;
             t.validate_max = settings.validate_max_temp;

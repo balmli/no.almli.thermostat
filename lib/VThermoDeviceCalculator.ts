@@ -115,11 +115,11 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
         let temperature = null;
         if (temperatures.length > 0 && tempSettings) {
             if (tempSettings.calcMethod === CalcMethod.AVERAGE) {
-                temperature = math.round(math.average(temperatures));
+                temperature = math.round(math.average(temperatures, tempSettings.measurementMaxAge));
             } else if (tempSettings.calcMethod === CalcMethod.MIN) {
-                temperature = math.min(temperatures);
+                temperature = math.min(temperatures, tempSettings.measurementMaxAge);
             } else if (tempSettings.calcMethod === CalcMethod.MAX) {
-                temperature = math.max(temperatures);
+                temperature = math.max(temperatures), tempSettings.measurementMaxAge;
             } else if (tempSettings.calcMethod === CalcMethod.NEWEST) {
                 temperature = math.newest(temperatures);
             } else if (tempSettings.calcMethod === CalcMethod.MANUAL) {

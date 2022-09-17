@@ -205,6 +205,7 @@ export class TemperatureSettingsZone {
 
 export class TemperatureSettings {
     calcMethod?: CalcMethod;
+    measurementMaxAge?: number; // in millis
     validate?: boolean;
     validate_min?: number;
     validate_max?: number;

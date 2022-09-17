@@ -1,8 +1,23 @@
 const round = (val: number) => Math.round(val * 100) / 100;
-const values = (arr: any[]) => arr.map(v => v.value);
-const average = (arr: any[]) => values(arr).reduce((p, c) => p + c, 0) / arr.length;
-const min = (arr: any[]) => Math.min(...values(arr));
-const max = (arr: any[]) => Math.max(...values(arr));
+
+const values = (arr: any[], measurementMaxAge?: number) => {
+    const vals = arr.length <= 1 ? arr : arr
+        .map(v => ({
+            ...v,
+            ts: typeof v.lastUpdated === 'number' ? v.lastUpdated : new Date(v.lastUpdated).getTime()
+        }))
+        .filter(v => !measurementMaxAge || ((Date.now() - v.ts) < measurementMaxAge));
+    return vals.length < 1 ? newest(arr) : vals
+        .map(v => v.value);
+};
+
+const average = (arr: any[], measurementMaxAge?: number) => {
+    const vals = values(arr, measurementMaxAge);
+    return vals.reduce((p: number, c: number) => p + c, 0) / vals.length;
+}
+
+const min = (arr: any[], measurementMaxAge?: number) => Math.min(...values(arr, measurementMaxAge));
+const max = (arr: any[], measurementMaxAge?: number) => Math.max(...values(arr, measurementMaxAge));
 const newest = (arr: any[]) => arr.map(v => ({
     ...v,
     ts: typeof v.lastUpdated === 'number' ? v.lastUpdated : new Date(v.lastUpdated).getTime()

@@ -22,6 +22,10 @@
         "id": "validate_max_temp"
       },
       {
+        "$extends": "ignore_old_measurements",
+        "id": "ignore_old_measurements"
+      },
+      {
         "type": "group",
         "label": {
           "en": "Temperature sensors in the same zone"

@@ -1,4 +1,7 @@
 {
+  "1.9.0": {
+    "en": "Added option to ignore temperature measurements older than X seconds."
+  },
   "1.8.5": {
     "en": "Fixed switching for fans in VHumidity."
   },

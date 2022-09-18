@@ -8,6 +8,10 @@
       {
         "$extends": "calc_method_humidity",
         "id": "calc_method_humidity"
+      },
+      {
+        "$extends": "ignore_old_measurements",
+        "id": "ignore_old_measurements"
       }
     ]
   },

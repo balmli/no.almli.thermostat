@@ -12,6 +12,7 @@ export class HumiditySettingsMapper {
             && settings) {
             const t = new HumiditySettings();
             t.calcMethod = settings.calc_method_humidity;
+            t.measurementMaxAge = !!settings.ignore_old_measurements ? settings.ignore_old_measurements * 1000 : undefined;
 
             return t;
         }

@@ -93,6 +93,7 @@ Fans will turn on if the humidity is larger than the target humidity, and off if
 - Validate temperatures: to only accept temperatures in the validate min / max range. This can be used if the temperature sensor reports invalid temperatures, eg. 0 or 100 °C.
 - Minimum validate temperature (°C): temperatures below this value will not be used when calculating the temperature.
 - Maximum validate temperature (°C): temperatures above this value will not be used when calculating the temperature.
+- Ignore old measurements: to ignore old measurements, set a value larger than 0. A value of eg. 7200 will ignore meaurements older than 2 hours (7200 seconds). Only used for Average, Minimum and Maximum, and when there are two or more sensors.
 
 #### Temperature sensors in the same zone
 Select which temperature sensors to be used from the same zone as the virtual thermostat.
@@ -165,6 +166,10 @@ Select temperature sensors from the sub zones of the virtual thermostat,  just o
 Please report issues at the [issues section on Github](https://github.com/balmli/no.almli.thermostat/issues).
 
 ## Release Notes:
+
+#### 1.9.1
+
+- Added option to ignore measurements older than X seconds
 
 #### 1.9.0
 

@@ -255,4 +255,5 @@ export enum CalcMethodHumidity {
 
 export class HumiditySettings {
     calcMethod?: CalcMethodHumidity;
+    measurementMaxAge?: number; // in millis
 }

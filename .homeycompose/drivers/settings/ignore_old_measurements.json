@@ -5,7 +5,7 @@
     "en": "Ignore old measurements"
   },
   "hint": {
-    "en": "To ignore temperature measurements older than X seconds, set a value larger than 0. Only used for Average, Minimum and Maximum. "
+    "en": "To ignore old measurements, set a value larger than 0. A value of eg. 7200 will ignore meaurements older than 2 hours (7200 seconds). Only used for Average, Minimum and Maximum, and when there are two or more sensors."
   },
   "value": 0,
   "min": 0,

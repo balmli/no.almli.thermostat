@@ -81,11 +81,11 @@ export class VHumidityDeviceCalculator extends DeviceCalculator {
         let humidity = null;
         if (humidities.length > 0 && humSettings) {
             if (humSettings.calcMethod === CalcMethodHumidity.AVERAGE) {
-                humidity = math.round(math.average(humidities));
+                humidity = math.round(math.average(humidities, humSettings.measurementMaxAge));
             } else if (humSettings.calcMethod === CalcMethodHumidity.MIN) {
-                humidity = math.min(humidities);
+                humidity = math.min(humidities, humSettings.measurementMaxAge);
             } else if (humSettings.calcMethod === CalcMethodHumidity.MAX) {
-                humidity = math.max(humidities);
+                humidity = math.max(humidities, humSettings.measurementMaxAge);
             } else if (humSettings.calcMethod === CalcMethodHumidity.NEWEST) {
                 humidity = math.newest(humidities);
             } else {

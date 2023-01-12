@@ -167,6 +167,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.9.2
+
+- Avoid black screen in mobile app for 'Heating turned off' trigger
+
 #### 1.9.1
 
 - Added option to ignore measurements older than X seconds

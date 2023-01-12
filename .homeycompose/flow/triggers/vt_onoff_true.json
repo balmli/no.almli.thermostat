@@ -9,8 +9,7 @@
       "type": "number",
       "title": {
         "en": "State"
-      },
-      "example": 1
+      }
     }
   ],
   "args": [

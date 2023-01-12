@@ -1,4 +1,7 @@
 {
+  "1.9.2": {
+    "en": "Avoid black screen in mobile app for 'Heating turned off' trigger."
+  },
   "1.9.1": {
     "en": "Added option to ignore measurements older than X seconds."
   },

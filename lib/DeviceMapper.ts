@@ -1,4 +1,4 @@
-import {HomeyAPI} from "athom-api";
+import {HomeyAPIV2} from "homey-api";
 import {
     Device,
     DeviceCapabilities,
@@ -12,9 +12,10 @@ import {HumiditySettingsMapper} from "./HumiditySettingsMapper";
 
 export class DeviceMapper {
 
-    static map(i: HomeyAPI.ManagerDevices.Device): Device {
+    static map(i: HomeyAPIV2.ManagerDevices.Device): Device {
         const d = new Device();
         d.id = i.id;
+        // @ts-ignore
         d.dataId = i.data ? i.data.id : undefined;
         d.name = i.name;
         d.driverUri = i.driverUri;

@@ -34,7 +34,7 @@ export class Device {
     driverUri?: string;
     driverId?: string;
     class?: string;
-    virtualClass?: string;
+    virtualClass?: string | null;
     zone?: string;
     ready?: boolean;
     available?: boolean;

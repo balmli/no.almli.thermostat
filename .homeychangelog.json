@@ -1,4 +1,7 @@
 {
+  "1.10.0": {
+    "en": "Updated to homey-api."
+  },
   "1.9.2": {
     "en": "Avoid black screen in mobile app for 'Heating turned off' trigger."
   },

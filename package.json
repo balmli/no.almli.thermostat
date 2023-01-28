@@ -13,12 +13,12 @@
   "author": "Bjørnar Almli",
   "license": "ISC",
   "dependencies": {
-    "athom-api": "^3.7.1"
+    "homey-api": "1.10.12"
   },
   "devDependencies": {
     "@tsconfig/node12": "^1.0.9",
     "@types/chai": "^4.2.22",
-    "@types/homey": "npm:homey-apps-sdk-v3-types@^0.2.2",
+    "@types/homey": "npm:homey-apps-sdk-v3-types@^0.3.3",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.7",
     "chai": "^4.3.4",

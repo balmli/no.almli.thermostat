@@ -167,6 +167,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.10.0
+
+- Updated to homey-api
+
 #### 1.9.2
 
 - Avoid black screen in mobile app for 'Heating turned off' trigger

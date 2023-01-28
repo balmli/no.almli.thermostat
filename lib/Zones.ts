@@ -1,4 +1,4 @@
-import {HomeyAPI} from "athom-api";
+import {HomeyAPIV2} from "homey-api";
 import {Zone} from "./types";
 
 export class Zones {
@@ -6,7 +6,7 @@ export class Zones {
     logger: any;
     zonesAsTree?: Zone;
 
-    constructor(zonesAsMap?: { [key: string]: HomeyAPI.ManagerZones.Zone; }, logger?: any) {
+    constructor(zonesAsMap?: { [key: string]: HomeyAPIV2.ManagerZones.Zone; }, logger?: any) {
         this.logger = logger;
         this.registerZones(zonesAsMap);
     }
@@ -33,7 +33,7 @@ export class Zones {
      * Register zones from a map of zones.
      * @param zonesAsMap
      */
-    registerZones(zonesAsMap?: { [key: string]: HomeyAPI.ManagerZones.Zone; }): void {
+    registerZones(zonesAsMap?: { [key: string]: HomeyAPIV2.ManagerZones.Zone; }): void {
         if (zonesAsMap) {
             this.zonesAsTree = Zones.createTree(zonesAsMap);
             this.logger?.verbose(`Updated zones. (${this.getZonesAsList(this.zonesAsTree).length} zones)`);
@@ -44,7 +44,7 @@ export class Zones {
      * Create or update a zone.
      * @param zone
      */
-    createOrUpdateZone(zone: HomeyAPI.ManagerZones.Zone) {
+    createOrUpdateZone(zone: HomeyAPIV2.ManagerZones.Zone) {
         if (zone) {
             const updatedZone = Zones.mapItem(zone);
             const zonesAsList: Zone[] = this.getZonesAsList(this.zonesAsTree);
@@ -114,12 +114,12 @@ export class Zones {
         return arr;
     }
 
-    private static createTree(zonesAsMap: { [key: string]: HomeyAPI.ManagerZones.Zone; }): Zone {
+    private static createTree(zonesAsMap: { [key: string]: HomeyAPIV2.ManagerZones.Zone; }): Zone {
         const t = Zones.toSubTree(Zones.asList(zonesAsMap));
         return t[0];
     }
 
-    private static asList(zonesAsMap: { [key: string]: HomeyAPI.ManagerZones.Zone; }): Zone[] {
+    private static asList(zonesAsMap: { [key: string]: HomeyAPIV2.ManagerZones.Zone; }): Zone[] {
         const ret: Zone[] = [];
         for (const key in zonesAsMap) {
             if (zonesAsMap.hasOwnProperty(key)) {

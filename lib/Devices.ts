@@ -1,4 +1,4 @@
-import {HomeyAPI} from "athom-api";
+import {HomeyAPIV2} from "homey-api";
 import {
     capabilityIdFormat,
     Device,
@@ -17,12 +17,12 @@ export class Devices {
     private logger: any;
     private calculator?: Calculator;
     private devices: Device[];
-    private capabilityInstances: Map<string, HomeyAPI.ManagerDevices.Device.CapabilityInstance>;
+    private capabilityInstances: Map<string, HomeyAPIV2.ManagerDevices.Device.DeviceCapability>;
 
-    constructor(devicesAsMap?: { [key: string]: HomeyAPI.ManagerDevices.Device; }, homey?: any, logger?: any) {
+    constructor(devicesAsMap?: { [key: string]: HomeyAPIV2.ManagerDevices.Device; }, homey?: any, logger?: any) {
         this.homey = homey;
         this.logger = logger;
-        this.capabilityInstances = new Map<string, HomeyAPI.ManagerDevices.Device.CapabilityInstance>();
+        this.capabilityInstances = new Map<string, HomeyAPIV2.ManagerDevices.Device.DeviceCapability>();
         this.devices = new Array<Device>();
         this.registerDevices(devicesAsMap);
     }
@@ -86,7 +86,7 @@ export class Devices {
      * Register devices from a map of devices.
      * @param devicesAsMap
      */
-    registerDevices(devicesAsMap?: { [key: string]: HomeyAPI.ManagerDevices.Device; }): void {
+    registerDevices(devicesAsMap?: { [key: string]: HomeyAPIV2.ManagerDevices.Device; }): void {
         if (devicesAsMap) {
             for (const key in devicesAsMap) {
                 if (devicesAsMap.hasOwnProperty(key)) {
@@ -103,7 +103,7 @@ export class Devices {
      * Create or update a device.
      * @param device
      */
-    createOrUpdateDevice(device: HomeyAPI.ManagerDevices.Device): Device | undefined {
+    createOrUpdateDevice(device: HomeyAPIV2.ManagerDevices.Device): Device | undefined {
         if (!this.validAndSupported(device)) {
             return;
         }
@@ -124,7 +124,7 @@ export class Devices {
      * Delete a device.
      * @param device
      */
-    deleteDevice(device: HomeyAPI.ManagerDevices.Device): void {
+    deleteDevice(device: HomeyAPIV2.ManagerDevices.Device): void {
         const idx = this.devices.findIndex(d => d.id === device.id);
         if (idx >= 0) {
             const deviz = this.devices[idx];
@@ -138,7 +138,7 @@ export class Devices {
         }
     }
 
-    private updateDeviceData(device: Device, updatedDevice: HomeyAPI.ManagerDevices.Device): void {
+    private updateDeviceData(device: Device, updatedDevice: HomeyAPIV2.ManagerDevices.Device): void {
         const newDevice = DeviceMapper.map(updatedDevice);
         if (Devices.deviceChanged(device, updatedDevice)) {
             device.name = newDevice.name;
@@ -160,7 +160,7 @@ export class Devices {
         device.humiditySettings = newDevice.humiditySettings;
     }
 
-    private static deviceChanged(device: Device, updatedDevice: HomeyAPI.ManagerDevices.Device): boolean {
+    private static deviceChanged(device: Device, updatedDevice: HomeyAPIV2.ManagerDevices.Device): boolean {
         return device.name !== updatedDevice.name
             || device.class !== updatedDevice.class
             || device.virtualClass !== updatedDevice.virtualClass
@@ -170,7 +170,7 @@ export class Devices {
             ;
     }
 
-    private static deviceCapabilitiesChanged(device: Device, updatedDevice: HomeyAPI.ManagerDevices.Device): boolean {
+    private static deviceCapabilitiesChanged(device: Device, updatedDevice: HomeyAPIV2.ManagerDevices.Device): boolean {
         return device.capabilities?.length !== updatedDevice.capabilities?.length
             || device.capabilities?.slice().sort().join(",") !== updatedDevice.capabilities?.slice().sort().join(",")
             ;
@@ -246,7 +246,7 @@ export class Devices {
         return false;
     }
 
-    private registerDevice(device: HomeyAPI.ManagerDevices.Device): Device | undefined {
+    private registerDevice(device: HomeyAPIV2.ManagerDevices.Device): Device | undefined {
         if (this.validAndSupported(device)) {
             let create = !device.makeCapabilityInstance;
             if (!!device.makeCapabilityInstance) {
@@ -277,12 +277,12 @@ export class Devices {
      * Check if valid and supported device.
      * @param device
      */
-    validAndSupported(device: HomeyAPI.ManagerDevices.Device): boolean {
+    validAndSupported(device: HomeyAPIV2.ManagerDevices.Device): boolean {
         return this.validDevice(device) &&
             this.supportedDevice(device);
     }
 
-    private validDevice(device: HomeyAPI.ManagerDevices.Device): boolean {
+    private validDevice(device: HomeyAPIV2.ManagerDevices.Device): boolean {
         const ret = !!device
             && typeof device === 'object'
             && !!device.id
@@ -296,7 +296,7 @@ export class Devices {
         return ret;
     }
 
-    private supportedDevice(device: HomeyAPI.ManagerDevices.Device): boolean {
+    private supportedDevice(device: HomeyAPIV2.ManagerDevices.Device): boolean {
         const ret = SUPPORTED_CLASSES.includes(device.class)
             || device.capabilitiesObj.hasOwnProperty('measure_temperature')
             || device.capabilitiesObj.hasOwnProperty('alarm_contact')
@@ -308,11 +308,12 @@ export class Devices {
         return ret;
     }
 
-    private makeCapabilityInstance(device: HomeyAPI.ManagerDevices.Device, capabilityId: string) {
+    private makeCapabilityInstance(device: HomeyAPIV2.ManagerDevices.Device, capabilityId: string) {
         try {
             const deviceCapabilityId = capabilityIdFormat(device.id, capabilityId);
             this.destroyCapabilityInstance(deviceCapabilityId);
             //device.setMaxListeners(100);
+            // @ts-ignore
             const capabilityInstance = device.makeCapabilityInstance(capabilityId, value =>
                 this.capabilityInstanceListener(device, capabilityId, value)
             );
@@ -323,7 +324,7 @@ export class Devices {
         }
     }
 
-    private capabilityInstanceListener(device: HomeyAPI.ManagerDevices.Device, capabilityId: string, value: any) {
+    private capabilityInstanceListener(device: HomeyAPIV2.ManagerDevices.Device, capabilityId: string, value: any) {
         const deviz = this.getDevice(device.id);
         if (deviz) {
             if (deviz.hasChangedValue(capabilityId, value)) {

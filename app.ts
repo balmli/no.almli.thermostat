@@ -1,5 +1,5 @@
 import Homey from 'homey';
-import {HomeyAPI} from "athom-api";
+import {HomeyAPIApp, HomeyAPIV2} from "homey-api";
 import {Devices} from "./lib/Devices";
 import {Zones} from "./lib/Zones";
 import {Calculator} from "./lib/Calculator";
@@ -13,7 +13,7 @@ const REFRESH_BOOTING = 120 * 1000;
 module.exports = class VThermoApp extends Homey.App {
 
     logger: any;
-    homeyApi: any;
+    homeyApi?: HomeyAPIApp;
     homeyApiCreated?: number;
     zonesObj!: Zones;
     devicesObj!: Devices;
@@ -129,7 +129,7 @@ module.exports = class VThermoApp extends Homey.App {
         this.calculator.startCalculation(delay);
     }
 
-    private async getOrCreateHomeyApi(): Promise<HomeyAPI> {
+    private async getOrCreateHomeyApi(): Promise<HomeyAPIApp | undefined> {
         if (this.homeyApi && this.homeyApiCreated && (Date.now() - this.homeyApiCreated > HOMEY_API_RECREATE_INTERVAL)) {
             await this.destroyHomeyApi();
         }
@@ -141,15 +141,24 @@ module.exports = class VThermoApp extends Homey.App {
 
     private async destroyHomeyApi(): Promise<void> {
         try {
-            this.homeyApi.devices.removeListener('device.create', this._onDeviceCreate.bind(this));
-            this.homeyApi.devices.removeListener('device.update', this._onDeviceUpdate.bind(this));
-            this.homeyApi.devices.removeListener('device.delete', this._onDeviceDelete.bind(this));
-            this.homeyApi.zones.removeListener('zone.create', this._onZoneCreate.bind(this));
-            this.homeyApi.zones.removeListener('zone.update', this._onZoneUpdate.bind(this));
-            this.homeyApi.zones.removeListener('zone.delete', this._onZoneDelete.bind(this));
-            await this.homeyApi.destroy();
-            this.homeyApi = undefined;
-            this.logger.debug(`HomeyAPI instance destroyed`);
+            if (this.homeyApi) {
+                // @ts-ignore
+                this.homeyApi.devices.removeListener('device.create', this._onDeviceCreate.bind(this));
+                // @ts-ignore
+                this.homeyApi.devices.removeListener('device.update', this._onDeviceUpdate.bind(this));
+                // @ts-ignore
+                this.homeyApi.devices.removeListener('device.delete', this._onDeviceDelete.bind(this));
+                // @ts-ignore
+                this.homeyApi.zones.removeListener('zone.create', this._onZoneCreate.bind(this));
+                // @ts-ignore
+                this.homeyApi.zones.removeListener('zone.update', this._onZoneUpdate.bind(this));
+                // @ts-ignore
+                this.homeyApi.zones.removeListener('zone.delete', this._onZoneDelete.bind(this));
+                // @ts-ignore
+                await this.homeyApi.destroy();
+                this.homeyApi = undefined;
+                this.logger.debug(`HomeyAPI instance destroyed`);
+            }
         } catch (err) {
             this.homeyApi = undefined;
             this.logger.error(`Destroying HomeyAPI failed`, err);
@@ -158,23 +167,30 @@ module.exports = class VThermoApp extends Homey.App {
 
     private async createHomeyApi(): Promise<void> {
         try {
-            this.homeyApi = await HomeyAPI.forCurrentHomey(this.homey);
+            this.homeyApi = new HomeyAPIApp({ homey: this.homey, debug: false });
+            // @ts-ignore
             this.homeyApi.devices.on('device.create', this._onDeviceCreate.bind(this));
+            // @ts-ignore
             this.homeyApi.devices.on('device.update', this._onDeviceUpdate.bind(this));
+            // @ts-ignore
             this.homeyApi.devices.on('device.delete', this._onDeviceDelete.bind(this));
+            // @ts-ignore
             this.homeyApi.zones.on('zone.create', this._onZoneCreate.bind(this));
+            // @ts-ignore
             this.homeyApi.zones.on('zone.update', this._onZoneUpdate.bind(this));
+            // @ts-ignore
             this.homeyApi.zones.on('zone.delete', this._onZoneDelete.bind(this));
             this.homeyApiCreated = Date.now();
-            this.logger.verbose(`HomeyAPI instance created`);
+            this.logger.verbose(`HomeyAPIApp instance created`);
         } catch (err) {
-            this.logger.error(`Creating HomeyAPI failed`, err);
+            this.logger.error(`Creating HomeyAPIApp failed`, err);
         }
     }
 
     private async getSystemInfo(): Promise<any> {
-        const api = await this.getOrCreateHomeyApi();
-        return api.system.getInfo();
+        await this.getOrCreateHomeyApi();
+        // @ts-ignore
+        return this.homeyApi.system.getInfo();
     }
 
     private async getUptime(): Promise<number> {
@@ -199,14 +215,16 @@ module.exports = class VThermoApp extends Homey.App {
         return false;
     }
 
-    private async getZones(): Promise<{ [key: string]: HomeyAPI.ManagerZones.Zone; }> {
-        const api = await this.getOrCreateHomeyApi();
-        return api.zones.getZones();
+    private async getZones(): Promise<{ [key: string]: HomeyAPIV2.ManagerZones.Zone; }> {
+        await this.getOrCreateHomeyApi();
+        // @ts-ignore
+        return this.homeyApi.zones.getZones();
     }
 
-    private async getZone(id: string): Promise<HomeyAPI.ManagerZones.Zone> {
-        const api = await this.getOrCreateHomeyApi();
-        return api.zones.getZone({id});
+    private async getZone(id: string): Promise<HomeyAPIV2.ManagerZones.Zone> {
+        await this.getOrCreateHomeyApi();
+        // @ts-ignore
+        return this.homeyApi.zones.getZone({id});
     }
 
     private async fetchZones(): Promise<void> {
@@ -221,14 +239,16 @@ module.exports = class VThermoApp extends Homey.App {
         }
     }
 
-    private async getDevices(): Promise<{ [key: string]: HomeyAPI.ManagerDevices.Device; }> {
-        const api = await this.getOrCreateHomeyApi();
-        return api.devices.getDevices();
+    private async getDevices(): Promise<{ [key: string]: HomeyAPIV2.ManagerDevices.Device; }> {
+        await this.getOrCreateHomeyApi();
+        // @ts-ignore
+        return this.homeyApi.devices.getDevices();
     }
 
-    private async getDevice(id: string): Promise<HomeyAPI.ManagerDevices.Device> {
-        const api = await this.getOrCreateHomeyApi();
-        return api.devices.getDevice({id});
+    private async getDevice(id: string): Promise<HomeyAPIV2.ManagerDevices.Device> {
+        await this.getOrCreateHomeyApi();
+        // @ts-ignore
+        return this.homeyApi.devices.getDevice({id});
     }
 
     private async fetchDevices(): Promise<void> {
@@ -244,8 +264,9 @@ module.exports = class VThermoApp extends Homey.App {
     }
 
     async setCapabilityValue(deviceId: string, capabilityId: string, value: any): Promise<any> {
-        const api = await this.getOrCreateHomeyApi();
-        return api.devices.setCapabilityValue({
+        await this.getOrCreateHomeyApi();
+        // @ts-ignore
+        return this.homeyApi.devices.setCapabilityValue({
             deviceId,
             capabilityId,
             value
@@ -282,7 +303,7 @@ module.exports = class VThermoApp extends Homey.App {
         }
     }
 
-    private async _onDeviceCreate(device: HomeyAPI.ManagerDevices.Device): Promise<void> {
+    private async _onDeviceCreate(device: HomeyAPIV2.ManagerDevices.Device): Promise<void> {
         this.logger.silly(`Device created: ${device.driverUri}:${device.class} - ${device.id} - ${device.name}`);
         if (this.devicesObj.validAndSupported(device)) {
             try {
@@ -296,7 +317,7 @@ module.exports = class VThermoApp extends Homey.App {
         }
     }
 
-    private async _onDeviceUpdate(device: HomeyAPI.ManagerDevices.Device): Promise<void> {
+    private async _onDeviceUpdate(device: HomeyAPIV2.ManagerDevices.Device): Promise<void> {
         this.logger.silly(`Device update: ${device.driverUri}:${device.class} - ${device.id} - ${device.name}`);
         if (this.devicesObj.validAndSupported(device)) {
             try {
@@ -313,12 +334,12 @@ module.exports = class VThermoApp extends Homey.App {
         }
     }
 
-    private async _onDeviceDelete(device: HomeyAPI.ManagerDevices.Device): Promise<void> {
+    private async _onDeviceDelete(device: HomeyAPIV2.ManagerDevices.Device): Promise<void> {
         this.logger.silly(`Device delete: ${device.id} - ${device.name}`);
         this.devicesObj.deleteDevice(device);
     }
 
-    private async _onZoneCreate(zone: HomeyAPI.ManagerZones.Zone): Promise<void> {
+    private async _onZoneCreate(zone: HomeyAPIV2.ManagerZones.Zone): Promise<void> {
         this.logger.silly(`Zone added: ${zone.id} - ${zone.name}`);
         try {
             const zone2 = await this.getZone(zone.id);
@@ -328,7 +349,7 @@ module.exports = class VThermoApp extends Homey.App {
         }
     }
 
-    private async _onZoneUpdate(zone: HomeyAPI.ManagerZones.Zone): Promise<void> {
+    private async _onZoneUpdate(zone: HomeyAPIV2.ManagerZones.Zone): Promise<void> {
         this.logger.silly(`Zone updated: ${zone.id} - ${zone.name}`);
         try {
             const zone2 = await this.getZone(zone.id);
@@ -338,7 +359,7 @@ module.exports = class VThermoApp extends Homey.App {
         }
     }
 
-    private async _onZoneDelete(zone: HomeyAPI.ManagerZones.Zone): Promise<void> {
+    private async _onZoneDelete(zone: HomeyAPIV2.ManagerZones.Zone): Promise<void> {
         this.logger.silly(`Zone deleted: ${zone.id}`);
         this.zonesObj.deleteZone(zone.id);
     }

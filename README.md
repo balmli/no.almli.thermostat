@@ -167,6 +167,10 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.10.1
+
+- Fixes for homey-api and Homey Pro 2023
+
 #### 1.10.0
 
 - Updated to homey-api

@@ -149,11 +149,15 @@ module.exports = class VThermoApp extends Homey.App {
                 // @ts-ignore
                 this.homeyApi.devices.removeListener('device.delete', this._onDeviceDelete.bind(this));
                 // @ts-ignore
+                await this.homeyApi.devices.disconnect();
+                // @ts-ignore
                 this.homeyApi.zones.removeListener('zone.create', this._onZoneCreate.bind(this));
                 // @ts-ignore
                 this.homeyApi.zones.removeListener('zone.update', this._onZoneUpdate.bind(this));
                 // @ts-ignore
                 this.homeyApi.zones.removeListener('zone.delete', this._onZoneDelete.bind(this));
+                // @ts-ignore
+                await this.homeyApi.zones.disconnect();
                 // @ts-ignore
                 await this.homeyApi.destroy();
                 this.homeyApi = undefined;
@@ -169,11 +173,15 @@ module.exports = class VThermoApp extends Homey.App {
         try {
             this.homeyApi = new HomeyAPIApp({ homey: this.homey, debug: false });
             // @ts-ignore
+            await this.homeyApi.devices.connect();
+            // @ts-ignore
             this.homeyApi.devices.on('device.create', this._onDeviceCreate.bind(this));
             // @ts-ignore
             this.homeyApi.devices.on('device.update', this._onDeviceUpdate.bind(this));
             // @ts-ignore
             this.homeyApi.devices.on('device.delete', this._onDeviceDelete.bind(this));
+            // @ts-ignore
+            await this.homeyApi.zones.connect();
             // @ts-ignore
             this.homeyApi.zones.on('zone.create', this._onZoneCreate.bind(this));
             // @ts-ignore

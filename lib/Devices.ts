@@ -110,10 +110,12 @@ export class Devices {
         const current = this.getDevice(device.id);
         if (current) {
             this.updateDeviceData(current, device);
+            this.calculator?.startCalculation();
             return current;
         } else {
             const deviz = this.registerDevice(device);
             if (deviz) {
+                this.calculator?.startCalculation();
                 this.logger?.debug(`Created device: ${device.id} ${device.name}. (${this.devices.length} devices)`);
             }
             return deviz;

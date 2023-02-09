@@ -47,12 +47,12 @@ export class Device {
 
     isVThermo(): boolean {
         return (this.driverUri === DRIVER_URI) &&
-            (this.driverId === DRIVER_VTHERMO);
+            (this.driverId === DRIVER_VTHERMO || this.driverId === DRIVER_URI + ':' + DRIVER_VTHERMO);
     }
 
     isVHumidity(): boolean {
         return (this.driverUri === DRIVER_URI) &&
-            (this.driverId === DRIVER_VHUMIDITY);
+            (this.driverId === DRIVER_VHUMIDITY || this.driverId === DRIVER_URI + ':' + DRIVER_VHUMIDITY);
     }
 
     /**

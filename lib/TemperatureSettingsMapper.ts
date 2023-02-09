@@ -9,7 +9,7 @@ export class TemperatureSettingsMapper {
 
     static map(driverUri?: string, driverId?: string, settings?: any): TemperatureSettings | undefined {
         if (driverUri === DRIVER_URI
-            && driverId === DRIVER_VTHERMO
+            && (driverId === DRIVER_VTHERMO || driverId === DRIVER_URI + ':' + DRIVER_VTHERMO)
             && settings) {
             const t = new TemperatureSettings();
             t.calcMethod = settings.calc_method;

@@ -8,7 +8,7 @@ export class HumiditySettingsMapper {
 
     static map(driverUri?: string, driverId?: string, settings?: any): HumiditySettings | undefined {
         if (driverUri === DRIVER_URI
-            && driverId === DRIVER_VHUMIDITY
+            && (driverId === DRIVER_VHUMIDITY || driverId === DRIVER_URI + ':' + DRIVER_VHUMIDITY)
             && settings) {
             const t = new HumiditySettings();
             t.calcMethod = settings.calc_method_humidity;

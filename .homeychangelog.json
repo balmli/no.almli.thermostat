@@ -1,4 +1,7 @@
 {
+  "1.10.1": {
+    "en": "Fixes for homey-api and Homey Pro 2023."
+  },
   "1.10.0": {
     "en": "Updated to homey-api."
   },

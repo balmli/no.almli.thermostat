@@ -13,7 +13,7 @@ export class DeviceSettingsMapper {
             && settings) {
             const t = new DeviceSettings();
 
-            if (driverId === DRIVER_VTHERMO) {
+            if (driverId === DRIVER_VTHERMO || driverId === DRIVER_URI + ':' + DRIVER_VTHERMO) {
                 t.zone = new DeviceSettingssZone();
                 t.zone.clazz = settings.devices_zone_heaters;
                 t.zone.thermostats = settings.devices_zone_thermostats;
@@ -21,7 +21,7 @@ export class DeviceSettingsMapper {
                 t.sub_zones = new DeviceSettingssZone();
                 t.sub_zones.clazz = settings.devices_sub_zones_heaters;
                 t.sub_zones.thermostats = settings.devices_sub_zones_thermostats;
-            } else if (driverId === DRIVER_VHUMIDITY) {
+            } else if (driverId === DRIVER_VHUMIDITY || driverId === DRIVER_URI + ':' + DRIVER_VHUMIDITY) {
                 t.zone = new DeviceSettingssZone();
                 t.zone.clazz = true;
             }

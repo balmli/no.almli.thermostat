@@ -9,7 +9,7 @@ export class TargetSettingsMapper {
 
     static map(driverUri?: string, driverId?: string, settings?: any): TargetSettings | undefined {
         if (driverUri === DRIVER_URI
-            && driverId === DRIVER_VTHERMO
+            && (driverId === DRIVER_VTHERMO || driverId === DRIVER_URI + ':' + DRIVER_VTHERMO)
             && settings) {
             const t = new TargetSettings();
             t.offset = settings.target_diff_temp;

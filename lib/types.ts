@@ -31,7 +31,6 @@ export class Device {
     id!: string;
     dataId?: string;
     name!: string;
-    driverUri?: string;
     driverId?: string;
     class?: string;
     virtualClass?: string | null;
@@ -46,13 +45,11 @@ export class Device {
     humiditySettings?: HumiditySettings;
 
     isVThermo(): boolean {
-        return (this.driverUri === DRIVER_URI) &&
-            (this.driverId === DRIVER_VTHERMO || this.driverId === DRIVER_URI + ':' + DRIVER_VTHERMO);
+        return this.driverId === DRIVER_VTHERMO;
     }
 
     isVHumidity(): boolean {
-        return (this.driverUri === DRIVER_URI) &&
-            (this.driverId === DRIVER_VHUMIDITY || this.driverId === DRIVER_URI + ':' + DRIVER_VHUMIDITY);
+        return this.driverId === DRIVER_VHUMIDITY;
     }
 
     /**
@@ -157,9 +154,8 @@ export class DeviceRequests {
 
 }
 
-export const DRIVER_URI = 'homey:app:no.almli.thermostat';
-export const DRIVER_VTHERMO = 'VThermo';
-export const DRIVER_VHUMIDITY = 'VHumidity';
+export const DRIVER_VTHERMO = 'homey:app:no.almli.thermostat:VThermo';
+export const DRIVER_VHUMIDITY = 'homey:app:no.almli.thermostat:VHumidity';
 
 export const SUPPORTED_CLASSES = [
     'fan',

@@ -3,8 +3,7 @@ import {Devices} from "./Devices";
 import {
     Device,
     DeviceRequest,
-    DeviceRequests,
-    DRIVER_URI,
+    DeviceRequests, DRIVER_VHUMIDITY, DRIVER_VTHERMO,
     Zone
 } from "./types";
 
@@ -37,7 +36,7 @@ export class DeviceCalculator {
             //this.logger?.info('DeviceCalculator: updated ', `DeviceCalculator: updated ${device.id} ${device.name} ${capabilityId} = ${value}`);
             const dr = new DeviceRequest();
             dr.id = device.id;
-            if (device.driverUri === DRIVER_URI) {
+            if (device.driverId === DRIVER_VTHERMO || device.driverId === DRIVER_VHUMIDITY) {
                 dr.dataId = device.dataId;
             }
             dr.capabilityId = capabilityId;
@@ -45,7 +44,6 @@ export class DeviceCalculator {
             dr.debugInfo = JSON.stringify({
                 name: device.name,
                 dataId: device.dataId,
-                driverUri: device.driverUri,
                 driverId: device.driverId,
                 class: device.class
             });

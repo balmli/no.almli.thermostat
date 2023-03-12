@@ -1,5 +1,4 @@
 import {
-    DRIVER_URI,
     DRIVER_VTHERMO,
     TargetSettings,
     TargetSettingsZone,
@@ -7,10 +6,8 @@ import {
 
 export class TargetSettingsMapper {
 
-    static map(driverUri?: string, driverId?: string, settings?: any): TargetSettings | undefined {
-        if (driverUri === DRIVER_URI
-            && (driverId === DRIVER_VTHERMO || driverId === DRIVER_URI + ':' + DRIVER_VTHERMO)
-            && settings) {
+    static map(driverId?: string, settings?: any): TargetSettings | undefined {
+        if (driverId === DRIVER_VTHERMO && settings) {
             const t = new TargetSettings();
             t.offset = settings.target_diff_temp;
             t.min = settings.target_min_temp;

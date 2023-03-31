@@ -13,7 +13,7 @@
   "author": "Bjørnar Almli",
   "license": "ISC",
   "dependencies": {
-    "homey-api": "3.0.0-rc.10"
+    "homey-api": "3.0.0-rc.17"
   },
   "devDependencies": {
     "@tsconfig/node12": "^1.0.9",

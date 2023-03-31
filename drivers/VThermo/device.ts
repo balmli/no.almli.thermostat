@@ -68,7 +68,21 @@ module.exports = class VThermoDevice extends BaseDevice {
   }
 
   async updateTargetTemp(min: number, max: number, step: number | undefined): Promise<void | string> {
-    let capOptions = this.getCapabilityOptions('target_temperature');
+    if (min === undefined && max === undefined && step === undefined) {
+      return;
+    }
+    let capOptions;
+    try {
+      capOptions = this.getCapabilityOptions('target_temperature');
+    } catch (err) {
+      capOptions = {
+        min: 1,
+        max: 40,
+        step: 0.5,
+        decimals: 1,
+      }
+    }
+
     if ((min !== undefined ? min : capOptions.min) >= (max !== undefined ? max : capOptions.max)) {
       return this.homey.__('error.invalid_target_temps');
     }

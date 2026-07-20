@@ -39,14 +39,20 @@ describe('ValueStore', () => {
 
     it('returns undefined when the requested historical reading is unavailable', () => {
         const store = new ValueStore();
+        expect(store.changePctPointsLastMinutes(10, NOW)).toBeUndefined();
         store.addValue(47, NOW);
         expect(store.changePctPointsLastMinutes(10, NOW)).toBeUndefined();
     });
 
-    it.fails('supports legitimate zero-valued humidity readings', () => {
-        const store = new ValueStore();
-        store.addValue(0, NOW - 5 * 60_000);
-        store.addValue(5, NOW);
-        expect(store.changePctPointsLastMinutes(5, NOW)).toBe(5);
+    it('supports legitimate zero-valued humidity readings', () => {
+        const increase = new ValueStore();
+        increase.addValue(0, NOW - 5 * 60_000);
+        increase.addValue(5, NOW);
+        expect(increase.changePctPointsLastMinutes(5, NOW)).toBe(5);
+
+        const decrease = new ValueStore();
+        decrease.addValue(5, NOW - 5 * 60_000);
+        decrease.addValue(0, NOW);
+        expect(decrease.changePctPointsLastMinutes(5, NOW)).toBe(-5);
     });
 });

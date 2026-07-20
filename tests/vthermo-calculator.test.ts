@@ -1,8 +1,9 @@
 import {describe, expect, it, vi} from 'vitest';
 import {VThermoDeviceCalculator} from '../lib/VThermoDeviceCalculator';
+import {DeviceMapper} from '../lib/DeviceMapper';
 import {Zones} from '../lib/Zones';
 import {CalcMethod, CAPABILITY_ACTIVE, DeviceCapability, DeviceClass, TemperatureSettingsZone} from '../lib/types';
-import {makeDevice, makeDevicesStub, makeVThermo, makeZone, NOW} from './helpers';
+import {makeApiDevice, makeDevice, makeDevicesStub, makeVThermo, makeZone, NOW} from './helpers';
 
 describe('VThermoDeviceCalculator temperature inputs', () => {
     it('selects enabled sensor categories and excludes the controlling virtual thermostat', () => {
@@ -99,6 +100,24 @@ describe('VThermoDeviceCalculator temperature inputs', () => {
             capabilityId: 'measure_temperature',
             value: 20,
         });
+    });
+
+    it('averages equivalent Celsius and Fahrenheit API readings in Celsius', () => {
+        const celsius = DeviceMapper.map(makeApiDevice({id: 'celsius', capabilities: {measure_temperature: 20}}));
+        const fahrenheitApi = makeApiDevice({id: 'fahrenheit', capabilities: {measure_temperature: 77}});
+        fahrenheitApi.capabilitiesObj.measure_temperature.units = '°F';
+        const fahrenheit = DeviceMapper.map(fahrenheitApi);
+        const device = makeVThermo({
+            capabilities: {measure_temperature: 0},
+            temperatureSettings: {calcMethod: CalcMethod.AVERAGE, zone: {sensor: true}},
+        });
+
+        expect(
+            new VThermoDeviceCalculator(
+                new Zones(),
+                makeDevicesStub([celsius, fahrenheit]),
+            ).calculateMeasureTemperature(device, makeZone('root')),
+        ).toMatchObject({value: 22.5});
     });
 
     it('returns null when no automatic reading is available', () => {

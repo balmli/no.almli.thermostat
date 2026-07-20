@@ -51,6 +51,14 @@ Do not replace the Apps SDK driver lookup with the Web API manager merely becaus
 - **Serialize refresh and event mutations where needed.** A snapshot registration and a concurrent create/update/delete event can otherwise overwrite newer local state or duplicate subscriptions.
 - **Keep API values and metadata intact at the boundary.** Temperature units, `lastUpdated`, availability, readiness, zone, class, virtual class, settings, and capability membership affect selection and control decisions.
 
+### Temperature-unit boundary
+
+VThermo keeps all internal temperature values in Celsius. `DeviceMapper` reads each Web API capability's own `units` metadata and converts `measure_temperature` and `target_temperature` values from Fahrenheit when the capability declares `°F`, `F`, or `Fahrenheit`. Celsius and unknown-unit values pass through unchanged to avoid double conversion.
+
+Capability-instance events use the source unit retained in the internal `DeviceCapability`, so snapshots and live updates follow the same conversion path. Physical `target_temperature` requests are converted from canonical Celsius back to the target capability's declared Fahrenheit unit immediately before `ManagerDevices.setCapabilityValue()`. Pending-write tracking and confirmation remain canonical Celsius, including when Homey confirms the write with a Fahrenheit event value.
+
+Do not apply Homey's global metric/imperial setting as an unconditional conversion rule. A single Homey can contain capabilities with different declared units, and local Apps SDK capability values use the app capability contract rather than this Web API normalization path.
+
 The official manager requires read access for device fetches and control access for capability writes. Those Web API scope names describe API authorization; do not copy them blindly into the Homey app manifest. This app obtains an App API through the Apps SDK and declares `homey:manager:api` in its manifest.
 
 ## ManagerZones

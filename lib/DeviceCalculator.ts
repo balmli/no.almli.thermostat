@@ -1,14 +1,8 @@
-import {Zones} from "./Zones";
-import {Devices} from "./Devices";
-import {
-    Device,
-    DeviceRequest,
-    DeviceRequests, DRIVER_VHUMIDITY, DRIVER_VTHERMO,
-    Zone
-} from "./types";
+import {Zones} from './Zones';
+import {Devices} from './Devices';
+import {Device, DeviceRequest, DeviceRequests, DRIVER_VHUMIDITY, DRIVER_VTHERMO, Zone} from './types';
 
 export class DeviceCalculator {
-
     protected zonesObj!: Zones;
     protected devicesObj!: Devices;
     protected logger: any;
@@ -20,7 +14,7 @@ export class DeviceCalculator {
     }
 
     calculate(zone: Zone): DeviceRequests {
-        throw new Error("Not implemented");
+        throw new Error('Not implemented');
     }
 
     /**
@@ -45,10 +39,9 @@ export class DeviceCalculator {
                 name: device.name,
                 dataId: device.dataId,
                 driverId: device.driverId,
-                class: device.class
+                class: device.class,
             });
             return dr;
         }
     }
-
 }

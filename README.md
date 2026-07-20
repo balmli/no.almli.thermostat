@@ -2,13 +2,13 @@
 
 ## Device: VThermo
 
-Add a virtual thermostat to a zone with a temperature sensor and it will turn on / off heaters in the same zone.  The virtual thermostat will start operating when the target temperature has been set.
+Add a virtual thermostat to a zone with a temperature sensor and it will turn on / off heaters in the same zone. The virtual thermostat will start operating when the target temperature has been set.
 
 Use a door/window sensor in the same zone to automatically turn off the heater on a contact alarm. This can be enabled with the 'Turn off if contact alarm' - checkbox in 'Advanced settings'.
 
 #### Master thermostat
 
-The virtual thermostat can be used as a 'master thermostat'.  As a master thermostat it will update the target temperature of other thermostats.  Not only other VThermo - termostats, but standard phyical thermostats as well.
+The virtual thermostat can be used as a 'master thermostat'. As a master thermostat it will update the target temperature of other thermostats. Not only other VThermo - termostats, but standard phyical thermostats as well.
 
 In Advanced settings, you can choose zones to control:
 
@@ -20,7 +20,7 @@ Select 'Update other thermostats' to update other thermostats and 'Update other 
 
 #### Temperature sensors
 
-You can select the temperature sensors the virtual thermostat will take into consideration when calculation its temperature.  
+You can select the temperature sensors the virtual thermostat will take into consideration when calculation its temperature.
 
 In Advanced settings, you can choose the types of temperature sensors: standard, other thermostats, other VThermo - thermostats and other devices with a temperature capability.
 
@@ -58,7 +58,7 @@ You can use temperature sensors from the same zone, from the parent zone, and fr
 
 Add a virtual humidity controller to a zone with a humidity sensor and it will turn on / off fans in the same zone.
 
-Fans will turn on if the humidity is larger than the target humidity, and off if less than the target humidity.  For humidifiers the logic can be inverted, by selecting the 'Invert for humidifier' - checkbox in 'Advanced settings'.
+Fans will turn on if the humidity is larger than the target humidity, and off if less than the target humidity. For humidifiers the logic can be inverted, by selecting the 'Invert for humidifier' - checkbox in 'Advanced settings'.
 
 #### Triggers
 
@@ -89,13 +89,15 @@ Fans will turn on if the humidity is larger than the target humidity, and off if
 ## Details about Advanced settings
 
 #### Temperature
-- Temperature calculation method: select between 'Average', 'Minimum', 'Maximum', 'Newest' or 'Manual'.  Manual is used when updating the temperature with a flow, e.g. from a temperature sensor in another zone.
+
+- Temperature calculation method: select between 'Average', 'Minimum', 'Maximum', 'Newest' or 'Manual'. Manual is used when updating the temperature with a flow, e.g. from a temperature sensor in another zone.
 - Validate temperatures: to only accept temperatures in the validate min / max range. This can be used if the temperature sensor reports invalid temperatures, eg. 0 or 100 °C.
 - Minimum validate temperature (°C): temperatures below this value will not be used when calculating the temperature.
 - Maximum validate temperature (°C): temperatures above this value will not be used when calculating the temperature.
 - Ignore old measurements: to ignore old measurements, set a value larger than 0. A value of eg. 7200 will ignore meaurements older than 2 hours (7200 seconds). Only used for Average, Minimum and Maximum, and when there are two or more sensors.
 
 #### Temperature sensors in the same zone
+
 Select which temperature sensors to be used from the same zone as the virtual thermostat.
 
 - standard temperature sensors
@@ -103,6 +105,7 @@ Select which temperature sensors to be used from the same zone as the virtual th
 - other devices with a temperature capability
 
 #### Temperature sensors from the parent zone
+
 Select temperature sensors from the parent zone of the virtual thermostat:
 
 - standard temperature sensors
@@ -111,7 +114,8 @@ Select temperature sensors from the parent zone of the virtual thermostat:
 - other devices with a temperature capability
 
 #### Temperature sensors from sub zones (one level)
-Select temperature sensors from the sub zones of the virtual thermostat,  just one level down.
+
+Select temperature sensors from the sub zones of the virtual thermostat, just one level down.
 
 - standard temperature sensors
 - other thermostats
@@ -131,35 +135,40 @@ Select temperature sensors from the sub zones of the virtual thermostat,  just o
 #### Target temperature
 
 - Target temperature offset (°C): offset when the target temperature is updated from a master VThermo - thermostat.
-- Target temperature update enabled: uncheck to disable being updated from a master VThermo - thermostat.   
+- Target temperature update enabled: uncheck to disable being updated from a master VThermo - thermostat.
 - Minimum target temperature (°C): minimum value for the target temperature between -10 °C and 150 °C.
 - Maximum target temperature (°C): maximum value for the target temperature between -10 °C and 150 °C.
-- Target temperature step (°C): select between step of 0.25 °C and 0.50 °C for the target temperature. 
+- Target temperature step (°C): select between step of 0.25 °C and 0.50 °C for the target temperature.
 
 #### Target temperature in the same zone
+
 - From other thermostat: check this to update target temperature on this VThermo from another thermostat in the same zone.
 - Update other thermostats: check this to update the target temperature of other thermostats in the same zone.
 
 #### Target temperature to sub zones (one level)
+
 - Update other VThermos: check this to update the target temperature of other VThermo - thermostats in sub zones (one level down).
 - Update other thermostats: check this to update the target temperature of other thermostats in sub zones (one level down).
 
 #### Target temperature to sub zones (all levels)
+
 - Update other VThermos: check this to update the target temperature of other VThermo - thermostats in all sub zones (all levels down).
 - Update other thermostats: check this to update the target temperature of other thermostats in all sub zones (all levels down).
 
 #### Contact and motion alarms
+
 - Turn off if contact alarm: check this to turn off heaters if there is a contact alarm in the same zone as the virtual thermostat.
 - Turn on if motion alarm: check this to turn on heaters if there is a motion alarm in the same zone as the virtual thermostat.
 
 #### General settings
-- Hysteresis: to avoid that the thermostat will turn on and off too often, the hysteresis value must be greater than zero. Example: with a value of 0.5, and a target temperature of 20.0 °C, the thermostat will switch on if below 20.0 - 0.5, and off if above 20.0 + 0.5.  
+
+- Hysteresis: to avoid that the thermostat will turn on and off too often, the hysteresis value must be greater than zero. Example: with a value of 0.5, and a target temperature of 20.0 °C, the thermostat will switch on if below 20.0 - 0.5, and off if above 20.0 + 0.5.
 - Invert switch: check this and the thermostat will switch on if above the target, and switch off if below the target.
 - On / off enabled: uncheck this to disable the thermostat On / Off - switch.
 
 #### Timing
-- Delay in milliseconds between switching devices: if this value is set to a number larger than zero, it will add a delay between switching each devices on / off.  This might help
 
+- Delay in milliseconds between switching devices: if this value is set to a number larger than zero, it will add a delay between switching each devices on / off. This might help
 
 ## Feedback:
 
@@ -176,7 +185,7 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 - Fixes for Homey Pro 2023
 
 #### 1.10.2
- 
+
 - Fixes for Homey Pro 2023
 
 #### 1.10.1
@@ -285,7 +294,7 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 #### 1.2.3
 
 - Added 'Newest' as calculation method for temperature and humidity.
-- Handle adding several devices at the same time. 
+- Handle adding several devices at the same time.
 - Updated Athom api.
 
 #### 1.2.2
@@ -299,7 +308,7 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 #### 1.2.0
 
 - Added support for master thermostats, e.g. update target temperatures on other thermostats.
-- Added support for temperatures from other zones. 
+- Added support for temperatures from other zones.
 - Added calculation methods for temperature and humidity (average, minimum, maximum).
 - Reduced memory consumption.
 
@@ -353,8 +362,8 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 - VHumidity: Added condition 'Humidity has increased more than [x] % points last [y] minutes'
 - VHumidity: Added condition 'Humidity has decreased more than [x] % points last [y] minutes'
 - Updated athom-api
-- VThermo: only trigger on/off if on/off has changed. 
-- VHumidity: only trigger on/off if on/off has changed. 
+- VThermo: only trigger on/off if on/off has changed.
+- VHumidity: only trigger on/off if on/off has changed.
 
 #### 1.1.7
 

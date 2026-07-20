@@ -1,11 +1,6 @@
-import {
-    DRIVER_VTHERMO,
-    TargetSettings,
-    TargetSettingsZone,
-} from "./types";
+import {DRIVER_VTHERMO, TargetSettings, TargetSettingsZone} from './types';
 
 export class TargetSettingsMapper {
-
     static map(driverId?: string, settings?: any): TargetSettings | undefined {
         if (driverId === DRIVER_VTHERMO && settings) {
             const t = new TargetSettings();
@@ -16,9 +11,8 @@ export class TargetSettingsMapper {
 
             t.zone = new TargetSettingsZone();
             t.zone.from_other = settings.target_zone_from_other;
-            t.zone.to_other = settings.target_zone_to_other
-                && !settings.target_zone_from_other
-                && !settings.devices_zone_thermostats;
+            t.zone.to_other =
+                settings.target_zone_to_other && !settings.target_zone_from_other && !settings.devices_zone_thermostats;
 
             t.sub_zones = new TargetSettingsZone();
             t.sub_zones.to_vthermo = settings.target_sub_zones_to_vthermo;
@@ -31,5 +25,4 @@ export class TargetSettingsMapper {
             return t;
         }
     }
-
 }

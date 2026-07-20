@@ -1,18 +1,16 @@
-import {HomeyAPIV3Local} from "homey-api";
-import {Zone} from "./types";
+import {HomeyAPIV3Local} from 'homey-api';
+import {Zone} from './types';
 
 export class Zones {
-
     logger: any;
     zonesAsTree?: Zone;
 
-    constructor(zonesAsMap?: { [key: string]: HomeyAPIV3Local.ManagerZones.Zone; }, logger?: any) {
+    constructor(zonesAsMap?: {[key: string]: HomeyAPIV3Local.ManagerZones.Zone}, logger?: any) {
         this.logger = logger;
         this.registerZones(zonesAsMap);
     }
 
-    destroy() {
-    }
+    destroy() {}
 
     /**
      * Return zones as a tree structure.
@@ -33,7 +31,7 @@ export class Zones {
      * Register zones from a map of zones.
      * @param zonesAsMap
      */
-    registerZones(zonesAsMap?: { [key: string]: HomeyAPIV3Local.ManagerZones.Zone; }): void {
+    registerZones(zonesAsMap?: {[key: string]: HomeyAPIV3Local.ManagerZones.Zone}): void {
         if (zonesAsMap) {
             this.zonesAsTree = Zones.createTree(zonesAsMap);
             this.logger?.verbose(`Updated zones. (${this.getZonesAsList(this.zonesAsTree).length} zones)`);
@@ -114,12 +112,12 @@ export class Zones {
         return arr;
     }
 
-    private static createTree(zonesAsMap: { [key: string]: HomeyAPIV3Local.ManagerZones.Zone; }): Zone {
+    private static createTree(zonesAsMap: {[key: string]: HomeyAPIV3Local.ManagerZones.Zone}): Zone {
         const t = Zones.toSubTree(Zones.asList(zonesAsMap));
         return t[0];
     }
 
-    private static asList(zonesAsMap: { [key: string]: HomeyAPIV3Local.ManagerZones.Zone; }): Zone[] {
+    private static asList(zonesAsMap: {[key: string]: HomeyAPIV3Local.ManagerZones.Zone}): Zone[] {
         const ret: Zone[] = [];
         for (const key in zonesAsMap) {
             if (zonesAsMap.hasOwnProperty(key)) {
@@ -153,8 +151,8 @@ export class Zones {
     }
 
     private static find(root?: Zone, id?: string): Zone | undefined {
-        return (!root || root.id === id) ? root
+        return !root || root.id === id
+            ? root
             : root.children?.reduce((result: any, n: any) => result || Zones.find(n, id), undefined);
     }
-
 }

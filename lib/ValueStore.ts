@@ -1,5 +1,4 @@
 export class ValueStore {
-
     _maxAge: number;
     _store: Map<number, number>;
 
@@ -41,10 +40,9 @@ export class ValueStore {
 
     changePctPointsLastMinutes(minutes: number, aTimestamp: number): number | undefined {
         const now = aTimestamp || Date.now();
-        const ts = now - (minutes * 60000);
+        const ts = now - minutes * 60000;
         const newest = this.sameAgeOrOlderThan(now);
         const newestOlderThan = this.sameAgeOrOlderThan(ts);
         return newest && newestOlderThan ? newest - newestOlderThan : undefined;
     }
-
 }

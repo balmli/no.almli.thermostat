@@ -11,14 +11,16 @@ The app listens to Homey device and zone changes through `homey-api`, keeps a lo
 
 ## Runtime and tooling
 
-- Use the Node/npm versions compatible with this repository's Homey SDK v3 and TypeScript 4 setup. Do not upgrade dependencies or the TypeScript target as part of an unrelated change.
+- Use Node 24 as specified by `.nvmrc`; the project uses Homey SDK v3 and TypeScript 6. Do not upgrade dependencies or the TypeScript target as part of an unrelated change.
 - Install dependencies with `npm ci` when a clean install is needed.
 - Useful commands:
-  - `npm run build` — TypeScript compilation to `build/`.
-  - `npm run lint` — ESLint using the Athom configuration.
-  - `npm test` — Mocha tests followed by `homey app validate`.
-  - `npx homey app validate` — validate the composed Homey manifest.
-  - `npx homey app run` — run the app on a configured Homey for integration testing.
+    - `npm run build` — TypeScript compilation to `build/`.
+    - `npm run format` — format supported repository files with Prettier.
+    - `npm run format:check` — verify Prettier formatting without changing files.
+    - `npm run lint` — run the Prettier check followed by ESLint.
+    - `npm test` — Mocha tests followed by `homey app validate`.
+    - `npx homey app validate` — validate the composed Homey manifest.
+    - `npx homey app run` — run the app on a configured Homey for integration testing.
 - `tests/` is ignored and is not currently checked in. If tests are added for a change, confirm they are intentionally included rather than assuming `npm test` exercises repository tests.
 
 ## Repository map
@@ -52,18 +54,18 @@ Keep calculations deterministic and side-effect-light. New calculation logic sho
 
 - Treat `.homeycompose/` and `drivers/*/*.compose.json` as the editable manifest sources.
 - When adding or renaming a capability, setting, Flow trigger, condition, or action, update all connected pieces:
-  - the appropriate compose JSON;
-  - `locales/en.json` labels/errors;
-  - the listener or trigger registration in `app.ts` or a driver device;
-  - mapper/internal types when settings affect calculation;
-  - README documentation when the behavior is user-visible.
+    - the appropriate compose JSON;
+    - `locales/en.json` labels/errors;
+    - the listener or trigger registration in `app.ts` or a driver device;
+    - mapper/internal types when settings affect calculation;
+    - README documentation when the behavior is user-visible.
 - Keep Flow card IDs and capability IDs stable unless a migration is included. Existing Homey devices and user Flows depend on them.
 - Driver `class` is `thermostat` for both virtual drivers. Internal detection uses the full driver IDs in `lib/types.ts`; do not infer virtual-device identity from class alone.
 - After compose changes, run Homey validation and inspect the generated `app.json` diff for unintended changes.
 
 ## Coding conventions
 
-- Follow the style in the file being edited. The codebase contains both two-space and four-space indentation; avoid broad reformatting.
+- Prettier owns formatting. Run `npm run format` after editing supported files and avoid manual formatting that conflicts with `.prettierrc.json`.
 - Keep changes narrowly scoped. Do not modernize unrelated legacy code, convert module systems, or remove existing `@ts-ignore`/`@ts-nocheck` directives without proving the affected paths still build and run.
 - Use TypeScript types from `lib/types.ts` for calculation-domain data. Avoid spreading new `any` types into pure logic when a concrete type is practical.
 - Use the app/device logger rather than `console.*`. Include device/zone/capability context in failure logs without logging secrets.

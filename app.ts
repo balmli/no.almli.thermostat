@@ -1,11 +1,11 @@
 // @ts-nocheck
 
 import Homey from 'homey';
-import {HomeyAPI, HomeyAPIV3Local} from "homey-api";
-import {Devices} from "./lib/Devices";
-import {Zones} from "./lib/Zones";
-import {Calculator} from "./lib/Calculator";
-import {CAPABILITY_ACTIVE} from "./lib/types";
+import {HomeyAPI, HomeyAPIV3Local} from 'homey-api';
+import {Devices} from './lib/Devices';
+import {Zones} from './lib/Zones';
+import {Calculator} from './lib/Calculator';
+import {CAPABILITY_ACTIVE} from './lib/types';
 
 const Logger = require('./lib/Logger');
 
@@ -14,7 +14,6 @@ const REFRESH_DEFAULT_INTERVAL = 86400 * 1000;
 const REFRESH_BOOTING = 120 * 1000;
 
 module.exports = class VThermoApp extends Homey.App {
-
     logger: any;
     homeyApi?: HomeyAPI;
     homeyApiCreated?: number;
@@ -48,54 +47,61 @@ module.exports = class VThermoApp extends Homey.App {
     }
 
     private async initFlows() {
-
-        this.homey.flow.getConditionCard('vt_onoff_is_on')
+        this.homey.flow
+            .getConditionCard('vt_onoff_is_on')
             .registerRunListener((args, state) => args.device.getCapabilityValue(CAPABILITY_ACTIVE));
 
-        this.homey.flow.getConditionCard('vh_onoff_is_on')
+        this.homey.flow
+            .getConditionCard('vh_onoff_is_on')
             .registerRunListener((args, state) => args.device.getCapabilityValue(CAPABILITY_ACTIVE));
 
-        this.homey.flow.getConditionCard('vh_humidity_increased_last_mins')
-            .registerRunListener((args, state) => {
-                if (!args.change_pct_points || !args.minutes) {
-                    return false;
-                }
-                const changeLastMinutes = args.device.getValueStore().changePctPointsLastMinutes(args.minutes);
-                return changeLastMinutes !== undefined && changeLastMinutes >= args.change_pct_points;
-            });
+        this.homey.flow.getConditionCard('vh_humidity_increased_last_mins').registerRunListener((args, state) => {
+            if (!args.change_pct_points || !args.minutes) {
+                return false;
+            }
+            const changeLastMinutes = args.device.getValueStore().changePctPointsLastMinutes(args.minutes);
+            return changeLastMinutes !== undefined && changeLastMinutes >= args.change_pct_points;
+        });
 
-        this.homey.flow.getConditionCard('vh_humidity_decreased_last_mins')
-            .registerRunListener((args, state) => {
-                if (!args.change_pct_points || !args.minutes) {
-                    return false;
-                }
-                const changeLastMinutes = args.device.getValueStore().changePctPointsLastMinutes(args.minutes);
-                return changeLastMinutes !== undefined && (-1.0 * changeLastMinutes) >= args.change_pct_points;
-            });
+        this.homey.flow.getConditionCard('vh_humidity_decreased_last_mins').registerRunListener((args, state) => {
+            if (!args.change_pct_points || !args.minutes) {
+                return false;
+            }
+            const changeLastMinutes = args.device.getValueStore().changePctPointsLastMinutes(args.minutes);
+            return changeLastMinutes !== undefined && -1.0 * changeLastMinutes >= args.change_pct_points;
+        });
 
-        this.homey.flow.getActionCard('update_invert_switch')
+        this.homey.flow
+            .getActionCard('update_invert_switch')
             .registerRunListener((args, state) => args.device.updateInvertSwitch(args.invert_switch === 'true'));
 
-        this.homey.flow.getActionCard('update_measure_temperature')
+        this.homey.flow
+            .getActionCard('update_measure_temperature')
             .registerRunListener((args, state) => args.device.updateMeasureTemperature(args.temperature));
 
-        this.homey.flow.getActionCard('update_target_temp_min_max_step')
-            .registerRunListener((args, state) => args.device.updateTargetTempMinMaxStep(args.temp_min, args.temp_max, args.temp_step));
+        this.homey.flow
+            .getActionCard('update_target_temp_min_max_step')
+            .registerRunListener((args, state) =>
+                args.device.updateTargetTempMinMaxStep(args.temp_min, args.temp_max, args.temp_step),
+            );
 
-        this.homey.flow.getActionCard('update_target_temp_offset')
+        this.homey.flow
+            .getActionCard('update_target_temp_offset')
             .registerRunListener((args, state) => args.device.updateTargetTempOffset(args.temp_offset));
 
-        this.homey.flow.getActionCard('update_target_update_enabled')
+        this.homey.flow
+            .getActionCard('update_target_update_enabled')
             .registerRunListener((args, state) => args.device.updateTargetUpdateEnabled(args.enabled === 'true'));
 
-        this.homey.flow.getActionCard('vh_set_target_humidity')
-            .registerRunListener((args, state) => {
-                args.device.setCapabilityValue('vh_target_humidity', args.vh_target_humidity)
-                    .catch((err: any) => args.device.logger.error(err));
-                args.device.setCapabilityValue('vh_target_humidity_view', args.vh_target_humidity)
-                    .catch((err: any) => args.device.logger.error(err));
-                return Promise.resolve();
-            });
+        this.homey.flow.getActionCard('vh_set_target_humidity').registerRunListener((args, state) => {
+            args.device
+                .setCapabilityValue('vh_target_humidity', args.vh_target_humidity)
+                .catch((err: any) => args.device.logger.error(err));
+            args.device
+                .setCapabilityValue('vh_target_humidity_view', args.vh_target_humidity)
+                .catch((err: any) => args.device.logger.error(err));
+            return Promise.resolve();
+        });
     }
 
     /**
@@ -133,7 +139,7 @@ module.exports = class VThermoApp extends Homey.App {
     }
 
     private async getOrCreateHomeyApi(): Promise<HomeyAPI | undefined> {
-        if (this.homeyApi && this.homeyApiCreated && (Date.now() - this.homeyApiCreated > HOMEY_API_RECREATE_INTERVAL)) {
+        if (this.homeyApi && this.homeyApiCreated && Date.now() - this.homeyApiCreated > HOMEY_API_RECREATE_INTERVAL) {
             await this.destroyHomeyApi();
         }
         if (!this.homeyApi) {
@@ -201,8 +207,7 @@ module.exports = class VThermoApp extends Homey.App {
             return true;
         }
         const runningDevices = Object.keys(await this.getDevices()).length;
-        if (!this._lastNumRunningDevices
-            || runningDevices !== this._lastNumRunningDevices) {
+        if (!this._lastNumRunningDevices || runningDevices !== this._lastNumRunningDevices) {
             this._lastNumRunningDevices = runningDevices;
             this.logger.debug(`Homey is booting: Current devices: ${runningDevices}`);
             return true;
@@ -211,7 +216,7 @@ module.exports = class VThermoApp extends Homey.App {
         return false;
     }
 
-    private async getZones(): Promise<{ [key: string]: HomeyAPIV3Local.ManagerZones.Zone; }> {
+    private async getZones(): Promise<{[key: string]: HomeyAPIV3Local.ManagerZones.Zone}> {
         await this.getOrCreateHomeyApi();
         return this.homeyApi.zones.getZones();
     }
@@ -233,7 +238,7 @@ module.exports = class VThermoApp extends Homey.App {
         }
     }
 
-    private async getDevices(): Promise<{ [key: string]: HomeyAPIV3Local.ManagerDevices.Device; }> {
+    private async getDevices(): Promise<{[key: string]: HomeyAPIV3Local.ManagerDevices.Device}> {
         await this.getOrCreateHomeyApi();
         return this.homeyApi.devices.getDevices();
     }
@@ -260,7 +265,7 @@ module.exports = class VThermoApp extends Homey.App {
         return this.homeyApi.devices.setCapabilityValue({
             deviceId,
             capabilityId,
-            value
+            value,
         });
     }
 
@@ -360,5 +365,4 @@ module.exports = class VThermoApp extends Homey.App {
     }
 
     delay = (ms: number) => new Promise(resolve => this.homey.setTimeout(resolve, ms));
-
 };

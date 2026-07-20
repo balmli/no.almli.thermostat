@@ -3,15 +3,7 @@
   "name": {
     "en": "VHumidity"
   },
-  "$extends": [
-    "defaults"
-  ],
+  "$extends": ["defaults"],
   "class": "thermostat",
-  "capabilities": [
-    "onoff",
-    "vt_onoff",
-    "vh_target_humidity",
-    "measure_humidity",
-    "vh_target_humidity_view"
-  ]
+  "capabilities": ["onoff", "vt_onoff", "vh_target_humidity", "measure_humidity", "vh_target_humidity_view"]
 }

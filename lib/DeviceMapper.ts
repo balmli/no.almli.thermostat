@@ -1,19 +1,13 @@
 // @ts-nocheck
 
-import {HomeyAPIV3Local} from "homey-api";
-import {
-    Device,
-    DeviceCapabilities,
-    DeviceCapability,
-    SUPPORTED_CAPABILITIES,
-} from "./types";
-import {TemperatureSettingsMapper} from "./TemperatureSettingsMapper";
-import {TargetSettingsMapper} from "./TargetSettingsMapper";
-import {DeviceSettingsMapper} from "./DeviceSettingsMapper";
-import {HumiditySettingsMapper} from "./HumiditySettingsMapper";
+import {HomeyAPIV3Local} from 'homey-api';
+import {Device, DeviceCapabilities, DeviceCapability, SUPPORTED_CAPABILITIES} from './types';
+import {TemperatureSettingsMapper} from './TemperatureSettingsMapper';
+import {TargetSettingsMapper} from './TargetSettingsMapper';
+import {DeviceSettingsMapper} from './DeviceSettingsMapper';
+import {HumiditySettingsMapper} from './HumiditySettingsMapper';
 
 export class DeviceMapper {
-
     static map(i: HomeyAPIV3Local.ManagerDevices.Device): Device {
         const d = new Device();
         d.id = i.id;
@@ -45,5 +39,4 @@ export class DeviceMapper {
         }
         return capabilities;
     }
-
 }

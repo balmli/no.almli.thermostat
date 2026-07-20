@@ -1,9 +1,8 @@
-
 export class Zone {
     id!: string;
     name!: string;
     parent?: string;
-    children?: Zone[]
+    children?: Zone[];
 }
 
 export enum DeviceClass {
@@ -24,8 +23,7 @@ export class DeviceCapability {
     }
 }
 
-export class DeviceCapabilities extends Map<string, DeviceCapability> {
-}
+export class DeviceCapabilities extends Map<string, DeviceCapability> {}
 
 export class Device {
     id!: string;
@@ -90,7 +88,6 @@ export class Device {
             dc.lastUpdated = Date.now();
         }
     }
-
 }
 
 export class DeviceCapabilityEvent {
@@ -129,10 +126,7 @@ export class DeviceRequests {
     }
 
     addRequests(drs: DeviceRequests) {
-        this.requests.push(
-            ...drs.getRequests()
-                .filter(dr => !!dr)
-        );
+        this.requests.push(...drs.getRequests().filter(dr => !!dr));
     }
 
     findIndex(dr: DeviceRequest): number {
@@ -151,19 +145,12 @@ export class DeviceRequests {
         }
         return ret;
     }
-
 }
 
 export const DRIVER_VTHERMO = 'homey:app:no.almli.thermostat:VThermo';
 export const DRIVER_VHUMIDITY = 'homey:app:no.almli.thermostat:VHumidity';
 
-export const SUPPORTED_CLASSES = [
-    'fan',
-    'heater',
-    'sensor',
-    'socket',
-    'thermostat'
-];
+export const SUPPORTED_CLASSES = ['fan', 'heater', 'sensor', 'socket', 'thermostat'];
 
 export const CAPABILITY_ACTIVE = 'vt_onoff';
 
@@ -176,20 +163,17 @@ export const SUPPORTED_CAPABILITIES = [
     'alarm_contact',
     'alarm_motion',
     CAPABILITY_ACTIVE,
-    'vh_target_humidity'
+    'vh_target_humidity',
 ];
 
-export const SUPPORTED_UPDATE_CAPABILITIES = [
-    'onoff',
-    'target_temperature'
-];
+export const SUPPORTED_UPDATE_CAPABILITIES = ['onoff', 'target_temperature'];
 
 export enum CalcMethod {
     AVERAGE = 'AVERAGE',
     MIN = 'MIN',
     MAX = 'MAX',
     NEWEST = 'NEWEST',
-    MANUAL = 'MANUAL'
+    MANUAL = 'MANUAL',
 }
 
 export class TemperatureSettingsZone {

@@ -1,15 +1,12 @@
-import {Zones} from "./Zones";
-import {Devices} from "./Devices";
-import {
-    DeviceRequests,
-} from "./types";
-import {VThermoDeviceCalculator} from "./VThermoDeviceCalculator";
-import {VHumidityDeviceCalculator} from "./VHumidityDeviceCalculator";
+import {Zones} from './Zones';
+import {Devices} from './Devices';
+import {DeviceRequests} from './types';
+import {VThermoDeviceCalculator} from './VThermoDeviceCalculator';
+import {VHumidityDeviceCalculator} from './VHumidityDeviceCalculator';
 
 const DEFAULT_CALCULATION_DELAY = 500;
 
 export class Calculator {
-
     private zonesObj!: Zones;
     private devicesObj!: Devices;
     private homey: any;
@@ -66,5 +63,4 @@ export class Calculator {
         }
         return requests;
     }
-
 }

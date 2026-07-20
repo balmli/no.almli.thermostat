@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import {HomeyAPIV3Local} from "homey-api";
+import {HomeyAPIV3Local} from 'homey-api';
 import {
     capabilityIdFormat,
     Device,
@@ -8,20 +8,19 @@ import {
     DeviceRequests,
     SUPPORTED_CAPABILITIES,
     SUPPORTED_CLASSES,
-    Zone
-} from "./types";
-import {Calculator} from "./Calculator";
-import {DeviceMapper} from "./DeviceMapper";
+    Zone,
+} from './types';
+import {Calculator} from './Calculator';
+import {DeviceMapper} from './DeviceMapper';
 
 export class Devices {
-
     private homey: any;
     private logger: any;
     private calculator?: Calculator;
     private devices: Device[];
     private capabilityInstances: Map<string, HomeyAPIV3Local.ManagerDevices.Device.DeviceCapability>;
 
-    constructor(devicesAsMap?: { [key: string]: HomeyAPIV3Local.ManagerDevices.Device; }, homey?: any, logger?: any) {
+    constructor(devicesAsMap?: {[key: string]: HomeyAPIV3Local.ManagerDevices.Device}, homey?: any, logger?: any) {
         this.homey = homey;
         this.logger = logger;
         this.capabilityInstances = new Map<string, HomeyAPIV3Local.ManagerDevices.Device.DeviceCapability>();
@@ -44,9 +43,7 @@ export class Devices {
      * @param deviceClass
      */
     getDevices(deviceClass?: DeviceClass): Device[] {
-        return this.devices
-            .filter(d => Devices.filterDeviceClass(d, deviceClass))
-            ;
+        return this.devices.filter(d => Devices.filterDeviceClass(d, deviceClass));
     }
 
     /**
@@ -80,7 +77,7 @@ export class Devices {
                 this.logger?.debug(`Updated device by data id: capability HARD: ${device.id} ${capabilityId}`, value);
             }
         } else {
-            this.logger?.warn(`Updata by data id: unknown device: ${dataId}`)
+            this.logger?.warn(`Updata by data id: unknown device: ${dataId}`);
         }
     }
 
@@ -88,7 +85,7 @@ export class Devices {
      * Register devices from a map of devices.
      * @param devicesAsMap
      */
-    registerDevices(devicesAsMap?: { [key: string]: HomeyAPIV3Local.ManagerDevices.Device; }): void {
+    registerDevices(devicesAsMap?: {[key: string]: HomeyAPIV3Local.ManagerDevices.Device}): void {
         if (devicesAsMap) {
             for (const key in devicesAsMap) {
                 if (devicesAsMap.hasOwnProperty(key)) {
@@ -165,29 +162,35 @@ export class Devices {
     }
 
     private static deviceChanged(device: Device, updatedDevice: HomeyAPIV3Local.ManagerDevices.Device): boolean {
-        return device.name !== updatedDevice.name
-            || device.class !== updatedDevice.class
-            || device.virtualClass !== updatedDevice.virtualClass
-            || device.zone !== updatedDevice.zone
-            || device.ready !== updatedDevice.ready
-            || device.available !== updatedDevice.available
-            ;
+        return (
+            device.name !== updatedDevice.name ||
+            device.class !== updatedDevice.class ||
+            device.virtualClass !== updatedDevice.virtualClass ||
+            device.zone !== updatedDevice.zone ||
+            device.ready !== updatedDevice.ready ||
+            device.available !== updatedDevice.available
+        );
     }
 
-    private static deviceCapabilitiesChanged(device: Device, updatedDevice: HomeyAPIV3Local.ManagerDevices.Device): boolean {
-        return device.capabilities?.length !== updatedDevice.capabilities?.length
-            || device.capabilities?.slice().sort().join(",") !== updatedDevice.capabilities?.slice().sort().join(",")
-            ;
+    private static deviceCapabilitiesChanged(
+        device: Device,
+        updatedDevice: HomeyAPIV3Local.ManagerDevices.Device,
+    ): boolean {
+        return (
+            device.capabilities?.length !== updatedDevice.capabilities?.length ||
+            device.capabilities?.slice().sort().join(',') !== updatedDevice.capabilities?.slice().sort().join(',')
+        );
     }
 
     private static filterDeviceClass = (d: Device, deviceClass?: DeviceClass): boolean => {
-        return !deviceClass ||
-            (((d.class === deviceClass) && !d.isVThermo() && !d.isVHumidity()))
-            || (((d.virtualClass === deviceClass) && !d.isVThermo() && !d.isVHumidity()))
-            || (((deviceClass === DeviceClass.vthermo) && d.isVThermo()))
-            || (((deviceClass === DeviceClass.vhumidity) && d.isVHumidity()))
-            ;
-    }
+        return (
+            !deviceClass ||
+            (d.class === deviceClass && !d.isVThermo() && !d.isVHumidity()) ||
+            (d.virtualClass === deviceClass && !d.isVThermo() && !d.isVHumidity()) ||
+            (deviceClass === DeviceClass.vthermo && d.isVThermo()) ||
+            (deviceClass === DeviceClass.vhumidity && d.isVHumidity())
+        );
+    };
 
     /**
      * Get devices from a zone, by zone id.
@@ -195,10 +198,7 @@ export class Devices {
      * @param deviceClass filter by device class (optional)
      */
     getDevicesFromZone(zoneId: string, deviceClass?: DeviceClass): Device[] | undefined {
-        return this.devices
-            .filter(d => d.zone === zoneId)
-            .filter(d => Devices.filterDeviceClass(d, deviceClass))
-            ;
+        return this.devices.filter(d => d.zone === zoneId).filter(d => Devices.filterDeviceClass(d, deviceClass));
     }
 
     /**
@@ -214,8 +214,7 @@ export class Devices {
         const zoneIds: string[] = zones.map(z => z.id);
         return this.devices
             .filter(d => d.zone && zoneIds.includes(d.zone))
-            .filter(d => Devices.filterDeviceClass(d, deviceClass))
-            ;
+            .filter(d => Devices.filterDeviceClass(d, deviceClass));
     }
 
     /**
@@ -256,8 +255,7 @@ export class Devices {
             if (!!device.makeCapabilityInstance) {
                 const capabilities = device.capabilitiesObj;
                 for (const capabilityId in capabilities) {
-                    if (capabilities.hasOwnProperty(capabilityId) &&
-                        SUPPORTED_CAPABILITIES.includes(capabilityId)) {
+                    if (capabilities.hasOwnProperty(capabilityId) && SUPPORTED_CAPABILITIES.includes(capabilityId)) {
                         this.makeCapabilityInstance(device, capabilityId);
                         create = true;
                     }
@@ -282,18 +280,18 @@ export class Devices {
      * @param device
      */
     validAndSupported(device: HomeyAPIV3Local.ManagerDevices.Device): boolean {
-        return this.validDevice(device) &&
-            this.supportedDevice(device);
+        return this.validDevice(device) && this.supportedDevice(device);
     }
 
     private validDevice(device: HomeyAPIV3Local.ManagerDevices.Device): boolean {
-        const ret = !!device
-            && typeof device === 'object'
-            && !!device.id
-            && !!device.name
-            && device.available
-            && !!device.capabilities
-            && !!device.capabilitiesObj;
+        const ret =
+            !!device &&
+            typeof device === 'object' &&
+            !!device.id &&
+            !!device.name &&
+            device.available &&
+            !!device.capabilities &&
+            !!device.capabilitiesObj;
         if (!ret) {
             this.logger?.silly(`Invalid device: ${device.id} - ${device.name}`);
         }
@@ -301,11 +299,11 @@ export class Devices {
     }
 
     private supportedDevice(device: HomeyAPIV3Local.ManagerDevices.Device): boolean {
-        const ret = SUPPORTED_CLASSES.includes(device.class)
-            || device.capabilitiesObj.hasOwnProperty('measure_temperature')
-            || device.capabilitiesObj.hasOwnProperty('alarm_contact')
-            || device.capabilitiesObj.hasOwnProperty('alarm_motion')
-        ;
+        const ret =
+            SUPPORTED_CLASSES.includes(device.class) ||
+            device.capabilitiesObj.hasOwnProperty('measure_temperature') ||
+            device.capabilitiesObj.hasOwnProperty('alarm_contact') ||
+            device.capabilitiesObj.hasOwnProperty('alarm_motion');
         if (!ret) {
             this.logger?.silly(`Not supported device: ${device.id} - ${device.name}: class=${device.class}`);
         }
@@ -318,16 +316,20 @@ export class Devices {
             this.destroyCapabilityInstance(deviceCapabilityId);
             //device.setMaxListeners(100);
             const capabilityInstance = device.makeCapabilityInstance(capabilityId, value =>
-                this.capabilityInstanceListener(device, capabilityId, value)
+                this.capabilityInstanceListener(device, capabilityId, value),
             );
             this.capabilityInstances.set(deviceCapabilityId, capabilityInstance);
             this.logger?.verbose(`Registered capability instance: ${device.id} ${device.name} ${capabilityId}`);
         } catch (err) {
-            this.logger?.error("Error creating capability instance: " + capabilityId, err);
+            this.logger?.error('Error creating capability instance: ' + capabilityId, err);
         }
     }
 
-    private capabilityInstanceListener(device: HomeyAPIV3Local.ManagerDevices.Device, capabilityId: string, value: any) {
+    private capabilityInstanceListener(
+        device: HomeyAPIV3Local.ManagerDevices.Device,
+        capabilityId: string,
+        value: any,
+    ) {
         const deviz = this.getDevice(device.id);
         if (deviz) {
             if (deviz.hasChangedValue(capabilityId, value)) {
@@ -343,7 +345,7 @@ export class Devices {
         if (capabilityInstance) {
             capabilityInstance.destroy();
             this.capabilityInstances.delete(deviceCapabilityId);
-            this.logger?.debug("Destroyed capability instance: ", deviceCapabilityId);
+            this.logger?.debug('Destroyed capability instance: ', deviceCapabilityId);
         }
     }
 
@@ -360,18 +362,25 @@ export class Devices {
                     try {
                         await localDevice.setCapabilityValue(dr.capabilityId, dr.value);
                         // For VHumidity: add to value store
-                        if (localDevice.getValueStore &&
-                            (dr.capabilityId === 'measure_humidity') &&
-                            (dr.value !== undefined) &&
-                            (dr.value !== null)) {
+                        if (
+                            localDevice.getValueStore &&
+                            dr.capabilityId === 'measure_humidity' &&
+                            dr.value !== undefined &&
+                            dr.value !== null
+                        ) {
                             localDevice.getValueStore().addValue(dr.value);
                         }
                         if (!!dr.trigger) {
-                            await this.homey?.flow.getDeviceTriggerCard(dr.trigger)
+                            await this.homey?.flow
+                                .getDeviceTriggerCard(dr.trigger)
                                 .trigger(localDevice, {state: dr.value ? 1 : 0}, {})
-                                .catch((err: any) => this.logger?.error(`Trigger failed: ${dr.id} ${dr.capabilityId}:`, err));
+                                .catch((err: any) =>
+                                    this.logger?.error(`Trigger failed: ${dr.id} ${dr.capabilityId}:`, err),
+                                );
                         }
-                        this.logger?.verbose(`Update: ${dr.id}:${localDevice.getName()}:${dr.capabilityId} -> ${dr.value}`);
+                        this.logger?.verbose(
+                            `Update: ${dr.id}:${localDevice.getName()}:${dr.capabilityId} -> ${dr.value}`,
+                        );
                     } catch (err) {
                         this.logger?.error('Update devices: UPDATE LOCAL failed:', dr, err);
                     }
@@ -388,8 +397,11 @@ export class Devices {
                         this.logger?.error('Update devices: UPDATE DEVICE failed:', dr, err);
                     }
                 } else {
-                    this.homey?.app.setCapabilityValue(dr.id, dr.capabilityId, dr.value)
-                        .then(() => this.logger?.verbose(`Update device:(other): ${dr.id}:${dr.capabilityId} -> ${dr.value}`))
+                    this.homey?.app
+                        .setCapabilityValue(dr.id, dr.capabilityId, dr.value)
+                        .then(() =>
+                            this.logger?.verbose(`Update device:(other): ${dr.id}:${dr.capabilityId} -> ${dr.value}`),
+                        )
                         .catch((err: any) => this.logger?.error('Update devices: UPDATE DEVICE failed:', dr, err));
                 }
             }

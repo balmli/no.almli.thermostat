@@ -8,15 +8,14 @@ import {
     DeviceRequests,
     DeviceSettings,
     HumiditySettings,
-    Zone
-} from "./types";
-import {DeviceCalculator} from "./DeviceCalculator";
-import {Zones} from "./Zones";
+    Zone,
+} from './types';
+import {DeviceCalculator} from './DeviceCalculator';
+import {Zones} from './Zones';
 
 const math = require('./math');
 
 export class VHumidityDeviceCalculator extends DeviceCalculator {
-
     calculate(zone: Zone): DeviceRequests {
         const requests = new DeviceRequests();
         const vhumidities = this.devicesObj.getDevicesFromZones(zone, DeviceClass.vhumidity);
@@ -59,7 +58,11 @@ export class VHumidityDeviceCalculator extends DeviceCalculator {
      * @param zonesObj zone manager
      * @param humiditySettings humidity settings
      */
-    getHumidities(zone: Zone | undefined, zonesObj: Zones, humiditySettings: HumiditySettings | undefined): DeviceCapability[] {
+    getHumidities(
+        zone: Zone | undefined,
+        zonesObj: Zones,
+        humiditySettings: HumiditySettings | undefined,
+    ): DeviceCapability[] {
         const dcs: DeviceCapability[] = [];
         if (zone && humiditySettings) {
             dcs.push(...this.getHumiditiesInZone(zone));
@@ -77,7 +80,10 @@ export class VHumidityDeviceCalculator extends DeviceCalculator {
         return this.updateAndCreateDeviceRequestIfChanged(device, 'measure_humidity', humidity);
     }
 
-    private calculateHumidity(humidities: DeviceCapability[], humSettings?: HumiditySettings): number | null | undefined {
+    private calculateHumidity(
+        humidities: DeviceCapability[],
+        humSettings?: HumiditySettings,
+    ): number | null | undefined {
         let humidity = null;
         if (humidities.length > 0 && humSettings) {
             if (humSettings.calcMethod === CalcMethodHumidity.AVERAGE) {
@@ -169,9 +175,9 @@ export class VHumidityDeviceCalculator extends DeviceCalculator {
         } else {
             const hysteresis = deviceSettings.hysteresis || 1;
             const invert = deviceSettings.invert;
-            if (humidity > (targetHumidity + hysteresis)) {
+            if (humidity > targetHumidity + hysteresis) {
                 onoff = invert !== true;
-            } else if (humidity < (targetHumidity - hysteresis)) {
+            } else if (humidity < targetHumidity - hysteresis) {
                 onoff = invert === true;
             }
         }
@@ -202,5 +208,4 @@ export class VHumidityDeviceCalculator extends DeviceCalculator {
         }
         return dcs;
     }
-
 }

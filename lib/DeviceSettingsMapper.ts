@@ -1,12 +1,6 @@
-import {
-    DeviceSettings,
-    DeviceSettingssZone,
-    DRIVER_VHUMIDITY,
-    DRIVER_VTHERMO,
-} from "./types";
+import {DeviceSettings, DeviceSettingssZone, DRIVER_VHUMIDITY, DRIVER_VTHERMO} from './types';
 
 export class DeviceSettingsMapper {
-
     static map(driverId?: string, settings?: any): DeviceSettings | undefined {
         if (settings) {
             const t = new DeviceSettings();
@@ -34,5 +28,4 @@ export class DeviceSettingsMapper {
             return t;
         }
     }
-
 }

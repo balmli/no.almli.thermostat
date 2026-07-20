@@ -3,7 +3,6 @@ import Homey from 'homey';
 const Logger = require('./Logger');
 
 export class BaseDevice extends Homey.Device {
-
     logger: any;
 
     async onInit(): Promise<void> {
@@ -16,9 +15,8 @@ export class BaseDevice extends Homey.Device {
     getDevicesSettings(): any {
         return {
             zone: {
-                clazz: true
-            }
+                clazz: true,
+            },
         };
     }
-
 }

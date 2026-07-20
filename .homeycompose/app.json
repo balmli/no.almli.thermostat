@@ -4,34 +4,22 @@
   "compatibility": ">=8.1.2",
   "sdk": 3,
   "brandColor": "#df20cb",
-  "platforms": [
-    "local"
-  ],
+  "platforms": ["local"],
   "name": {
     "en": "VThermo"
   },
   "description": {
     "en": "Virtual thermostat and humidity controller"
   },
-  "category": [
-    "tools"
-  ],
+  "category": ["tools"],
   "tags": {
-    "en": [
-      "thermostat",
-      "temperature control",
-      "heating",
-      "virtual",
-      "humidity"
-    ]
+    "en": ["thermostat", "temperature control", "heating", "virtual", "humidity"]
   },
   "images": {
     "large": "/assets/images/large.png",
     "small": "/assets/images/small.png"
   },
-  "permissions": [
-    "homey:manager:api"
-  ],
+  "permissions": ["homey:manager:api"],
   "author": {
     "name": "Bjørnar Almli",
     "email": "bjornar.almli@gmail.com"

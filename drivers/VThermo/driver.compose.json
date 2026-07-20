@@ -3,14 +3,7 @@
   "name": {
     "en": "VThermo"
   },
-  "$extends": [
-    "defaults"
-  ],
+  "$extends": ["defaults"],
   "class": "thermostat",
-  "capabilities": [
-    "onoff",
-    "vt_onoff",
-    "target_temperature",
-    "measure_temperature"
-  ]
+  "capabilities": ["onoff", "vt_onoff", "target_temperature", "measure_temperature"]
 }

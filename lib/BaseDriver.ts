@@ -4,7 +4,6 @@ const math = require('./math');
 const Logger = require('./Logger');
 
 export class BaseDriver extends Homey.Driver {
-
     logger: any;
 
     async onInit(): Promise<void> {
@@ -23,12 +22,11 @@ export class BaseDriver extends Homey.Driver {
     async onPairListDevices(): Promise<any[]> {
         return [
             {
-                "name": this.getDriverName(),
-                "data": {
-                    "id": math.guid()
-                }
-            }
+                name: this.getDriverName(),
+                data: {
+                    id: math.guid(),
+                },
+            },
         ];
     }
-
 }

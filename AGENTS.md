@@ -117,9 +117,13 @@ Homey hardware/API behavior cannot be established by compilation alone. For inte
 
 ## Issue-task workflow
 
-- Handle one issue task at a time. Finish its investigation, regression test, implementation, verification, documentation, and GitHub response before starting another issue.
+- Handle one GitHub issue task at a time. Finish its branch, investigation, regression test, implementation, verification, documentation, atomic commits, pull request, and GitHub response before starting another issue.
+- Before changing code for a task in `tasks/github-issues/`, create a dedicated branch from the intended base branch. Name it `fix/<github-issue-slug>`, where the slug is the GitHub task filename without `.md`; for example, `tasks/github-issues/50-state-and-temperature-inputs.md` uses `fix/50-state-and-temperature-inputs`. Do not implement GitHub issue fixes directly on the default branch or reuse one issue branch for another issue.
+- Keep the branch and pull request limited to that one GitHub issue and any directly related task in `tasks/expected-failures/` that must be resolved by the same fix.
 - Use atomic commits: each commit should contain one coherent issue fix together with its tests and any directly required documentation or task updates. Do not combine multiple issue fixes or unrelated cleanup in the same commit.
 - Commit only after the relevant focused tests and required project checks pass. If preparatory refactoring is independently useful and behavior-preserving, keep it in a separate atomic commit.
+- After verification, push the issue branch and create a pull request targeting the intended base branch. Include the GitHub issue, related expected-failure task, behavior change, TDD regression coverage, verification results, and any hardware limitations in the pull-request description.
+- Push any later atomic commits for that issue to the same branch so the existing pull request is updated. Do not begin another GitHub issue until the current issue's commits are pushed and its pull request has been created.
 - Use test-driven development when solving tasks in both `tasks/expected-failures/` and `tasks/github-issues/`: first add or identify a focused regression test that demonstrates the intended behavior and fails for the expected reason, then make the smallest production change that passes it, and finally refactor while keeping the suite green.
 - An existing `it.fails` test in an expected-failure task is the red phase. When fixing that defect, change it to a normal passing test and add any boundary cases required by the task. Do not weaken or delete the assertion merely to make the suite pass.
 - A GitHub issue fix must include regression coverage for the reported behavior whenever it can be tested locally. Keep platform- or hardware-only verification requirements explicit when they cannot be automated.

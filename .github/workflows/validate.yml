@@ -9,7 +9,6 @@ on:
 
 permissions:
     contents: read
-    packages: read
 
 concurrency:
     group: validate-${{ github.workflow }}-${{ github.ref }}
@@ -31,14 +30,7 @@ jobs:
                   node-version-file: .nvmrc
                   cache: npm
 
-            - name: Configure GitHub Packages authentication
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN || github.token }}
-              run: npm config set '//npm.pkg.github.com/:_authToken' '${NODE_AUTH_TOKEN}' --location=project
-
             - name: Install dependencies
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN || github.token }}
               run: npm ci --ignore-scripts
 
             - name: Build
@@ -52,7 +44,5 @@ jobs:
 
             - name: Validate for publishing
               uses: athombv/github-action-homey-app-validate@master
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN || github.token }}
               with:
                   level: publish

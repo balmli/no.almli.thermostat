@@ -5,6 +5,7 @@ import {
     capabilityIdFormat,
     Device,
     DeviceClass,
+    DeviceRequest,
     DeviceRequests,
     SUPPORTED_CAPABILITIES,
     SUPPORTED_CLASSES,
@@ -13,17 +14,27 @@ import {
 import {Calculator} from './Calculator';
 import {DeviceMapper} from './DeviceMapper';
 
+const PHYSICAL_UPDATE_RETRY_BASE_DELAY = 5000;
+const PHYSICAL_UPDATE_MAX_ATTEMPTS = 3;
+
+type PendingPhysicalUpdate = {
+    value: any;
+    attempts: number;
+};
+
 export class Devices {
     private homey: any;
     private logger: any;
     private calculator?: Calculator;
     private devices: Device[];
     private capabilityInstances: Map<string, HomeyAPIV3Local.ManagerDevices.Device.DeviceCapability>;
+    private pendingPhysicalUpdates: Map<string, PendingPhysicalUpdate>;
 
     constructor(devicesAsMap?: {[key: string]: HomeyAPIV3Local.ManagerDevices.Device}, homey?: any, logger?: any) {
         this.homey = homey;
         this.logger = logger;
         this.capabilityInstances = new Map<string, HomeyAPIV3Local.ManagerDevices.Device.DeviceCapability>();
+        this.pendingPhysicalUpdates = new Map<string, PendingPhysicalUpdate>();
         this.devices = new Array<Device>();
         this.registerDevices(devicesAsMap);
     }
@@ -32,6 +43,7 @@ export class Devices {
         for (const ci of this.capabilityInstances.values()) {
             ci.destroy();
         }
+        this.pendingPhysicalUpdates.clear();
     }
 
     setCalculator(calculator?: Calculator): void {
@@ -135,6 +147,11 @@ export class Devices {
                 }
             }
             this.devices.splice(idx, 1);
+            for (const key of this.pendingPhysicalUpdates.keys()) {
+                if (key.startsWith(`${device.id}_`)) {
+                    this.pendingPhysicalUpdates.delete(key);
+                }
+            }
             this.logger?.debug(`Deleted device: ${device.id}. (${this.devices.length} devices)`);
         }
     }
@@ -332,6 +349,7 @@ export class Devices {
     ) {
         const deviz = this.getDevice(device.id);
         if (deviz) {
+            this.confirmPhysicalUpdate(device.id, capabilityId, value);
             if (deviz.hasChangedValue(capabilityId, value)) {
                 deviz.setLocalCapabilityValue(capabilityId, value);
                 this.calculator?.startCalculation();
@@ -346,6 +364,66 @@ export class Devices {
             capabilityInstance.destroy();
             this.capabilityInstances.delete(deviceCapabilityId);
             this.logger?.debug('Destroyed capability instance: ', deviceCapabilityId);
+        }
+    }
+
+    private confirmPhysicalUpdate(deviceId: string, capabilityId: string, value: any): void {
+        const key = capabilityIdFormat(deviceId, capabilityId);
+        const pending = this.pendingPhysicalUpdates.get(key);
+        if (pending && pending.value === value) {
+            this.pendingPhysicalUpdates.delete(key);
+            this.logger?.verbose(`Physical update confirmed: ${deviceId}:${capabilityId} -> ${value}`);
+        }
+    }
+
+    private trackPhysicalUpdate(dr: {id: string; capabilityId: string; value?: any}): PendingPhysicalUpdate {
+        const key = capabilityIdFormat(dr.id, dr.capabilityId);
+        const current = this.pendingPhysicalUpdates.get(key);
+        const pending = {
+            value: dr.value,
+            attempts: current && current.value === dr.value ? current.attempts + 1 : 1,
+        };
+        this.pendingPhysicalUpdates.set(key, pending);
+        return pending;
+    }
+
+    private schedulePhysicalUpdateReconciliation(dr: DeviceRequest, pending: PendingPhysicalUpdate): void {
+        const key = capabilityIdFormat(dr.id, dr.capabilityId);
+        const current = this.pendingPhysicalUpdates.get(key);
+        if (current !== pending) {
+            return;
+        }
+
+        const observedValue = this.getDevice(dr.id)?.getLocalCapabilityValue(dr.capabilityId)?.value;
+        if (observedValue === dr.value) {
+            this.pendingPhysicalUpdates.delete(key);
+            return;
+        }
+
+        if (pending.attempts < PHYSICAL_UPDATE_MAX_ATTEMPTS) {
+            this.calculator?.startCalculation(PHYSICAL_UPDATE_RETRY_BASE_DELAY * pending.attempts);
+            return;
+        }
+
+        this.pendingPhysicalUpdates.delete(key);
+        this.logger?.error(
+            `Physical update not confirmed after ${pending.attempts} attempts: ${dr.id}:${dr.capabilityId}`,
+            dr,
+        );
+    }
+
+    private async updatePhysicalDevice(dr: DeviceRequest): Promise<void> {
+        const pending = this.trackPhysicalUpdate(dr);
+        try {
+            await this.homey?.app.setCapabilityValue(dr.id, dr.capabilityId, dr.value);
+            if (dr.deviceDelay && dr.deviceDelay > 0) {
+                await this.homey?.app.delay(dr.deviceDelay);
+            }
+            this.logger?.verbose(`Update device:(other): ${dr.id}:${dr.capabilityId} -> ${dr.value}`);
+        } catch (err) {
+            this.logger?.error('Update devices: UPDATE DEVICE failed:', dr, err);
+        } finally {
+            this.schedulePhysicalUpdateReconciliation(dr, pending);
         }
     }
 
@@ -388,22 +466,7 @@ export class Devices {
                     this.logger?.warn(`Update device: Has dataId, but is not a local device`, dr);
                 }
             } else {
-                if (dr.deviceDelay && dr.deviceDelay > 0) {
-                    try {
-                        await this.homey?.app.setCapabilityValue(dr.id, dr.capabilityId, dr.value);
-                        await this.homey?.app.delay(dr.deviceDelay);
-                        this.logger?.verbose(`Update device:(other): ${dr.id}:${dr.capabilityId} -> ${dr.value}`);
-                    } catch (err) {
-                        this.logger?.error('Update devices: UPDATE DEVICE failed:', dr, err);
-                    }
-                } else {
-                    this.homey?.app
-                        .setCapabilityValue(dr.id, dr.capabilityId, dr.value)
-                        .then(() =>
-                            this.logger?.verbose(`Update device:(other): ${dr.id}:${dr.capabilityId} -> ${dr.value}`),
-                        )
-                        .catch((err: any) => this.logger?.error('Update devices: UPDATE DEVICE failed:', dr, err));
-                }
+                await this.updatePhysicalDevice(dr);
             }
         }
     }

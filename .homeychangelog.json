@@ -1,4 +1,7 @@
 {
+  "1.11.0": {
+    "en": "Reliability improvements for sensor updates, calculations, device control, Fahrenheit temperatures, multi-zone readings, and zero-valued settings and history."
+  },
   "1.10.4": {
     "en": "Fixes for Homey Pro 2023."
   },

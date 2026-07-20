@@ -184,6 +184,19 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
+#### 1.11.0
+
+- Improved Homey device subscription refresh and API lifecycle cleanup
+- Added bounded recovery for transient calculation failures
+- Await, confirm, and retry physical device updates without assuming unconfirmed state
+- Preserve heater outputs when temperature input is temporarily unavailable
+- Added correct Celsius/Fahrenheit conversion at the Homey API boundary
+- Fixed duplicate temperature and humidity readings when using multiple zones
+- Added support for zero hysteresis and zero target-temperature limits
+- Fixed stale-measurement fallback and maximum-age handling
+- Fixed VThermo reactivation after enabling on/off control
+- Fixed zero-valued humidity history and invalid logger-level errors
+
 #### 1.10.4
 
 - Fixes for Homey Pro 2023

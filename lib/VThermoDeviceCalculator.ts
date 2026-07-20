@@ -13,8 +13,7 @@ import {
 } from './types';
 import {DeviceCalculator} from './DeviceCalculator';
 import {Zones} from './Zones';
-
-const math = require('./math');
+import * as math from './math';
 
 export class VThermoDeviceCalculator extends DeviceCalculator {
     calculate(zone: Zone): DeviceRequests {

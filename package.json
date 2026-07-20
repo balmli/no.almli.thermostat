@@ -8,12 +8,15 @@
   },
   "scripts": {
     "build": "tsc",
-    "xxx_pretest": "eslint --ignore-path .gitignore app.ts lib test",
-    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
-    "posttest": "homey app validate",
+    "pretest": "npm run test:typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:typecheck": "tsc --noEmit -p tsconfig.eslint.json",
+    "posttest": "homey app validate && prettier --write app.json",
     "format": "prettier --write --ignore-unknown .",
     "format:check": "prettier --check --ignore-unknown .",
-    "lint": "npm run format:check && eslint app.ts drivers lib"
+    "lint": "npm run format:check && eslint app.ts drivers lib tests vitest.config.ts"
   },
   "author": "Bjørnar Almli",
   "license": "ISC",
@@ -23,18 +26,14 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@tsconfig/node24": "^24.0.4",
-    "@types/chai": "^5.2.3",
     "@types/homey": "npm:homey-apps-sdk-v3-types@^0.3.12",
-    "@types/mocha": "^10.0.10",
     "@types/node": "^24.12.0",
-    "chai": "^6.2.2",
-    "chai-datetime": "^1.8.1",
+    "@vitest/coverage-v8": "^4.1.10",
     "eslint": "^10.7.0",
     "globals": "^17.7.0",
-    "mocha": "^11.7.6",
     "prettier": "^3.9.5",
-    "ts-node": "^10.9.2",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.64.0"
+    "typescript-eslint": "^8.64.0",
+    "vitest": "^4.1.10"
   }
 }

@@ -1,6 +1,6 @@
 import Homey from 'homey';
+import * as math from './math';
 
-const math = require('./math');
 const Logger = require('./Logger');
 
 export class BaseDriver extends Homey.Driver {

@@ -2,7 +2,7 @@
   "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
     "allowJs": true,
-    "outDir": "build/",
+    "outDir": ".homeybuild/",
     "types": ["node"]
   },
   "include": ["app.ts", "drivers/**/*.ts", "lib/**/*.ts", "lib/**/*.js"]

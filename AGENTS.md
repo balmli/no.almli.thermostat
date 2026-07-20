@@ -14,14 +14,17 @@ The app listens to Homey device and zone changes through `homey-api`, keeps a lo
 - Use Node 24 as specified by `.nvmrc`; the project uses Homey SDK v3 and TypeScript 6. Do not upgrade dependencies or the TypeScript target as part of an unrelated change.
 - Install dependencies with `npm ci` when a clean install is needed.
 - Useful commands:
-    - `npm run build` — TypeScript compilation to `build/`.
+    - `npm run build` — TypeScript compilation to `.homeybuild/`.
     - `npm run format` — format supported repository files with Prettier.
     - `npm run format:check` — verify Prettier formatting without changing files.
     - `npm run lint` — run the Prettier check followed by ESLint.
-    - `npm test` — Mocha tests followed by `homey app validate`.
+    - `npm test` — run the Vitest suite, followed by `homey app validate` through the `posttest` script.
+    - `npm run test:watch` — run Vitest in watch mode.
+    - `npm run test:coverage` — run Vitest with V8 coverage reporting.
+    - `npm run test:typecheck` — type-check application and test sources without emitting files.
     - `npx homey app validate` — validate the composed Homey manifest.
     - `npx homey app run` — run the app on a configured Homey for integration testing.
-- `tests/` is ignored and is not currently checked in. If tests are added for a change, confirm they are intentionally included rather than assuming `npm test` exercises repository tests.
+- `tests/` contains the committed unit suite. Suspected production defects may be captured with Vitest's `it.fails` so their intended behavior is explicit without making the baseline suite unusable.
 
 ## Repository map
 
@@ -36,6 +39,8 @@ The app listens to Homey device and zone changes through `homey-api`, keeps a lo
 - `app.json` — generated/composed Homey manifest. Prefer editing `.homeycompose/**` and driver compose files, then regenerate/validate instead of editing only `app.json`.
 - `locales/en.json` — user-facing strings.
 - `assets/` and `drivers/*/assets/` — app and driver artwork.
+- `tests/` — Vitest unit tests, fixtures, and the virtual Homey SDK boundary used by framework-facing tests.
+- `tasks/` — repository-only implementation tasks and issue documentation; excluded from Homey app packages through `.homeyignore`.
 
 ## Architecture and data flow
 
@@ -112,5 +117,6 @@ Homey hardware/API behavior cannot be established by compilation alone. For inte
 - Preserve backward compatibility for paired devices, saved settings, capability IDs, and Flow cards.
 - If a stored setting or capability shape changes, implement migration in the relevant driver's `migrate()` method and make it idempotent.
 - Do not edit generated folders such as `build/`, `.homeybuild/`, or installed dependencies.
+- Keep repository-only directories such as `tests/`, `tasks/`, and documentation workspaces in `.homeyignore`. When adding a new non-runtime directory, update `.homeyignore` and confirm Homey validation still passes.
 - Do not commit credentials, Homey tokens, `env.json`, device IDs, or diagnostic data that identifies a user's home.
 - Update `README.md` and `.homeychangelog.json` when a user-visible behavior change warrants release documentation; do not invent a version bump unless requested.

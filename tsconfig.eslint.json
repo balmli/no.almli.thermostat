@@ -3,5 +3,5 @@
   "compilerOptions": {
     "noEmit": true
   },
-  "include": ["app.ts", "drivers/**/*.ts", "lib/**/*.ts", "lib/**/*.js"]
+  "include": ["app.ts", "drivers/**/*.ts", "lib/**/*.ts", "lib/**/*.js", "tests/**/*.ts", "vitest.config.ts"]
 }

@@ -3,7 +3,7 @@ env.json
 .idea
 build/
 node_modules/
-tests/
+coverage/
 
 
 # Added by Homey CLI

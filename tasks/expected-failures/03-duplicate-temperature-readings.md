@@ -1,5 +1,7 @@
 # Stop duplicating multi-zone temperature readings
 
+- Status: Completed 2026-07-20
+
 ## Problem
 
 `VThermoDeviceCalculator.getTemperaturesInZone()` loops over each requested zone but fetches devices from the complete zone array during every iteration. With two zones, every selected reading is returned twice; with three zones, every reading is returned three times.
@@ -26,3 +28,7 @@ Either fetch from the complete zone array once without a loop, or fetch from the
 - Category filtering remains unchanged.
 - Change the related test from `it.fails` to `it`.
 - `npm test`, `npm run test:coverage`, `npm run lint`, and `npm run build` pass.
+
+## Resolution
+
+`getTemperaturesInZone()` now queries the complete supplied zone scope once, then applies the existing sensor-category and capability filters. Each matching temperature capability therefore contributes once regardless of the number of selected zones. The former `it.fails` case is a normal regression test and also covers empty and undefined zone scopes.

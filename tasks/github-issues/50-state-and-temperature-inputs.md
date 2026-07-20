@@ -1,7 +1,7 @@
 # GitHub #50: State changes and temperature inputs on Homey 2019
 
 - Issue: https://github.com/balmli/no.almli.thermostat/issues/50
-- Status: Investigation
+- Status: Closed as configuration/user error 2026-07-20
 - Priority: High
 
 ## Report
@@ -39,3 +39,11 @@ On Homey 2019, changing the target across the measured temperature did not relia
 ## Done when
 
 Target changes reliably update state, supported same-zone sensors are selected and aggregated correctly on Homey 2019, and end-to-end regression tests cover both behaviors.
+
+## Resolution
+
+Closed without a code change. The reported state behavior is consistent with VThermo having no eligible temperature input: without a selected measurement, moving the target cannot resolve a heating/idle transition.
+
+The most likely cause is that the intended temperature sensor was not in the same Homey zone as VThermo or was not enabled under the matching temperature-sensor category. Sensors exposed through another app can also have a different Homey class and may require the corresponding “other devices with a temperature capability” category rather than the standard sensor category.
+
+The duplicate-reading defect documented in [Stop duplicating multi-zone temperature readings](../expected-failures/03-duplicate-temperature-readings.md) remains an independent implementation task and is not being closed by this configuration resolution.

@@ -34,10 +34,15 @@ describe('math', () => {
         vi.useRealTimers();
     });
 
-    it.fails('falls back to the newest reading when all readings are stale', () => {
+    it('falls back to the newest reading when all readings are stale', () => {
         vi.setSystemTime(NOW);
-        const values = [new DeviceCapability(10, NOW - 20_000), new DeviceCapability(15, NOW - 10_000)];
+        const values = [
+            new DeviceCapability(10, NOW - 20_000),
+            {value: 15, lastUpdated: new Date(NOW - 10_000).toISOString()},
+        ];
         expect(math.average(values, 1000)).toBe(15);
+        expect(math.min(values, 1000)).toBe(15);
+        expect(math.max(values, 1000)).toBe(15);
         vi.useRealTimers();
     });
 

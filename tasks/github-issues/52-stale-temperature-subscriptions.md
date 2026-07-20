@@ -1,7 +1,7 @@
 # GitHub #52: VThermo temperature stops updating
 
 - Issue: https://github.com/balmli/no.almli.thermostat/issues/52
-- Status: Investigation
+- Status: Completed 2026-07-20
 - Priority: High
 
 ## Report
@@ -22,11 +22,18 @@ Several users report that VThermo eventually shows a stale or incorrect temperat
 5. Add tests for subscription replacement, reconnect, unavailable-to-available transitions, and multi-sensor updates.
 6. Improve diagnostic logging around last capability event, last refresh, sensor timestamps, and active subscription count.
 
-## Information needed
-
-- Diagnostic report captured immediately while values are stale, before restarting.
-- Homey model/firmware, app version, calculation method, sensor list, and old-measurement setting.
-
 ## Done when
 
 A long-running subscription test reproduces and fixes the stale state, or diagnostics can distinguish an upstream sensor outage from a VThermo subscription/cache failure.
+
+## Resolution
+
+- Device refreshes now replace supported capability instances and destroy subscriptions for capabilities or devices that disappeared from the authoritative snapshot.
+- Unavailable or not-ready devices are removed from the active model and recreated with fresh subscriptions when they recover.
+- Refreshed API capability values replace stale cached values even when the capability list itself did not change.
+- Homey API device and zone listeners now use stable callback references, partial connection failures are fully destroyed, and app shutdown awaits manager disconnection.
+- Subscription logs include the active instance count, and capability-event logs include an event timestamp.
+- The related all-stale aggregation and VThermo MAX age-filter failures were fixed in the same branch and pull request.
+- Regression tests cover subscription replacement, removed capabilities, full-snapshot removal, unavailable-to-available recovery, stable API listeners, partial initialization, awaited shutdown, stale fallback, and MAX age filtering.
+
+These tests exercise API-shaped manager resources and lifecycle behavior locally. They do not prove event delivery from every physical sensor app or Homey generation; an upstream sensor that stops publishing will still retain its last known reading according to the configured maximum-age behavior.

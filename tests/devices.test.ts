@@ -125,6 +125,80 @@ describe('Devices registry', () => {
         expect(destroys.every(destroy => destroy.mock.calls.length === 1)).toBe(true);
     });
 
+    it('replaces capability subscriptions when an API device is refreshed', () => {
+        let firstListener!: (value: unknown) => void;
+        let secondListener!: (value: unknown) => void;
+        const firstDestroy = vi.fn();
+        const secondDestroy = vi.fn();
+        const first = makeApiDevice({id: 'sensor', capabilities: {measure_temperature: 20}});
+        first.makeCapabilityInstance = vi.fn((_id: string, listener: (value: unknown) => void) => {
+            firstListener = listener;
+            return {destroy: firstDestroy};
+        });
+        const second = makeApiDevice({id: 'sensor', capabilities: {measure_temperature: 21}});
+        second.makeCapabilityInstance = vi.fn((_id: string, listener: (value: unknown) => void) => {
+            secondListener = listener;
+            return {destroy: secondDestroy};
+        });
+        const calculator = {startCalculation: vi.fn()};
+        const devices = new Devices({sensor: first} as any);
+        devices.setCalculator(calculator as any);
+
+        expect(firstListener).toBeTypeOf('function');
+        devices.createOrUpdateDevice(second);
+        expect(firstDestroy).toHaveBeenCalledOnce();
+        expect(secondListener).toBeTypeOf('function');
+        expect(devices.getDevice('sensor')?.getLocalCapabilityValue('measure_temperature').value).toBe(21);
+        secondListener(22);
+        expect(devices.getDevice('sensor')?.getLocalCapabilityValue('measure_temperature').value).toBe(22);
+        expect(calculator.startCalculation).toHaveBeenCalledTimes(2);
+    });
+
+    it('destroys subscriptions for removed capabilities and snapshot devices', () => {
+        const destroys = new Map<string, ReturnType<typeof vi.fn>>();
+        const sensor = makeApiDevice({
+            id: 'sensor',
+            capabilities: {measure_temperature: 20, alarm_motion: false},
+        });
+        sensor.makeCapabilityInstance = vi.fn((id: string) => {
+            const destroy = vi.fn();
+            destroys.set(`sensor:${id}`, destroy);
+            return {destroy};
+        });
+        const removed = makeApiDevice({id: 'removed', capabilities: {measure_temperature: 10}});
+        removed.makeCapabilityInstance = vi.fn((id: string) => {
+            const destroy = vi.fn();
+            destroys.set(`removed:${id}`, destroy);
+            return {destroy};
+        });
+        const devices = new Devices({sensor, removed} as any);
+        const refreshed = makeApiDevice({id: 'sensor', capabilities: {measure_temperature: 21}});
+        refreshed.makeCapabilityInstance = vi.fn(() => ({destroy: vi.fn()}));
+
+        devices.registerDevices({sensor: refreshed} as any);
+
+        expect(destroys.get('sensor:alarm_motion')).toHaveBeenCalledOnce();
+        expect(destroys.get('removed:measure_temperature')).toHaveBeenCalledOnce();
+        expect(devices.getDevice('removed')).toBeUndefined();
+    });
+
+    it('removes an unavailable device and recreates it when available again', () => {
+        const destroy = vi.fn();
+        const available = makeApiDevice({id: 'sensor', capabilities: {measure_temperature: 20}});
+        available.makeCapabilityInstance = vi.fn(() => ({destroy}));
+        const devices = new Devices({sensor: available} as any);
+        const unavailable = {...available, available: false};
+
+        devices.createOrUpdateDevice(unavailable);
+        expect(devices.getDevice('sensor')).toBeUndefined();
+        expect(destroy).toHaveBeenCalledOnce();
+
+        const restored = makeApiDevice({id: 'sensor', capabilities: {measure_temperature: 21}});
+        restored.makeCapabilityInstance = vi.fn(() => ({destroy: vi.fn()}));
+        expect(devices.createOrUpdateDevice(restored)).toBeDefined();
+        expect(devices.getDevice('sensor')?.getLocalCapabilityValue('measure_temperature').value).toBe(21);
+    });
+
     it('creates, updates and deletes devices', () => {
         const calculator = {startCalculation: vi.fn()};
         const devices = new Devices();
@@ -135,7 +209,7 @@ describe('Devices registry', () => {
         devices.deleteDevice(created);
         devices.deleteDevice(created);
         expect(devices.getDevice('device')).toBeUndefined();
-        expect(calculator.startCalculation).toHaveBeenCalledTimes(2);
+        expect(calculator.startCalculation).toHaveBeenCalledTimes(3);
     });
 });
 

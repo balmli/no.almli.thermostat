@@ -43,6 +43,7 @@ export class Devices {
         for (const ci of this.capabilityInstances.values()) {
             ci.destroy();
         }
+        this.capabilityInstances.clear();
         this.pendingPhysicalUpdates.clear();
     }
 
@@ -99,10 +100,18 @@ export class Devices {
      */
     registerDevices(devicesAsMap?: {[key: string]: HomeyAPIV3Local.ManagerDevices.Device}): void {
         if (devicesAsMap) {
+            const registeredDeviceIds = new Set<string>();
             for (const key in devicesAsMap) {
                 if (devicesAsMap.hasOwnProperty(key)) {
                     const device = devicesAsMap[key];
-                    this.registerDevice(device);
+                    if (this.registerDevice(device)) {
+                        registeredDeviceIds.add(device.id);
+                    }
+                }
+            }
+            for (const device of [...this.devices]) {
+                if (!registeredDeviceIds.has(device.id)) {
+                    this.deleteDevice({id: device.id} as HomeyAPIV3Local.ManagerDevices.Device);
                 }
             }
             this.logger?.info(`Registered devices. (${this.devices.length} devices)`);
@@ -116,10 +125,14 @@ export class Devices {
      */
     createOrUpdateDevice(device: HomeyAPIV3Local.ManagerDevices.Device): Device | undefined {
         if (!this.validAndSupported(device)) {
+            if (device?.id && this.getDevice(device.id)) {
+                this.deleteDevice(device);
+            }
             return;
         }
         const current = this.getDevice(device.id);
         if (current) {
+            this.replaceCapabilityInstances(device, current);
             this.updateDeviceData(current, device);
             this.calculator?.startCalculation();
             return current;
@@ -153,6 +166,7 @@ export class Devices {
                 }
             }
             this.logger?.debug(`Deleted device: ${device.id}. (${this.devices.length} devices)`);
+            this.calculator?.startCalculation();
         }
     }
 
@@ -167,11 +181,14 @@ export class Devices {
             device.available = newDevice.available;
             this.logger?.debug(`Updated device data: ${device.id}`, device);
         }
-        if (Devices.deviceCapabilitiesChanged(device, updatedDevice)) {
-            device.capabilities = newDevice.capabilities;
-            device.capabilitiesObj = newDevice.capabilitiesObj;
+        if (
+            Devices.deviceCapabilitiesChanged(device, updatedDevice) ||
+            Devices.deviceCapabilityValuesChanged(device, newDevice)
+        ) {
             this.logger?.debug(`Updated device capabilities: ${device.id}`, device);
         }
+        device.capabilities = newDevice.capabilities;
+        device.capabilitiesObj = newDevice.capabilitiesObj;
         device.temperatureSettings = newDevice.temperatureSettings;
         device.deviceSettings = newDevice.deviceSettings;
         device.targetSettings = newDevice.targetSettings;
@@ -197,6 +214,13 @@ export class Devices {
             device.capabilities?.length !== updatedDevice.capabilities?.length ||
             device.capabilities?.slice().sort().join(',') !== updatedDevice.capabilities?.slice().sort().join(',')
         );
+    }
+
+    private static deviceCapabilityValuesChanged(device: Device, updatedDevice: Device): boolean {
+        return [...(updatedDevice.capabilitiesObj?.entries() ?? [])].some(([capabilityId, capability]) => {
+            const current = device.capabilitiesObj?.get(capabilityId);
+            return !current || current.value !== capability.value || current.lastUpdated !== capability.lastUpdated;
+        });
     }
 
     private static filterDeviceClass = (d: Device, deviceClass?: DeviceClass): boolean => {
@@ -268,16 +292,7 @@ export class Devices {
 
     private registerDevice(device: HomeyAPIV3Local.ManagerDevices.Device): Device | undefined {
         if (this.validAndSupported(device)) {
-            let create = !device.makeCapabilityInstance;
-            if (!!device.makeCapabilityInstance) {
-                const capabilities = device.capabilitiesObj;
-                for (const capabilityId in capabilities) {
-                    if (capabilities.hasOwnProperty(capabilityId) && SUPPORTED_CAPABILITIES.includes(capabilityId)) {
-                        this.makeCapabilityInstance(device, capabilityId);
-                        create = true;
-                    }
-                }
-            }
+            const create = this.replaceCapabilityInstances(device, this.getDevice(device.id));
             if (create) {
                 const deviceId = device.id;
                 const idx = this.devices.findIndex(d => d.id === deviceId);
@@ -306,6 +321,7 @@ export class Devices {
             typeof device === 'object' &&
             !!device.id &&
             !!device.name &&
+            device.ready &&
             device.available &&
             !!device.capabilities &&
             !!device.capabilitiesObj;
@@ -313,6 +329,29 @@ export class Devices {
             this.logger?.silly(`Invalid device: ${device.id} - ${device.name}`);
         }
         return ret;
+    }
+
+    private replaceCapabilityInstances(device: HomeyAPIV3Local.ManagerDevices.Device, current?: Device): boolean {
+        const capabilities = device.capabilitiesObj;
+        const supportedCapabilityIds = Object.keys(capabilities).filter(capabilityId =>
+            SUPPORTED_CAPABILITIES.includes(capabilityId),
+        );
+        const supportedCapabilityIdSet = new Set(supportedCapabilityIds);
+
+        for (const capabilityId of current?.capabilitiesObj?.keys() ?? []) {
+            if (!supportedCapabilityIdSet.has(capabilityId)) {
+                this.destroyCapabilityInstance(capabilityIdFormat(device.id, capabilityId));
+            }
+        }
+
+        if (!device.makeCapabilityInstance) {
+            return true;
+        }
+
+        for (const capabilityId of supportedCapabilityIds) {
+            this.makeCapabilityInstance(device, capabilityId);
+        }
+        return supportedCapabilityIds.length > 0;
     }
 
     private supportedDevice(device: HomeyAPIV3Local.ManagerDevices.Device): boolean {
@@ -336,7 +375,9 @@ export class Devices {
                 this.capabilityInstanceListener(device, capabilityId, value),
             );
             this.capabilityInstances.set(deviceCapabilityId, capabilityInstance);
-            this.logger?.verbose(`Registered capability instance: ${device.id} ${device.name} ${capabilityId}`);
+            this.logger?.verbose(
+                `Registered capability instance: ${device.id} ${device.name} ${capabilityId} (${this.capabilityInstances.size} active)`,
+            );
         } catch (err) {
             this.logger?.error('Error creating capability instance: ' + capabilityId, err);
         }
@@ -353,7 +394,9 @@ export class Devices {
             if (deviz.hasChangedValue(capabilityId, value)) {
                 deviz.setLocalCapabilityValue(capabilityId, value);
                 this.calculator?.startCalculation();
-                this.logger?.debug(`Updated device capability: ${device.id} ${capabilityId}`);
+                this.logger?.debug(
+                    `Updated device capability: ${device.id} ${capabilityId} at ${new Date().toISOString()}`,
+                );
             }
         }
     }

@@ -5,12 +5,13 @@ const VThermoDevice = (VThermoDeviceModule as any).default ?? VThermoDeviceModul
 
 function makeDevice({onoffEnabled, onoff}: {onoffEnabled: boolean; onoff: boolean}) {
     const listeners = new Map<string, (value: unknown, opts: unknown) => Promise<void>>();
+    const updateByDataId = vi.fn();
     const updateSettingsByDataId = vi.fn();
     const setCapabilityValue = vi.fn().mockResolvedValue(undefined);
     const device = Object.assign(Object.create(VThermoDevice.prototype), {
         homey: {
             __: vi.fn().mockReturnValue('Switching disabled'),
-            app: {updateByDataId: vi.fn(), updateSettingsByDataId},
+            app: {updateByDataId, updateSettingsByDataId},
             setTimeout: vi.fn(),
         },
         logger: {error: vi.fn(), info: vi.fn()},
@@ -22,16 +23,20 @@ function makeDevice({onoffEnabled, onoff}: {onoffEnabled: boolean; onoff: boolea
         setCapabilityOptions: vi.fn().mockResolvedValue(undefined),
         registerCapabilityListener: vi.fn((capabilityId, listener) => listeners.set(capabilityId, listener)),
     });
-    return {device, listeners, setCapabilityValue, updateSettingsByDataId};
+    return {device, listeners, setCapabilityValue, updateByDataId, updateSettingsByDataId};
 }
 
 describe('VThermo Homey device', () => {
     it('keeps switch-off stable when on/off control is enabled', async () => {
-        const {device, listeners, setCapabilityValue} = makeDevice({onoffEnabled: true, onoff: true});
+        const {device, listeners, setCapabilityValue, updateByDataId} = makeDevice({
+            onoffEnabled: true,
+            onoff: true,
+        });
         await device.initialize();
 
         await expect(listeners.get('onoff')!(false, {})).resolves.toBeUndefined();
         expect(setCapabilityValue).not.toHaveBeenCalled();
+        expect(updateByDataId).toHaveBeenCalledWith('data-id', 'onoff', false);
     });
 
     it('restores on and rejects switch-off when on/off control is disabled', async () => {

@@ -267,6 +267,12 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
             return requests;
         }
 
+        const mainOnoff = device.getLocalCapabilityValue('onoff');
+        if (deviceSettings.onoffEnabled && mainOnoff?.value === false) {
+            this.addSwitchingRequests(device, zone, deviceSettings, requests, false);
+            return requests;
+        }
+
         const targetTemperature = device.getLocalCapabilityValue('target_temperature');
         if (!targetTemperature || targetTemperature.value === undefined || targetTemperature.value === null) {
             return requests;
@@ -283,17 +289,27 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
         const onoff = this.resolveOnOff(device, temperature.value, targetTemperature.value, contactAlarm, motionAlarm);
 
         if (onoff !== undefined) {
-            const dr = this.updateAndCreateDeviceRequestIfChanged(device, CAPABILITY_ACTIVE, onoff);
-            if (dr) {
-                dr.trigger = `vt_onoff_${dr.value ? 'true' : 'false'}`;
-            }
-            requests.addRequest(dr);
-
-            this.heatersDeviceRequests(onoff, zone, deviceSettings, requests);
-            this.thermostatsDeviceRequests(onoff, zone, deviceSettings, requests);
+            this.addSwitchingRequests(device, zone, deviceSettings, requests, onoff);
         }
 
         return requests;
+    }
+
+    private addSwitchingRequests(
+        device: Device,
+        zone: Zone,
+        deviceSettings: DeviceSettings,
+        requests: DeviceRequests,
+        onoff: boolean,
+    ): void {
+        const dr = this.updateAndCreateDeviceRequestIfChanged(device, CAPABILITY_ACTIVE, onoff);
+        if (dr) {
+            dr.trigger = `vt_onoff_${dr.value ? 'true' : 'false'}`;
+        }
+        requests.addRequest(dr);
+
+        this.heatersDeviceRequests(onoff, zone, deviceSettings, requests);
+        this.thermostatsDeviceRequests(onoff, zone, deviceSettings, requests);
     }
 
     /**

@@ -97,4 +97,26 @@ describe('Homey API manager lifecycle', () => {
         await shutdown;
         expect(api.destroy).toHaveBeenCalledOnce();
     });
+
+    it('awaits calculator fail-safe shutdown before destroying device state', async () => {
+        let finishFailSafe!: () => void;
+        const app = makeApp();
+        app.calculator = {
+            destroy: vi.fn().mockReturnValue(
+                new Promise<void>(resolve => {
+                    finishFailSafe = resolve;
+                }),
+            ),
+        };
+        app.devicesObj = {destroy: vi.fn()};
+        app.zonesObj = {destroy: vi.fn()};
+
+        const shutdown = app.onUninit();
+        await Promise.resolve();
+        expect(app.devicesObj.destroy).not.toHaveBeenCalled();
+
+        finishFailSafe();
+        await shutdown;
+        expect(app.devicesObj.destroy).toHaveBeenCalledOnce();
+    });
 });

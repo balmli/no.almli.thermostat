@@ -63,7 +63,7 @@ describe('Calculator', () => {
         calculator.startCalculation();
         await vi.advanceTimersByTimeAsync(499);
         expect(updateDevices).not.toHaveBeenCalled();
-        calculator.destroy();
+        await calculator.destroy();
         await vi.advanceTimersByTimeAsync(1);
         expect(updateDevices).not.toHaveBeenCalled();
         vi.useRealTimers();
@@ -88,5 +88,60 @@ describe('Calculator', () => {
         await vi.advanceTimersByTimeAsync(1);
         expect(logger.error).toHaveBeenCalledWith('Calculation failed', expect.any(Error));
         vi.useRealTimers();
+    });
+
+    it('turns configured heaters off when calculation fails', async () => {
+        vi.useFakeTimers();
+        const updateDevices = vi.fn().mockResolvedValue(undefined);
+        const calculator = new Calculator(
+            {getZones: () => makeZone('root'), getZonesAsList: () => [makeZone('root')]} as any,
+            {updateDevices} as any,
+            {setTimeout, clearTimeout},
+        );
+        (calculator as any).vThermoCalculator = {
+            calculate: () => {
+                throw new Error('broken');
+            },
+            calculateFailSafe: () => requests({id: 'heater', capabilityId: 'onoff', value: false}),
+        };
+        (calculator as any).vHumidityCalculator = {calculate: () => new DeviceRequests()};
+
+        calculator.startCalculation(1);
+        await vi.advanceTimersByTimeAsync(1);
+
+        expect(updateDevices).toHaveBeenCalledOnce();
+        expect(updateDevices.mock.calls[0][0].getRequests()).toEqual([
+            expect.objectContaining({id: 'heater', capabilityId: 'onoff', value: false}),
+        ]);
+        vi.useRealTimers();
+    });
+
+    it('awaits fail-safe heater writes during shutdown', async () => {
+        let finishWrite!: () => void;
+        const updateDevices = vi.fn().mockReturnValue(
+            new Promise<void>(resolve => {
+                finishWrite = resolve;
+            }),
+        );
+        const calculator = new Calculator(
+            {getZones: () => makeZone('root'), getZonesAsList: () => [makeZone('root')]} as any,
+            {updateDevices} as any,
+            {setTimeout, clearTimeout},
+        );
+        (calculator as any).vThermoCalculator = {
+            calculateFailSafe: () => requests({id: 'heater', capabilityId: 'onoff', value: false}),
+        };
+
+        let completed = false;
+        const shutdown = calculator.destroy().then(() => {
+            completed = true;
+        });
+        await Promise.resolve();
+        expect(completed).toBe(false);
+        expect(updateDevices).toHaveBeenCalledOnce();
+
+        finishWrite();
+        await shutdown;
+        expect(completed).toBe(true);
     });
 });

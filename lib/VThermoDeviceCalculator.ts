@@ -31,6 +31,50 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
     }
 
     /**
+     * Create conservative off requests for heaters controlled by VThermos in a zone.
+     * Physical heater requests are unconditional because the cached value may be stale
+     * when this path is needed.
+     */
+    calculateFailSafe(zone: Zone): DeviceRequests {
+        const requests = new DeviceRequests();
+        const devices = this.devicesObj.getDevicesFromZones(zone, DeviceClass.vthermo);
+        for (const device of devices ?? []) {
+            requests.addRequests(this.calculateDeviceFailSafe(device, zone));
+        }
+        return requests;
+    }
+
+    private calculateDeviceFailSafe(device: Device, zone: Zone): DeviceRequests {
+        const requests = new DeviceRequests();
+        if (device.getLocalCapabilityValue(CAPABILITY_ACTIVE)?.value !== true) {
+            return requests;
+        }
+        const activeRequest = this.updateAndCreateDeviceRequestIfChanged(device, CAPABILITY_ACTIVE, false);
+        if (activeRequest) {
+            activeRequest.trigger = 'vt_onoff_false';
+            requests.addRequest(activeRequest);
+        }
+
+        for (const heater of this.getHeaters(zone, this.zonesObj, device.deviceSettings)) {
+            if (!heater.hasCapability('onoff')) {
+                continue;
+            }
+            const request = new DeviceRequest();
+            request.id = heater.id;
+            request.capabilityId = 'onoff';
+            request.value = false;
+            request.debugInfo = JSON.stringify({
+                name: heater.name,
+                driverId: heater.driverId,
+                class: heater.class,
+                failSafe: true,
+            });
+            requests.addRequest(request);
+        }
+        return requests;
+    }
+
+    /**
      * Get temperatures in a zone or list of zones.
      * @param zone a zone or a list of zones
      * @param tempSettings temperature settings
@@ -276,7 +320,8 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
 
         const temperature = device.getLocalCapabilityValue('measure_temperature');
         if (!temperature || temperature.value === undefined || temperature.value === null) {
-            return requests;
+            this.logger?.warn(`No usable temperature for VThermo; applying heater fail-safe: ${device.id}`);
+            return this.calculateDeviceFailSafe(device, zone);
         }
 
         const contactAlarm = deviceSettings.contactAlarm && this.devicesObj.hasContactAlarm(zone);

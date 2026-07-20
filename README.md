@@ -170,6 +170,12 @@ Select temperature sensors from the sub zones of the virtual thermostat, just on
 
 - Delay in milliseconds between switching devices: if this value is set to a number larger than zero, it will add a delay between switching each devices on / off. This might help
 
+#### Safety and fail-safe behavior
+
+VThermo sends explicit off commands to heaters belonging to an actively heating controller when no usable temperature is available, when a calculation fails, and during an orderly app shutdown. Inactive controllers do not affect independently used heaters. Fail-safe writes use the same confirmation and bounded retry path as normal heater commands.
+
+This protection requires the Homey runtime, app shutdown callback, network, and heater integration to remain responsive. It cannot act during a sudden power loss or an immediate process/runtime termination, and capability confirmation does not prove the physical relay state. VThermo is automation software, not a certified safety controller; use independent hardware temperature limits for safety-critical heating.
+
 ## Feedback:
 
 Please report issues at the [issues section on Github](https://github.com/balmli/no.almli.thermostat/issues).

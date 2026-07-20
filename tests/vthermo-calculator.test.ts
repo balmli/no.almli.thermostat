@@ -222,12 +222,31 @@ describe('VThermoDeviceCalculator switching', () => {
         ]);
     });
 
-    it('produces no switching requests without target or measured temperature', () => {
+    it('produces no switching requests before a target temperature is configured', () => {
         const root = makeZone('root');
         const noTarget = makeVThermo({capabilities: {target_temperature: null}});
-        const noMeasurement = makeVThermo({capabilities: {measure_temperature: null}});
         expect(calculator().calculateHeaterSwitching(noTarget, root).getRequests()).toEqual([]);
-        expect(calculator().calculateHeaterSwitching(noMeasurement, root).getRequests()).toEqual([]);
+    });
+
+    it('fails safe when an active VThermo has no usable temperature measurement', () => {
+        const root = makeZone('root');
+        const vthermo = makeVThermo({
+            capabilities: {measure_temperature: null, [CAPABILITY_ACTIVE]: true},
+            deviceSettings: {zone: {clazz: true}},
+        });
+        const heater = makeDevice({
+            id: 'heater',
+            deviceClass: DeviceClass.heater,
+            capabilities: {onoff: true},
+        });
+        const requests = new VThermoDeviceCalculator(new Zones(), makeDevicesStub([vthermo, heater]))
+            .calculateHeaterSwitching(vthermo, root)
+            .getRequests();
+
+        expect(requests).toEqual([
+            expect.objectContaining({id: 'vthermo', capabilityId: CAPABILITY_ACTIVE, value: false}),
+            expect.objectContaining({id: 'heater', capabilityId: 'onoff', value: false}),
+        ]);
     });
 
     it('selects heaters and thermostats from independently enabled zone scopes', () => {
@@ -248,6 +267,56 @@ describe('VThermoDeviceCalculator switching', () => {
         const settings = {zone: {clazz: true, thermostats: false}, sub_zones: {clazz: false, thermostats: true}};
         expect(calc.getHeaters(root, new Zones(), settings).map(device => device.id)).toEqual(['root-heater']);
         expect(calc.getThermostats(root, new Zones(), settings).map(device => device.id)).toEqual(['child-thermostat']);
+    });
+
+    it('creates explicit fail-safe off requests for every configured heater', () => {
+        const child = makeZone('child', 'root');
+        const root = makeZone('root', undefined, [child]);
+        const vthermo = makeVThermo({
+            zone: 'root',
+            capabilities: {[CAPABILITY_ACTIVE]: true},
+            deviceSettings: {
+                zone: {clazz: true},
+                sub_zones: {clazz: true},
+            },
+        });
+        const rootHeater = makeDevice({
+            id: 'root-heater',
+            zone: 'root',
+            deviceClass: DeviceClass.heater,
+            capabilities: {onoff: true},
+        });
+        const childHeater = makeDevice({
+            id: 'child-heater',
+            zone: 'child',
+            deviceClass: DeviceClass.heater,
+            capabilities: {onoff: false},
+        });
+        const requests = new VThermoDeviceCalculator(new Zones(), makeDevicesStub([vthermo, rootHeater, childHeater]))
+            .calculateFailSafe(root)
+            .getRequests();
+
+        expect(requests).toEqual([
+            expect.objectContaining({id: 'vthermo', capabilityId: CAPABILITY_ACTIVE, value: false}),
+            expect.objectContaining({id: 'root-heater', capabilityId: 'onoff', value: false}),
+            expect.objectContaining({id: 'child-heater', capabilityId: 'onoff', value: false}),
+        ]);
+    });
+
+    it('does not shut down heaters for an inactive VThermo', () => {
+        const root = makeZone('root');
+        const vthermo = makeVThermo({capabilities: {[CAPABILITY_ACTIVE]: false}});
+        const heater = makeDevice({
+            id: 'heater',
+            deviceClass: DeviceClass.heater,
+            capabilities: {onoff: true},
+        });
+
+        expect(
+            new VThermoDeviceCalculator(new Zones(), makeDevicesStub([vthermo, heater]))
+                .calculateFailSafe(root)
+                .getRequests(),
+        ).toEqual([]);
     });
 });
 

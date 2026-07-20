@@ -251,6 +251,24 @@ describe('VThermoDeviceCalculator switching', () => {
         expect(calculator().calculateHeaterSwitching(noMeasurement, root).getRequests()).toEqual([]);
     });
 
+    it('turns controlled heaters off when VThermo is switched off without a usable temperature', () => {
+        const root = makeZone('root');
+        const vthermo = makeVThermo({
+            capabilities: {
+                onoff: false,
+                [CAPABILITY_ACTIVE]: false,
+                target_temperature: null,
+                measure_temperature: null,
+            },
+        });
+        const heater = makeDevice({id: 'heater', deviceClass: DeviceClass.heater, capabilities: {onoff: true}});
+        const requests = new VThermoDeviceCalculator(new Zones(), makeDevicesStub([vthermo, heater]))
+            .calculateHeaterSwitching(vthermo, root)
+            .getRequests();
+
+        expect(requests).toEqual([expect.objectContaining({id: 'heater', capabilityId: 'onoff', value: false})]);
+    });
+
     it('selects heaters and thermostats from independently enabled zone scopes', () => {
         const child = makeZone('child', 'root');
         const root = makeZone('root', undefined, [child]);

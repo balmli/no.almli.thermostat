@@ -22,6 +22,10 @@ module.exports = class VThermoDevice extends BaseDevice {
                 }
                 throw new Error(this.homey.__('error.switching_disabled'));
             }
+            // Keep the Web API-backed model in sync immediately so switching off
+            // cannot depend on a later capability subscription event.
+            // @ts-ignore
+            this.homey.app.updateByDataId(this.getData().id, 'onoff', value);
         });
         this.registerCapabilityListener('target_temperature', async (value: any, opts: any) => {
             // @ts-ignore

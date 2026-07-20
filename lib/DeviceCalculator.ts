@@ -26,12 +26,12 @@ export class DeviceCalculator {
      */
     updateAndCreateDeviceRequestIfChanged(device: Device, capabilityId: string, value: any): DeviceRequest | undefined {
         if (device.hasChangedValue(capabilityId, value)) {
-            device.setLocalCapabilityValue(capabilityId, value);
             //this.logger?.info('DeviceCalculator: updated ', `DeviceCalculator: updated ${device.id} ${device.name} ${capabilityId} = ${value}`);
             const dr = new DeviceRequest();
             dr.id = device.id;
             if (device.driverId === DRIVER_VTHERMO || device.driverId === DRIVER_VHUMIDITY) {
                 dr.dataId = device.dataId;
+                device.setLocalCapabilityValue(capabilityId, value);
             }
             dr.capabilityId = capabilityId;
             dr.value = value;

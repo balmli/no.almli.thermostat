@@ -1,7 +1,7 @@
 # GitHub #49: Physical output can remain on after VThermo switches off
 
 - Issue: https://github.com/balmli/no.almli.thermostat/issues/49
-- Status: Confirmed reliability investigation
+- Status: Completed 2026-07-20
 - Priority: Critical
 
 ## Report
@@ -39,3 +39,14 @@ This overlaps the broader fail-safe work for GitHub #57, but this task specifica
 ## Done when
 
 VThermo cannot report a successfully applied output state solely from an unconfirmed write, failed writes are retried or surfaced clearly, and the regression cases pass.
+
+## Resolution
+
+- Physical capability requests no longer overwrite the API-observed value before Homey reports the change through the capability subscription.
+- Delayed and undelayed writes now share one awaited, sequential error-handling path.
+- A rejected or unconfirmed write remains eligible for recalculation instead of being suppressed by an optimistic cached value.
+- Unconfirmed `onoff` and `target_temperature` writes receive at most three automatic attempts, with delays of 5 and 10 seconds before the second and third attempts.
+- A matching capability event clears the pending write; an update still unconfirmed after the third attempt is logged explicitly. Later independent calculations may begin a new bounded attempt sequence.
+- Regression tests cover pending undelayed writes, rejection and retry eligibility, bounded backoff, capability-event confirmation, and continuation after a failed device.
+
+Homey capability confirmation is still software-level confirmation, not proof of physical relay state. Independent hardware temperature limits remain appropriate for safety-critical heating.

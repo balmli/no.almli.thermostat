@@ -1,6 +1,8 @@
 import {describe, expect, it, vi} from 'vitest';
+import {DeviceCalculator} from '../lib/DeviceCalculator';
 import {Devices} from '../lib/Devices';
 import {DeviceRequest, DeviceRequests, DeviceClass, DRIVER_VTHERMO} from '../lib/types';
+import {Zones} from '../lib/Zones';
 import {makeApiDevice, makeZone} from './helpers';
 
 function request(values: Partial<DeviceRequest>): DeviceRequests {
@@ -175,7 +177,7 @@ describe('Devices updates to Homey', () => {
         expect(setCapabilityValue.mock.invocationCallOrder[0]).toBeLessThan(delay.mock.invocationCallOrder[0]);
     });
 
-    it.fails('does not resolve until an undelayed physical update completes', async () => {
+    it('does not resolve until an undelayed physical update completes', async () => {
         let finishWrite!: () => void;
         const write = new Promise<void>(resolve => {
             finishWrite = resolve;
@@ -196,12 +198,75 @@ describe('Devices updates to Homey', () => {
         expect(completedBeforeWrite).toBe(false);
     });
 
+    it('keeps a rejected physical update eligible for the next calculation', async () => {
+        const heater = makeApiDevice({id: 'heater', deviceClass: DeviceClass.heater, capabilities: {onoff: true}});
+        const startCalculation = vi.fn();
+        const devices = new Devices({heater} as any, {
+            app: {setCapabilityValue: vi.fn().mockRejectedValue(new Error('offline'))},
+        });
+        devices.setCalculator({startCalculation} as any);
+        const calculator = new DeviceCalculator(new Zones(), devices);
+        const physical = devices.getDevice('heater')!;
+
+        const first = calculator.updateAndCreateDeviceRequestIfChanged(physical, 'onoff', false);
+        await devices.updateDevices(request(first!));
+        const retry = calculator.updateAndCreateDeviceRequestIfChanged(physical, 'onoff', false);
+
+        expect(physical.getLocalCapabilityValue('onoff').value).toBe(true);
+        expect(retry).toMatchObject({id: 'heater', capabilityId: 'onoff', value: false});
+        expect(startCalculation).toHaveBeenCalledWith(5000);
+    });
+
+    it('bounds automatic retries while a physical update remains unconfirmed', async () => {
+        const heater = makeApiDevice({id: 'heater', deviceClass: DeviceClass.heater, capabilities: {onoff: true}});
+        const setCapabilityValue = vi.fn().mockResolvedValue(undefined);
+        const startCalculation = vi.fn();
+        const logger = {error: vi.fn(), verbose: vi.fn(), info: vi.fn()};
+        const devices = new Devices({heater} as any, {app: {setCapabilityValue}}, logger);
+        devices.setCalculator({startCalculation} as any);
+        const off = request({id: 'heater', capabilityId: 'onoff', value: false});
+
+        await devices.updateDevices(off);
+        await devices.updateDevices(off);
+        await devices.updateDevices(off);
+
+        expect(setCapabilityValue).toHaveBeenCalledTimes(3);
+        expect(devices.getDevice('heater')?.getLocalCapabilityValue('onoff').value).toBe(true);
+        expect(startCalculation.mock.calls).toEqual([[5000], [10000]]);
+        expect(logger.error).toHaveBeenCalledWith(
+            expect.stringContaining('not confirmed after 3 attempts'),
+            off.getRequests()[0],
+        );
+    });
+
+    it('stops retrying when a capability event confirms the physical update', async () => {
+        let capabilityListener!: (value: unknown) => void;
+        const heater = makeApiDevice({id: 'heater', deviceClass: DeviceClass.heater, capabilities: {onoff: true}});
+        heater.makeCapabilityInstance = vi.fn((_id: string, listener: (value: unknown) => void) => {
+            capabilityListener = listener;
+            return {destroy: vi.fn()};
+        });
+        const setCapabilityValue = vi.fn().mockImplementation(async () => capabilityListener(false));
+        const startCalculation = vi.fn();
+        const devices = new Devices({heater} as any, {app: {setCapabilityValue}});
+        devices.setCalculator({startCalculation} as any);
+
+        await devices.updateDevices(request({id: 'heater', capabilityId: 'onoff', value: false}));
+
+        expect(devices.getDevice('heater')?.getLocalCapabilityValue('onoff').value).toBe(false);
+        expect(startCalculation).toHaveBeenCalledTimes(1);
+        expect(startCalculation).toHaveBeenCalledWith();
+    });
+
     it('logs and continues when a local device or physical write is unavailable', async () => {
         const logger = {warn: vi.fn(), error: vi.fn()};
         const homey = {
             app: {
                 getDeviceByDataId: vi.fn().mockReturnValue(undefined),
-                setCapabilityValue: vi.fn().mockRejectedValue(new Error('offline')),
+                setCapabilityValue: vi
+                    .fn()
+                    .mockRejectedValueOnce(new Error('offline'))
+                    .mockResolvedValueOnce(undefined),
             },
         };
         const devices = new Devices(undefined, homey, logger);
@@ -217,8 +282,12 @@ describe('Devices updates to Homey', () => {
         requests.addRequest(
             Object.assign(new DeviceRequest(), {id: 'physical', capabilityId: 'onoff', value: true, deviceDelay: 1}),
         );
+        requests.addRequest(
+            Object.assign(new DeviceRequest(), {id: 'next', capabilityId: 'onoff', value: false, deviceDelay: 1}),
+        );
         await devices.updateDevices(requests);
         expect(logger.warn).toHaveBeenCalled();
         expect(logger.error).toHaveBeenCalled();
+        expect(homey.app.setCapabilityValue).toHaveBeenCalledTimes(2);
     });
 });

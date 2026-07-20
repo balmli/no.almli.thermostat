@@ -1,4 +1,4 @@
-import {describe, expect, it, vi} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {DeviceCalculator} from '../lib/DeviceCalculator';
 import {Devices} from '../lib/Devices';
 import {Zones} from '../lib/Zones';
@@ -12,13 +12,12 @@ describe('DeviceCalculator', () => {
         expect(() => calculator().calculate({id: 'root', name: 'Root'})).toThrow('Not implemented');
     });
 
-    it('creates a request and updates the local capability when a value changes', () => {
-        vi.spyOn(Date, 'now').mockReturnValue(99);
+    it('creates a request without treating a physical value as confirmed', () => {
         const device = makeDevice({id: 'heater', name: 'Heater', capabilities: {onoff: false}});
         const request = calculator().updateAndCreateDeviceRequestIfChanged(device, 'onoff', true);
         expect(request).toMatchObject({id: 'heater', capabilityId: 'onoff', value: true});
         expect(JSON.parse(request!.debugInfo)).toMatchObject({name: 'Heater', class: 'sensor'});
-        expect(device.getLocalCapabilityValue('onoff')).toMatchObject({value: true, lastUpdated: 99});
+        expect(device.getLocalCapabilityValue('onoff')).toMatchObject({value: false});
     });
 
     it('does not create requests for unchanged, undefined or unknown values', () => {
@@ -37,5 +36,7 @@ describe('DeviceCalculator', () => {
         const physical = makeDevice({dataId: 'ignored', capabilities: {onoff: false}});
         expect(calculator().updateAndCreateDeviceRequestIfChanged(virtual, 'onoff', true)?.dataId).toBe('local-id');
         expect(calculator().updateAndCreateDeviceRequestIfChanged(physical, 'onoff', true)?.dataId).toBeUndefined();
+        expect(virtual.getLocalCapabilityValue('onoff').value).toBe(true);
+        expect(physical.getLocalCapabilityValue('onoff').value).toBe(false);
     });
 });

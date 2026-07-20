@@ -104,6 +104,25 @@ describe('Devices registry', () => {
         expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('unknown device'));
     });
 
+    it('updates mapped virtual-device settings immediately by local data id', () => {
+        const api = makeApiDevice({
+            id: 'virtual',
+            dataId: 'data-id',
+            driverId: DRIVER_VTHERMO,
+            capabilities: {onoff: false},
+        });
+        api.settings = {onoff_enabled: false};
+        const calculator = {startCalculation: vi.fn()};
+        const devices = new Devices({api} as any);
+        devices.setCalculator(calculator as any);
+
+        devices.updateSettingsByDataId('data-id', {onoff_enabled: true});
+
+        expect(devices.getDevice('virtual')?.deviceSettings?.onoffEnabled).toBe(true);
+        expect(calculator.startCalculation).toHaveBeenCalledOnce();
+        expect(calculator.startCalculation).toHaveBeenCalledWith(1);
+    });
+
     it('subscribes to supported capabilities, reacts to changes and destroys subscriptions', () => {
         const callbacks = new Map<string, (value: unknown) => void>();
         const destroys: ReturnType<typeof vi.fn>[] = [];

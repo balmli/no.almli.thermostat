@@ -95,6 +95,22 @@ export class Devices {
     }
 
     /**
+     * Update mapped settings for a local virtual device and start calculation.
+     * @param dataId
+     * @param settings complete Homey settings object
+     */
+    updateSettingsByDataId(dataId: string, settings: any): void {
+        const device = this.getDeviceByDataId(dataId);
+        if (device) {
+            DeviceMapper.mapSettings(device, device.driverId, settings);
+            this.calculator?.startCalculation(1);
+            this.logger?.debug(`Updated device settings by data id: ${device.id}`);
+        } else {
+            this.logger?.warn(`Update settings by data id: unknown device: ${dataId}`);
+        }
+    }
+
+    /**
      * Register devices from a map of devices.
      * @param devicesAsMap
      */

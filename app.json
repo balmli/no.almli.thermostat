@@ -634,7 +634,7 @@
               },
               "value": true,
               "hint": {
-                "en": "By unchecking this switch, the device cannot be turned off."
+                "en": "When unchecked, the device cannot be turned off and its on/off switch will remain on."
               }
             }
           ]
@@ -1265,7 +1265,7 @@
               },
               "value": true,
               "hint": {
-                "en": "By unchecking this switch, the device cannot be turned off."
+                "en": "When unchecked, the device cannot be turned off and its on/off switch will remain on."
               }
             }
           ]

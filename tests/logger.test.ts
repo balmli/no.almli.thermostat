@@ -36,7 +36,12 @@ describe('Logger', () => {
         expect(log).toHaveBeenCalledWith('[Info]', 'message');
     });
 
-    it.fails('reports supported values when an invalid log level is provided', () => {
-        expect(() => new Logger({logLevel: 'invalid'})).toThrow(/Unsupported loglevel.*silly:1/);
+    it('reports supported values when an invalid log level is provided', () => {
+        expect(() => new Logger({logLevel: 'invalid'})).toThrow(
+            new Error(
+                'Unsupported loglevel (invalid) given. Please choose from ' +
+                    'silly:1, debug:2, verbose:3, info:4, warn:5, error:6',
+            ),
+        );
     });
 });

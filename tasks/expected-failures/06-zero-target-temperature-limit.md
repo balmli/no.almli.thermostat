@@ -1,5 +1,7 @@
 # Honor zero target-temperature limits
 
+- Status: Completed 2026-07-20
+
 ## Problem
 
 `VThermoDeviceCalculator.calculateTargetTemperature()` checks target minimum and maximum settings using truthiness. A configured boundary of `0` is treated as if it were absent, allowing propagated targets to cross the saved limit.
@@ -25,3 +27,7 @@ Test boundaries explicitly for `undefined` rather than truthiness. Review the of
 - Undefined limits do not clamp.
 - Change the related test from `it.fails` to `it` and add maximum-zero coverage.
 - `npm test`, `npm run test:coverage`, `npm run lint`, and `npm run build` pass.
+
+## Resolution
+
+Target minimum and maximum checks now test for numeric values instead of truthiness. Zero and negative boundaries clamp propagated targets correctly, while undefined limits remain inactive. The zero-minimum expected-failure test is now a normal regression test, with additional zero-maximum, negative-boundary, and undefined-limit coverage.

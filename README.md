@@ -162,7 +162,7 @@ Select temperature sensors from the sub zones of the virtual thermostat, just on
 
 #### General settings
 
-- Hysteresis: to avoid that the thermostat will turn on and off too often, the hysteresis value must be greater than zero. Example: with a value of 0.5, and a target temperature of 20.0 °C, the thermostat will switch on if below 20.0 - 0.5, and off if above 20.0 + 0.5.
+- Hysteresis: use a positive value to avoid switching the thermostat on and off too often. Example: with a value of 0.5 and a target temperature of 20.0 °C, the thermostat switches on below 19.5 °C and off above 20.5 °C. A value of 0 is supported and switches whenever the temperature crosses the target, but it can cause rapid switching and may reduce relay or heater lifetime. At exactly the target, the current state is retained.
 - Invert switch: check this and the thermostat will switch on if above the target, and switch off if below the target.
 - On / off enabled: uncheck this to disable the thermostat On / Off - switch.
 

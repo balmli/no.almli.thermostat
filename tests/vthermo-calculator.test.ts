@@ -142,6 +142,19 @@ describe('VThermoDeviceCalculator switching', () => {
         expect(calculator().resolveOnOff(device, 20.5, 20)).toBeUndefined();
     });
 
+    it('supports zero hysteresis without changing state exactly at the target', () => {
+        const device = makeVThermo({deviceSettings: {hysteresis: 0}});
+        expect(calculator().resolveOnOff(device, 19.99, 20)).toBe(true);
+        expect(calculator().resolveOnOff(device, 20, 20)).toBeUndefined();
+        expect(calculator().resolveOnOff(device, 20.01, 20)).toBe(false);
+    });
+
+    it('uses the default hysteresis when the setting is undefined', () => {
+        const device = makeVThermo({deviceSettings: {hysteresis: undefined}});
+        expect(calculator().resolveOnOff(device, 19.75, 20)).toBeUndefined();
+        expect(calculator().resolveOnOff(device, 19.49, 20)).toBe(true);
+    });
+
     it('reverses threshold behavior when switching is inverted', () => {
         const device = makeVThermo({deviceSettings: {invert: true}});
         expect(calculator().resolveOnOff(device, 19, 20)).toBe(false);
@@ -248,11 +261,27 @@ describe('VThermoDeviceCalculator target propagation', () => {
         expect(calculator.calculateTargetTemperature(makeDevice(), 20)).toBe(20);
     });
 
-    it.fails('honors a zero minimum target temperature', () => {
+    it('honors a zero minimum target temperature', () => {
         const recipient = makeVThermo({targetSettings: {min: 0, max: 25}});
         expect(
             new VThermoDeviceCalculator(new Zones(), makeDevicesStub([])).calculateTargetTemperature(recipient, -5),
         ).toBe(0);
+    });
+
+    it('honors zero and negative maximum target temperatures', () => {
+        const calculator = new VThermoDeviceCalculator(new Zones(), makeDevicesStub([]));
+        expect(calculator.calculateTargetTemperature(makeVThermo({targetSettings: {max: 0}}), 5)).toBe(0);
+        expect(calculator.calculateTargetTemperature(makeVThermo({targetSettings: {min: -10, max: -1}}), 5)).toBe(-1);
+        expect(calculator.calculateTargetTemperature(makeVThermo({targetSettings: {min: -10, max: -1}}), -20)).toBe(
+            -10,
+        );
+    });
+
+    it('does not clamp target temperatures when limits are undefined', () => {
+        const recipient = makeVThermo({targetSettings: {min: undefined, max: undefined}});
+        expect(
+            new VThermoDeviceCalculator(new Zones(), makeDevicesStub([])).calculateTargetTemperature(recipient, -5),
+        ).toBe(-5);
     });
 
     it('updates enabled virtual thermostats in direct children and physical thermostats in deeper descendants', () => {

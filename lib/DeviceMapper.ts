@@ -21,11 +21,15 @@ export class DeviceMapper {
         d.available = i.available;
         d.capabilities = i.capabilities;
         d.capabilitiesObj = DeviceMapper.mapCapabilities(i.capabilitiesObj);
-        d.temperatureSettings = TemperatureSettingsMapper.map(i.driverId, i.settings);
-        d.deviceSettings = DeviceSettingsMapper.map(i.driverId, i.settings);
-        d.targetSettings = TargetSettingsMapper.map(i.driverId, i.settings);
-        d.humiditySettings = HumiditySettingsMapper.map(i.driverId, i.settings);
+        DeviceMapper.mapSettings(d, i.driverId, i.settings);
         return d;
+    }
+
+    static mapSettings(device: Device, driverId?: string, settings?: any): void {
+        device.temperatureSettings = TemperatureSettingsMapper.map(driverId, settings);
+        device.deviceSettings = DeviceSettingsMapper.map(driverId, settings);
+        device.targetSettings = TargetSettingsMapper.map(driverId, settings);
+        device.humiditySettings = HumiditySettingsMapper.map(driverId, settings);
     }
 
     private static mapCapabilities(caps: any): DeviceCapabilities {

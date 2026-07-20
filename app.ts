@@ -137,6 +137,15 @@ module.exports = class VThermoApp extends Homey.App {
     }
 
     /**
+     * Update mapped settings for a local virtual device by data id.
+     * @param dataId
+     * @param settings complete Homey settings object
+     */
+    updateSettingsByDataId(dataId: string, settings: any): void {
+        this.devicesObj.updateSettingsByDataId(dataId, settings);
+    }
+
+    /**
      * Start calculation, with an optional delay.
      * @param delay delay in ms.
      */

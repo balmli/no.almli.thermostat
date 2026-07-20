@@ -58,17 +58,11 @@ module.exports = class VThermoDevice extends BaseDevice {
         if (err) {
             throw new Error(err);
         } else {
-            this.homey.setTimeout(async () => {
-                if (
-                    changedKeys.includes('target_min_temp') ||
-                    changedKeys.includes('target_max_temp') ||
-                    changedKeys.includes('target_diff_temp')
-                ) {
-                    //await this.homey.app.updateAllTargetTemperatures(this);
-                }
-                // @ts-ignore
-                this.homey.app.startCalculation();
-            }, 1000);
+            // Keep the Web API-backed model in sync before calculation. Waiting for
+            // a later device.update event can leave onoff_enabled stale long enough
+            // for an off device to be evaluated as if switching were disabled.
+            // @ts-ignore
+            this.homey.app.updateSettingsByDataId(this.getData().id, newSettings);
         }
     }
 

@@ -13,6 +13,7 @@ import {
 } from './types';
 import {Calculator} from './Calculator';
 import {DeviceMapper} from './DeviceMapper';
+import {fromCanonicalTemperature, toCanonicalTemperature} from './TemperatureUnits';
 
 const PHYSICAL_UPDATE_RETRY_BASE_DELAY = 5000;
 const PHYSICAL_UPDATE_MAX_ATTEMPTS = 3;
@@ -406,9 +407,11 @@ export class Devices {
     ) {
         const deviz = this.getDevice(device.id);
         if (deviz) {
-            this.confirmPhysicalUpdate(device.id, capabilityId, value);
-            if (deviz.hasChangedValue(capabilityId, value)) {
-                deviz.setLocalCapabilityValue(capabilityId, value);
+            const capability = deviz.getLocalCapabilityValue(capabilityId);
+            const canonicalValue = toCanonicalTemperature(capabilityId, value, capability?.units);
+            this.confirmPhysicalUpdate(device.id, capabilityId, canonicalValue);
+            if (deviz.hasChangedValue(capabilityId, canonicalValue)) {
+                deviz.setLocalCapabilityValue(capabilityId, canonicalValue);
                 this.calculator?.startCalculation();
                 this.logger?.debug(
                     `Updated device capability: ${device.id} ${capabilityId} at ${new Date().toISOString()}`,
@@ -474,7 +477,9 @@ export class Devices {
     private async updatePhysicalDevice(dr: DeviceRequest): Promise<void> {
         const pending = this.trackPhysicalUpdate(dr);
         try {
-            await this.homey?.app.setCapabilityValue(dr.id, dr.capabilityId, dr.value);
+            const capability = this.getDevice(dr.id)?.getLocalCapabilityValue(dr.capabilityId);
+            const apiValue = fromCanonicalTemperature(dr.capabilityId, dr.value, capability?.units);
+            await this.homey?.app.setCapabilityValue(dr.id, dr.capabilityId, apiValue);
             if (dr.deviceDelay && dr.deviceDelay > 0) {
                 await this.homey?.app.delay(dr.deviceDelay);
             }

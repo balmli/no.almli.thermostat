@@ -6,6 +6,7 @@ import {TemperatureSettingsMapper} from './TemperatureSettingsMapper';
 import {TargetSettingsMapper} from './TargetSettingsMapper';
 import {DeviceSettingsMapper} from './DeviceSettingsMapper';
 import {HumiditySettingsMapper} from './HumiditySettingsMapper';
+import {toCanonicalTemperature} from './TemperatureUnits';
 
 export class DeviceMapper {
     static map(i: HomeyAPIV3Local.ManagerDevices.Device): Device {
@@ -37,7 +38,9 @@ export class DeviceMapper {
         for (const key in caps) {
             if (caps.hasOwnProperty(key) && SUPPORTED_CAPABILITIES.includes(key)) {
                 const values = caps[key];
-                const dc = new DeviceCapability(values['value'], new Date(values['lastUpdated']).getTime());
+                const units = values['units'];
+                const value = toCanonicalTemperature(key, values['value'], units);
+                const dc = new DeviceCapability(value, new Date(values['lastUpdated']).getTime(), units);
                 capabilities.set(key, dc);
             }
         }

@@ -132,6 +132,17 @@ describe('DeviceMapper', () => {
         expect(mapped.capabilitiesObj?.has('unsupported_capability')).toBe(false);
     });
 
+    it('normalizes Fahrenheit temperature capabilities to canonical Celsius', () => {
+        const apiDevice = makeApiDevice({capabilities: {measure_temperature: 68, target_temperature: 77}});
+        apiDevice.capabilitiesObj.measure_temperature.units = '°F';
+        apiDevice.capabilitiesObj.target_temperature.units = '°F';
+
+        const mapped = DeviceMapper.map(apiDevice);
+
+        expect(mapped.capabilitiesObj?.get('measure_temperature')).toMatchObject({value: 20, units: '°F'});
+        expect(mapped.capabilitiesObj?.get('target_temperature')).toMatchObject({value: 25, units: '°F'});
+    });
+
     it('attaches all applicable virtual thermostat settings', () => {
         const apiDevice = makeApiDevice({driverId: DRIVER_VTHERMO, capabilities: {target_temperature: 20}});
         apiDevice.settings = {calc_method: CalcMethod.MANUAL, devices_zone_heaters: true};

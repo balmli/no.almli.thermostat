@@ -16,10 +16,12 @@ export enum DeviceClass {
 export class DeviceCapability {
     value: any;
     lastUpdated: number;
+    units?: string | null;
 
-    constructor(value: any, lastUpdated: number) {
+    constructor(value: any, lastUpdated: number, units?: string | null) {
         this.value = value;
         this.lastUpdated = lastUpdated;
+        this.units = units;
     }
 }
 

@@ -26,6 +26,8 @@ In Advanced settings, you can choose the types of temperature sensors: standard,
 
 You can use temperature sensors from the same zone, from the parent zone, and from the sub zones.
 
+VThermo supports sensor and physical thermostat capabilities declared in Celsius or Fahrenheit. Calculations use Celsius internally and convert at the Homey API boundary according to each capability's unit metadata, allowing Celsius and Fahrenheit devices to be used together.
+
 #### Triggers
 
 - Turned on

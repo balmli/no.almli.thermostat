@@ -144,6 +144,24 @@ describe('Devices registry', () => {
         expect(destroys.every(destroy => destroy.mock.calls.length === 1)).toBe(true);
     });
 
+    it('normalizes Fahrenheit capability events before updating the local model', () => {
+        let listener!: (value: unknown) => void;
+        const api = makeApiDevice({id: 'sensor', capabilities: {measure_temperature: 68}});
+        api.capabilitiesObj.measure_temperature.units = '°F';
+        api.makeCapabilityInstance = vi.fn((_id: string, callback: (value: unknown) => void) => {
+            listener = callback;
+            return {destroy: vi.fn()};
+        });
+        const calculator = {startCalculation: vi.fn()};
+        const devices = new Devices({api} as any);
+        devices.setCalculator(calculator as any);
+
+        listener(77);
+
+        expect(devices.getDevice('sensor')?.getLocalCapabilityValue('measure_temperature').value).toBe(25);
+        expect(calculator.startCalculation).toHaveBeenCalledOnce();
+    });
+
     it('replaces capability subscriptions when an API device is refreshed', () => {
         let firstListener!: (value: unknown) => void;
         let secondListener!: (value: unknown) => void;
@@ -270,6 +288,23 @@ describe('Devices updates to Homey', () => {
         expect(setCapabilityValue.mock.invocationCallOrder[0]).toBeLessThan(delay.mock.invocationCallOrder[0]);
     });
 
+    it('converts canonical Celsius when writing a Fahrenheit physical thermostat target', async () => {
+        const thermostat = makeApiDevice({
+            id: 'thermostat',
+            deviceClass: DeviceClass.thermostat,
+            capabilities: {target_temperature: 68},
+        });
+        thermostat.capabilitiesObj.target_temperature.units = '°F';
+        const setCapabilityValue = vi.fn().mockResolvedValue(undefined);
+        const devices = new Devices({thermostat} as any, {app: {setCapabilityValue}});
+
+        await devices.updateDevices(request({id: 'thermostat', capabilityId: 'target_temperature', value: 21}));
+
+        expect(setCapabilityValue).toHaveBeenCalledOnce();
+        expect(setCapabilityValue.mock.calls[0]).toEqual(['thermostat', 'target_temperature', 69.8]);
+        expect(devices.getDevice('thermostat')?.getLocalCapabilityValue('target_temperature').value).toBe(20);
+    });
+
     it('does not resolve until an undelayed physical update completes', async () => {
         let finishWrite!: () => void;
         const write = new Promise<void>(resolve => {
@@ -349,6 +384,32 @@ describe('Devices updates to Homey', () => {
         expect(devices.getDevice('heater')?.getLocalCapabilityValue('onoff').value).toBe(false);
         expect(startCalculation).toHaveBeenCalledTimes(1);
         expect(startCalculation).toHaveBeenCalledWith();
+    });
+
+    it('confirms a canonical target write from its Fahrenheit capability event', async () => {
+        let capabilityListener!: (value: unknown) => void;
+        const thermostat = makeApiDevice({
+            id: 'thermostat',
+            deviceClass: DeviceClass.thermostat,
+            capabilities: {target_temperature: 68},
+        });
+        thermostat.capabilitiesObj.target_temperature.units = '°F';
+        thermostat.makeCapabilityInstance = vi.fn((_id: string, listener: (value: unknown) => void) => {
+            capabilityListener = listener;
+            return {destroy: vi.fn()};
+        });
+        const setCapabilityValue = vi.fn().mockImplementation(async (_id, _capabilityId, value) => {
+            capabilityListener(value);
+        });
+        const startCalculation = vi.fn();
+        const devices = new Devices({thermostat} as any, {app: {setCapabilityValue}});
+        devices.setCalculator({startCalculation} as any);
+
+        await devices.updateDevices(request({id: 'thermostat', capabilityId: 'target_temperature', value: 21}));
+
+        expect(setCapabilityValue).toHaveBeenCalledWith('thermostat', 'target_temperature', 69.8);
+        expect(devices.getDevice('thermostat')?.getLocalCapabilityValue('target_temperature').value).toBeCloseTo(21);
+        expect(startCalculation).toHaveBeenCalledOnce();
     });
 
     it('logs and continues when a local device or physical write is unavailable', async () => {

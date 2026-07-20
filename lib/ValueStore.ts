@@ -43,6 +43,6 @@ export class ValueStore {
         const ts = now - minutes * 60000;
         const newest = this.sameAgeOrOlderThan(now);
         const newestOlderThan = this.sameAgeOrOlderThan(ts);
-        return newest && newestOlderThan ? newest - newestOlderThan : undefined;
+        return newest !== undefined && newestOlderThan !== undefined ? newest - newestOlderThan : undefined;
     }
 }

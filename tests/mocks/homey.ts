@@ -1,3 +1,10 @@
+class App {
+    homey: any;
+
+    log() {}
+    error() {}
+}
+
 class Device {
     log() {}
     error() {}
@@ -8,4 +15,4 @@ class Driver {
     error() {}
 }
 
-export default {Device, Driver};
+export default {App, Device, Driver};

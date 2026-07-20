@@ -1,5 +1,7 @@
 # Apply measurement age to VThermo MAX calculations
 
+- Status: Completed 2026-07-20
+
 ## Problem
 
 The VThermo `MAX` branch calls `math.max(temperatures)` without passing `measurementMaxAge`. A comma expression evaluates the age setting separately and discards it. Stale high readings can therefore control the thermostat indefinitely.
@@ -24,3 +26,7 @@ Pass `tempSettings.measurementMaxAge` as the second argument to `math.max()`. En
 - The all-stale fallback uses the newest reading once task 01 is fixed.
 - Change the related test from `it.fails` to `it`.
 - `npm test`, `npm run test:coverage`, `npm run lint`, and `npm run build` pass.
+
+## Resolution
+
+The VThermo MAX branch now passes `measurementMaxAge` to `math.max()` instead of discarding it through a comma expression. A stale high reading is excluded when a recent value exists, and the shared all-stale fallback selects the newest reading when none remain within the configured age.

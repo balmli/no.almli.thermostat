@@ -75,7 +75,7 @@ describe('VHumidityDeviceCalculator measurements', () => {
         vi.useRealTimers();
     });
 
-    it.fails('falls back to the newest reading when every reading is old', () => {
+    it('falls back to the newest reading when every reading is old', () => {
         vi.useFakeTimers();
         vi.setSystemTime(NOW);
         const virtual = makeVHumidity({

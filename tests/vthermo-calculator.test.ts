@@ -113,7 +113,7 @@ describe('VThermoDeviceCalculator temperature inputs', () => {
         expect(request).toMatchObject({value: null});
     });
 
-    it.fails('applies maximum-age filtering to the MAX calculation method', () => {
+    it('applies maximum-age filtering to the MAX calculation method', () => {
         vi.useFakeTimers();
         vi.setSystemTime(NOW);
         const calculator = new VThermoDeviceCalculator(new Zones(), makeDevicesStub([]));

@@ -139,7 +139,7 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
             } else if (tempSettings.calcMethod === CalcMethod.MIN) {
                 temperature = math.min(temperatures, tempSettings.measurementMaxAge);
             } else if (tempSettings.calcMethod === CalcMethod.MAX) {
-                ((temperature = math.max(temperatures)), tempSettings.measurementMaxAge);
+                temperature = math.max(temperatures, tempSettings.measurementMaxAge);
             } else if (tempSettings.calcMethod === CalcMethod.NEWEST) {
                 temperature = math.newest(temperatures);
             } else if (tempSettings.calcMethod === CalcMethod.MANUAL) {

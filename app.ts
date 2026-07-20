@@ -22,6 +22,12 @@ module.exports = class VThermoApp extends Homey.App {
     calculator!: Calculator;
     _refreshTimeout: any;
     _lastNumRunningDevices?: number;
+    private readonly _deviceCreateListener = this._onDeviceCreate.bind(this);
+    private readonly _deviceUpdateListener = this._onDeviceUpdate.bind(this);
+    private readonly _deviceDeleteListener = this._onDeviceDelete.bind(this);
+    private readonly _zoneCreateListener = this._onZoneCreate.bind(this);
+    private readonly _zoneUpdateListener = this._onZoneUpdate.bind(this);
+    private readonly _zoneDeleteListener = this._onZoneDelete.bind(this);
 
     async onInit(): Promise<void> {
         this.logger = new Logger({
@@ -43,7 +49,7 @@ module.exports = class VThermoApp extends Homey.App {
         this.calculator.destroy();
         this.devicesObj.destroy();
         this.zonesObj.destroy();
-        this.destroyHomeyApi();
+        await this.destroyHomeyApi();
     }
 
     private async initFlows() {
@@ -149,41 +155,61 @@ module.exports = class VThermoApp extends Homey.App {
     }
 
     private async destroyHomeyApi(): Promise<void> {
+        const homeyApi = this.homeyApi;
+        if (!homeyApi) {
+            return;
+        }
+        this.homeyApi = undefined;
+        this.homeyApiCreated = undefined;
+
         try {
-            if (this.homeyApi) {
-                this.homeyApi.devices.removeListener('device.create', this._onDeviceCreate.bind(this));
-                this.homeyApi.devices.removeListener('device.update', this._onDeviceUpdate.bind(this));
-                this.homeyApi.devices.removeListener('device.delete', this._onDeviceDelete.bind(this));
-                await this.homeyApi.devices.disconnect();
-                this.homeyApi.zones.removeListener('zone.create', this._onZoneCreate.bind(this));
-                this.homeyApi.zones.removeListener('zone.update', this._onZoneUpdate.bind(this));
-                this.homeyApi.zones.removeListener('zone.delete', this._onZoneDelete.bind(this));
-                await this.homeyApi.zones.disconnect();
-                await this.homeyApi.destroy();
-                this.homeyApi = undefined;
-                this.logger.debug(`HomeyAPI instance destroyed`);
-            }
+            homeyApi.devices.removeListener('device.create', this._deviceCreateListener);
+            homeyApi.devices.removeListener('device.update', this._deviceUpdateListener);
+            homeyApi.devices.removeListener('device.delete', this._deviceDeleteListener);
         } catch (err) {
-            this.homeyApi = undefined;
+            this.logger.error(`Removing HomeyAPI device listeners failed`, err);
+        }
+        try {
+            homeyApi.zones.removeListener('zone.create', this._zoneCreateListener);
+            homeyApi.zones.removeListener('zone.update', this._zoneUpdateListener);
+            homeyApi.zones.removeListener('zone.delete', this._zoneDeleteListener);
+        } catch (err) {
+            this.logger.error(`Removing HomeyAPI zone listeners failed`, err);
+        }
+        try {
+            await homeyApi.devices.disconnect();
+        } catch (err) {
+            this.logger.error(`Disconnecting HomeyAPI devices failed`, err);
+        }
+        try {
+            await homeyApi.zones.disconnect();
+        } catch (err) {
+            this.logger.error(`Disconnecting HomeyAPI zones failed`, err);
+        }
+        try {
+            await homeyApi.destroy();
+        } catch (err) {
             this.logger.error(`Destroying HomeyAPI failed`, err);
         }
+        this.logger.debug(`HomeyAPI instance destroyed`);
     }
 
     private async createHomeyApi(): Promise<void> {
         try {
             this.homeyApi = await HomeyAPI.createAppAPI({homey: this.homey, debug: false});
             await this.homeyApi.devices.connect();
-            this.homeyApi.devices.on('device.create', this._onDeviceCreate.bind(this));
-            this.homeyApi.devices.on('device.update', this._onDeviceUpdate.bind(this));
-            this.homeyApi.devices.on('device.delete', this._onDeviceDelete.bind(this));
+            this.homeyApi.devices.on('device.create', this._deviceCreateListener);
+            this.homeyApi.devices.on('device.update', this._deviceUpdateListener);
+            this.homeyApi.devices.on('device.delete', this._deviceDeleteListener);
             await this.homeyApi.zones.connect();
-            this.homeyApi.zones.on('zone.create', this._onZoneCreate.bind(this));
-            this.homeyApi.zones.on('zone.update', this._onZoneUpdate.bind(this));
-            this.homeyApi.zones.on('zone.delete', this._onZoneDelete.bind(this));
+            this.homeyApi.zones.on('zone.create', this._zoneCreateListener);
+            this.homeyApi.zones.on('zone.update', this._zoneUpdateListener);
+            this.homeyApi.zones.on('zone.delete', this._zoneDeleteListener);
             this.homeyApiCreated = Date.now();
             this.logger.verbose(`HomeyAPIApp instance created`);
         } catch (err) {
             this.logger.error(`Creating HomeyAPIApp failed`, err);
+            await this.destroyHomeyApi();
         }
     }
 
@@ -315,18 +341,16 @@ module.exports = class VThermoApp extends Homey.App {
 
     private async _onDeviceUpdate(device: HomeyAPIV3Local.ManagerDevices.Device): Promise<void> {
         this.logger.silly(`Device update: ${device.driverId}:${device.class} - ${device.id} - ${device.name}`);
-        if (this.devicesObj.validAndSupported(device)) {
-            try {
-                const current = this.devicesObj.getDevice(device.id);
-                if (!current && !device.makeCapabilityInstance) {
-                    const now = Date.now();
-                    device = await this.getDevice(device.id);
-                    this.logger?.debug(`Fetched device: ${device.id} ${device.name}. (${Date.now() - now} ms.)`);
-                }
-                this.devicesObj.createOrUpdateDevice(device);
-            } catch (err) {
-                this.logger.error('Device update failed', err);
+        try {
+            const current = this.devicesObj.getDevice(device.id);
+            if (this.devicesObj.validAndSupported(device) && !current && !device.makeCapabilityInstance) {
+                const now = Date.now();
+                device = await this.getDevice(device.id);
+                this.logger?.debug(`Fetched device: ${device.id} ${device.name}. (${Date.now() - now} ms.)`);
             }
+            this.devicesObj.createOrUpdateDevice(device);
+        } catch (err) {
+            this.logger.error('Device update failed', err);
         }
     }
 

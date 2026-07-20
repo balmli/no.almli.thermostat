@@ -10,7 +10,7 @@ const values = (arr: any[], measurementMaxAge?: number) => {
                       ts: typeof v.lastUpdated === 'number' ? v.lastUpdated : new Date(v.lastUpdated).getTime(),
                   }))
                   .filter(v => !measurementMaxAge || Date.now() - v.ts < measurementMaxAge);
-    return vals.length < 1 ? newest(arr) : vals.map(v => v.value);
+    return vals.length < 1 ? [newest(arr)] : vals.map(v => v.value);
 };
 
 export const average = (arr: any[], measurementMaxAge?: number) => {

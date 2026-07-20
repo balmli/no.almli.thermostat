@@ -1,0 +1,48 @@
+name: Validate Homey app
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+    pull_request:
+
+permissions:
+    contents: read
+
+concurrency:
+    group: validate-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    validate:
+        name: Build, check, test, and validate
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@v7
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v7
+              with:
+                  node-version-file: .nvmrc
+                  cache: npm
+
+            - name: Install dependencies
+              run: npm ci --ignore-scripts
+
+            - name: Build
+              run: npm run build
+
+            - name: Check formatting, lint, and test types
+              run: npm run lint && npm run test:typecheck
+
+            - name: Test
+              run: npm test --ignore-scripts
+
+            - name: Validate for publishing
+              uses: athombv/github-action-homey-app-validate@master
+              with:
+                  level: publish

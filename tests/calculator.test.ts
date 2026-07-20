@@ -63,7 +63,7 @@ describe('Calculator', () => {
         calculator.startCalculation();
         await vi.advanceTimersByTimeAsync(499);
         expect(updateDevices).not.toHaveBeenCalled();
-        await calculator.destroy();
+        calculator.destroy();
         await vi.advanceTimersByTimeAsync(1);
         expect(updateDevices).not.toHaveBeenCalled();
         vi.useRealTimers();
@@ -90,7 +90,7 @@ describe('Calculator', () => {
         vi.useRealTimers();
     });
 
-    it('turns configured heaters off when calculation fails', async () => {
+    it('retries a transient calculation failure without changing outputs', async () => {
         vi.useFakeTimers();
         const updateDevices = vi.fn().mockResolvedValue(undefined);
         const calculator = new Calculator(
@@ -98,50 +98,46 @@ describe('Calculator', () => {
             {updateDevices} as any,
             {setTimeout, clearTimeout},
         );
-        (calculator as any).vThermoCalculator = {
-            calculate: () => {
-                throw new Error('broken');
-            },
-            calculateFailSafe: () => requests({id: 'heater', capabilityId: 'onoff', value: false}),
-        };
+        const calculate = vi
+            .fn()
+            .mockImplementationOnce(() => {
+                throw new Error('transient');
+            })
+            .mockReturnValue(new DeviceRequests());
+        (calculator as any).vThermoCalculator = {calculate};
         (calculator as any).vHumidityCalculator = {calculate: () => new DeviceRequests()};
 
         calculator.startCalculation(1);
         await vi.advanceTimersByTimeAsync(1);
-
+        expect(calculate).toHaveBeenCalledOnce();
+        expect(updateDevices).not.toHaveBeenCalled();
+        await vi.advanceTimersByTimeAsync(4_999);
+        expect(calculate).toHaveBeenCalledOnce();
+        await vi.advanceTimersByTimeAsync(1);
+        expect(calculate).toHaveBeenCalledTimes(2);
         expect(updateDevices).toHaveBeenCalledOnce();
-        expect(updateDevices.mock.calls[0][0].getRequests()).toEqual([
-            expect.objectContaining({id: 'heater', capabilityId: 'onoff', value: false}),
-        ]);
+        expect(updateDevices.mock.calls[0][0].getRequests()).toEqual([]);
         vi.useRealTimers();
     });
 
-    it('awaits fail-safe heater writes during shutdown', async () => {
-        let finishWrite!: () => void;
-        const updateDevices = vi.fn().mockReturnValue(
-            new Promise<void>(resolve => {
-                finishWrite = resolve;
-            }),
-        );
+    it('bounds automatic calculation recovery retries', async () => {
+        vi.useFakeTimers();
         const calculator = new Calculator(
             {getZones: () => makeZone('root'), getZonesAsList: () => [makeZone('root')]} as any,
-            {updateDevices} as any,
+            {updateDevices: vi.fn()} as any,
             {setTimeout, clearTimeout},
         );
-        (calculator as any).vThermoCalculator = {
-            calculateFailSafe: () => requests({id: 'heater', capabilityId: 'onoff', value: false}),
-        };
-
-        let completed = false;
-        const shutdown = calculator.destroy().then(() => {
-            completed = true;
+        const calculate = vi.fn(() => {
+            throw new Error('persistent');
         });
-        await Promise.resolve();
-        expect(completed).toBe(false);
-        expect(updateDevices).toHaveBeenCalledOnce();
+        (calculator as any).vThermoCalculator = {calculate};
+        (calculator as any).vHumidityCalculator = {calculate: () => new DeviceRequests()};
 
-        finishWrite();
-        await shutdown;
-        expect(completed).toBe(true);
+        calculator.startCalculation(1);
+        await vi.advanceTimersByTimeAsync(1 + 5_000 + 30_000 + 120_000);
+        expect(calculate).toHaveBeenCalledTimes(4);
+        await vi.advanceTimersByTimeAsync(600_000);
+        expect(calculate).toHaveBeenCalledTimes(4);
+        vi.useRealTimers();
     });
 });

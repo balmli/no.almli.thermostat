@@ -28,12 +28,11 @@ The failure can be reproduced and automatically recovered or failed safe, with r
 
 ## Resolution
 
-- A VThermo with a configured target but no usable temperature now becomes inactive and sends explicit off requests to every configured heater instead of retaining the last heating command.
-- Calculation exceptions now invoke the same conservative heater shutdown path after logging the original failure.
-- Orderly app shutdown waits for fail-safe heater writes before destroying the device registry and Homey API connection.
-- Fail-safe selection is limited to actively heating VThermos so an inactive controller cannot turn off an independently used heater. Once selected, physical off requests are unconditional because the cached heater value may be stale during a failure. Shared heater requests are de-duplicated before writing.
-- The controller stops scheduling retries while it is shutting down; calculation-time failures continue to use the bounded output retry and confirmation behavior delivered with GitHub #49.
+- Missing target or temperature input deliberately retains the current heater output. Automatically forcing heaters off is not a safe universal default because a sensor outage could leave a home cold or cause frozen pipes.
+- Calculation exceptions are logged and receive bounded automatic recovery attempts after 5 seconds, 30 seconds, and 2 minutes. A later device event starts a fresh calculation sequence.
+- App shutdown remains non-intrusive and does not change heater outputs.
+- Physical capability writes continue to use the confirmation and bounded retry behavior delivered with GitHub #49, so an unconfirmed off command is not mistaken for physical state.
 - The related all-stale aggregation and awaited physical-write failures were already resolved in their expected-failure tasks and remain covered by the full suite.
-- Regression tests cover missing measurements, calculation exceptions, configured-zone selection, inactive-controller isolation, explicit writes despite a stale off cache, awaited shutdown, stale-value fallback, rejected writes, confirmation, and bounded retries.
+- Regression tests cover output retention for missing inputs, transient calculation recovery, bounded calculation retries, stale-value fallback, rejected writes, capability confirmation, and bounded output retries.
 
-The fail-safe requires a responsive Homey runtime and device integration. It cannot run during power loss or an immediate runtime/process termination, and software capability confirmation is not proof of physical relay state. Independent hardware temperature limits remain appropriate for safety-critical heating.
+There is no software-only default that eliminates both overheating and loss-of-heating risk. VThermo does not claim certified safety behavior; independent hardware minimum/maximum temperature protection remains appropriate for the installation.

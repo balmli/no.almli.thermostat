@@ -46,7 +46,7 @@ module.exports = class VThermoApp extends Homey.App {
 
     async onUninit(): Promise<void> {
         this.clearRefreshTimeout();
-        await this.calculator.destroy();
+        this.calculator.destroy();
         this.devicesObj.destroy();
         this.zonesObj.destroy();
         await this.destroyHomeyApi();

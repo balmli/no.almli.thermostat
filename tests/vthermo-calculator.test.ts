@@ -222,10 +222,10 @@ describe('VThermoDeviceCalculator switching', () => {
         ]);
     });
 
-    it('produces no switching requests without target or measured temperature', () => {
+    it('preserves the current output without target or measured temperature', () => {
         const root = makeZone('root');
         const noTarget = makeVThermo({capabilities: {target_temperature: null}});
-        const noMeasurement = makeVThermo({capabilities: {measure_temperature: null}});
+        const noMeasurement = makeVThermo({capabilities: {measure_temperature: null, [CAPABILITY_ACTIVE]: true}});
         expect(calculator().calculateHeaterSwitching(noTarget, root).getRequests()).toEqual([]);
         expect(calculator().calculateHeaterSwitching(noMeasurement, root).getRequests()).toEqual([]);
     });

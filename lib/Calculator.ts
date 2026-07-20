@@ -5,6 +5,7 @@ import {VThermoDeviceCalculator} from './VThermoDeviceCalculator';
 import {VHumidityDeviceCalculator} from './VHumidityDeviceCalculator';
 
 const DEFAULT_CALCULATION_DELAY = 500;
+const CALCULATION_FAILURE_RETRY_DELAYS = [5000, 30000, 120000];
 
 export class Calculator {
     private zonesObj!: Zones;
@@ -12,6 +13,7 @@ export class Calculator {
     private homey: any;
     private logger: any;
     private _calculateTimeout: any;
+    private _calculationFailureCount = 0;
     private vThermoCalculator: VThermoDeviceCalculator;
     private vHumidityCalculator: VHumidityDeviceCalculator;
 
@@ -35,6 +37,11 @@ export class Calculator {
     }
 
     startCalculation(delay = DEFAULT_CALCULATION_DELAY): void {
+        this._calculationFailureCount = 0;
+        this.scheduleCalculation(delay);
+    }
+
+    private scheduleCalculation(delay: number): void {
         this.clearCalculationTimeout();
         this._calculateTimeout = this.homey?.setTimeout(this.execCalculate.bind(this), delay);
         this.logger?.debug(`Will calculate in ${delay} ms.`);
@@ -45,8 +52,19 @@ export class Calculator {
             const calculationResponse = this.calculateDeviceRequests();
             const uniqueRequests = DeviceRequests.unique(calculationResponse);
             await this.devicesObj.updateDevices(uniqueRequests);
+            this._calculationFailureCount = 0;
         } catch (err) {
             this.logger?.error(`Calculation failed`, err);
+            const retryDelay = CALCULATION_FAILURE_RETRY_DELAYS[this._calculationFailureCount];
+            if (retryDelay !== undefined) {
+                this._calculationFailureCount += 1;
+                this.logger?.warn?.(
+                    `Retrying calculation in ${retryDelay} ms (${this._calculationFailureCount}/${CALCULATION_FAILURE_RETRY_DELAYS.length})`,
+                );
+                this.scheduleCalculation(retryDelay);
+            } else {
+                this.logger?.error(`Calculation recovery stopped after ${this._calculationFailureCount} retries`);
+            }
         }
     }
 

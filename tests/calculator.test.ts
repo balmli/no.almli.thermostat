@@ -89,4 +89,55 @@ describe('Calculator', () => {
         expect(logger.error).toHaveBeenCalledWith('Calculation failed', expect.any(Error));
         vi.useRealTimers();
     });
+
+    it('retries a transient calculation failure without changing outputs', async () => {
+        vi.useFakeTimers();
+        const updateDevices = vi.fn().mockResolvedValue(undefined);
+        const calculator = new Calculator(
+            {getZones: () => makeZone('root'), getZonesAsList: () => [makeZone('root')]} as any,
+            {updateDevices} as any,
+            {setTimeout, clearTimeout},
+        );
+        const calculate = vi
+            .fn()
+            .mockImplementationOnce(() => {
+                throw new Error('transient');
+            })
+            .mockReturnValue(new DeviceRequests());
+        (calculator as any).vThermoCalculator = {calculate};
+        (calculator as any).vHumidityCalculator = {calculate: () => new DeviceRequests()};
+
+        calculator.startCalculation(1);
+        await vi.advanceTimersByTimeAsync(1);
+        expect(calculate).toHaveBeenCalledOnce();
+        expect(updateDevices).not.toHaveBeenCalled();
+        await vi.advanceTimersByTimeAsync(4_999);
+        expect(calculate).toHaveBeenCalledOnce();
+        await vi.advanceTimersByTimeAsync(1);
+        expect(calculate).toHaveBeenCalledTimes(2);
+        expect(updateDevices).toHaveBeenCalledOnce();
+        expect(updateDevices.mock.calls[0][0].getRequests()).toEqual([]);
+        vi.useRealTimers();
+    });
+
+    it('bounds automatic calculation recovery retries', async () => {
+        vi.useFakeTimers();
+        const calculator = new Calculator(
+            {getZones: () => makeZone('root'), getZonesAsList: () => [makeZone('root')]} as any,
+            {updateDevices: vi.fn()} as any,
+            {setTimeout, clearTimeout},
+        );
+        const calculate = vi.fn(() => {
+            throw new Error('persistent');
+        });
+        (calculator as any).vThermoCalculator = {calculate};
+        (calculator as any).vHumidityCalculator = {calculate: () => new DeviceRequests()};
+
+        calculator.startCalculation(1);
+        await vi.advanceTimersByTimeAsync(1 + 5_000 + 30_000 + 120_000);
+        expect(calculate).toHaveBeenCalledTimes(4);
+        await vi.advanceTimersByTimeAsync(600_000);
+        expect(calculate).toHaveBeenCalledTimes(4);
+        vi.useRealTimers();
+    });
 });

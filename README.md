@@ -170,6 +170,12 @@ Select temperature sensors from the sub zones of the virtual thermostat, just on
 
 - Delay in milliseconds between switching devices: if this value is set to a number larger than zero, it will add a delay between switching each devices on / off. This might help
 
+#### Safety and recovery behavior
+
+VThermo does not automatically turn heaters off when a temperature input is missing, a calculation fails, or the app stops. Retaining the existing output avoids an unexpected loss of heating during a sensor or software outage. Transient calculation failures are retried after 5 seconds, 30 seconds, and 2 minutes; a later device event can start a fresh calculation sequence.
+
+No software default is safe for every home: retaining heat can risk overheating, while forcing heat off can risk a cold house or frozen pipes. VThermo is automation software, not a certified safety controller. Use independent hardware minimum/maximum temperature protection appropriate for the installation.
+
 ## Feedback:
 
 Please report issues at the [issues section on Github](https://github.com/balmli/no.almli.thermostat/issues).

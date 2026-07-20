@@ -12,6 +12,8 @@ The app listens to Homey device and zone changes through `homey-api`, keeps a lo
 ## Runtime and tooling
 
 - Use Node 24 as specified by `.nvmrc`; the project uses Homey SDK v3 and TypeScript 6. Do not upgrade dependencies or the TypeScript target as part of an unrelated change.
+- The Homey Web API is a core integration dependency. Before changing device discovery, capability subscriptions/writes, driver lookup, zone topology, refresh, or API lifecycle code, read [Homey API managers in VThermo](docs/homey-api-managers.md) and consult the official [ManagerDevices](https://athombv.github.io/node-homey-api/HomeyAPIV2.ManagerDevices.html), [ManagerDrivers](https://athombv.github.io/node-homey-api/HomeyAPIV2.ManagerDrivers.html), and [ManagerZones](https://athombv.github.io/node-homey-api/HomeyAPIV2.ManagerZones.html) references.
+- The official links above describe `HomeyAPIV2`, while this app currently uses `homey-api` 3.x and `HomeyAPIV3Local` types. Verify version-specific signatures and payload behavior in the installed package; do not assume V2 and V3 Local are identical.
 - Install dependencies with `npm ci` when a clean install is needed.
 - Useful commands:
     - `npm run build` — TypeScript compilation to `.homeybuild/`.
@@ -40,6 +42,7 @@ The app listens to Homey device and zone changes through `homey-api`, keeps a lo
 - `locales/en.json` — user-facing strings.
 - `assets/` and `drivers/*/assets/` — app and driver artwork.
 - `tests/` — Vitest unit tests, fixtures, and the virtual Homey SDK boundary used by framework-facing tests.
+- `docs/homey-api-managers.md` — how this app uses the Homey Web API device and zone managers, why its Apps SDK driver manager is different, and the lifecycle/reconciliation risks to test.
 - `tasks/` — repository-only implementation tasks and issue documentation; excluded from Homey app packages through `.homeyignore`.
 
 ## Architecture and data flow
@@ -114,6 +117,9 @@ Homey hardware/API behavior cannot be established by compilation alone. For inte
 
 ## Issue-task workflow
 
+- Handle one issue task at a time. Finish its investigation, regression test, implementation, verification, documentation, and GitHub response before starting another issue.
+- Use atomic commits: each commit should contain one coherent issue fix together with its tests and any directly required documentation or task updates. Do not combine multiple issue fixes or unrelated cleanup in the same commit.
+- Commit only after the relevant focused tests and required project checks pass. If preparatory refactoring is independently useful and behavior-preserving, keep it in a separate atomic commit.
 - Use test-driven development when solving tasks in both `tasks/expected-failures/` and `tasks/github-issues/`: first add or identify a focused regression test that demonstrates the intended behavior and fails for the expected reason, then make the smallest production change that passes it, and finally refactor while keeping the suite green.
 - An existing `it.fails` test in an expected-failure task is the red phase. When fixing that defect, change it to a normal passing test and add any boundary cases required by the task. Do not weaken or delete the assertion merely to make the suite pass.
 - A GitHub issue fix must include regression coverage for the reported behavior whenever it can be tested locally. Keep platform- or hardware-only verification requirements explicit when they cannot be automated.

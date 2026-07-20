@@ -3,30 +3,35 @@
   "version": "1.0.0",
   "description": "Virtual thermostat",
   "main": "app.ts",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "build": "tsc",
     "xxx_pretest": "eslint --ignore-path .gitignore app.ts lib test",
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
     "posttest": "homey app validate",
-    "lint": "eslint --ext .js,.ts --ignore-path .gitignore ."
+    "lint": "eslint app.ts drivers lib"
   },
   "author": "Bjørnar Almli",
   "license": "ISC",
   "dependencies": {
-    "homey-api": "3.0.7"
+    "homey-api": "^3.19.1"
   },
   "devDependencies": {
-    "@tsconfig/node12": "^1.0.9",
-    "@types/chai": "^4.2.22",
-    "@types/homey": "npm:homey-apps-sdk-v3-types@^0.3.4",
-    "@types/mocha": "^9.0.0",
-    "@types/node": "^16.11.7",
-    "chai": "^4.3.4",
-    "chai-datetime": "^1.8.0",
-    "eslint": "^7.32.0",
-    "eslint-config-athom": "^3.0.1",
-    "mocha": "^9.1.2",
-    "ts-node": "^10.4.0",
-    "typescript": "^4.4.4"
+    "@eslint/js": "^10.0.1",
+    "@tsconfig/node24": "^24.0.4",
+    "@types/chai": "^5.2.3",
+    "@types/homey": "npm:homey-apps-sdk-v3-types@^0.3.12",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.12.0",
+    "chai": "^6.2.2",
+    "chai-datetime": "^1.8.1",
+    "eslint": "^10.7.0",
+    "globals": "^17.7.0",
+    "mocha": "^11.7.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.64.0"
   }
 }

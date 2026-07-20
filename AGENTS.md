@@ -112,6 +112,14 @@ For calculation changes, add focused tests where practical using small mapped `D
 
 Homey hardware/API behavior cannot be established by compilation alone. For integration-sensitive changes, state what was tested on a real Homey and what remains unverified.
 
+## Issue-task workflow
+
+- Use test-driven development when solving tasks in both `tasks/expected-failures/` and `tasks/github-issues/`: first add or identify a focused regression test that demonstrates the intended behavior and fails for the expected reason, then make the smallest production change that passes it, and finally refactor while keeping the suite green.
+- An existing `it.fails` test in an expected-failure task is the red phase. When fixing that defect, change it to a normal passing test and add any boundary cases required by the task. Do not weaken or delete the assertion merely to make the suite pass.
+- A GitHub issue fix must include regression coverage for the reported behavior whenever it can be tested locally. Keep platform- or hardware-only verification requirements explicit when they cannot be automated.
+- When completing a task in `tasks/github-issues/`, comment on the linked GitHub issue with a concise summary of the fix, its tests, and any relevant release status. Keep the comment polite, appreciative, and helpful.
+- Do not ask issue reporters or other users for more information, logs, diagnostics, reproduction details, or follow-up work. Base issue comments and implementation decisions on the available report, repository evidence, and tests.
+
 ## Change discipline
 
 - Preserve backward compatibility for paired devices, saved settings, capability IDs, and Flow cards.

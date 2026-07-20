@@ -130,6 +130,16 @@ Homey hardware/API behavior cannot be established by compilation alone. For inte
 - When completing a task in `tasks/github-issues/`, comment on the linked GitHub issue with a concise summary of the fix, its tests, and any relevant release status. Keep the comment polite, appreciative, and helpful.
 - Do not ask issue reporters or other users for more information, logs, diagnostics, reproduction details, or follow-up work. Base issue comments and implementation decisions on the available report, repository evidence, and tests.
 
+## Release workflow
+
+- Prepare a release only when the user explicitly requests a version. Start from an up-to-date default branch and create a dedicated `release/<version>` branch.
+- Treat `.homeycompose/app.json` as the source of truth for the Homey app version. Update its `version`, add the new version first in `.homeychangelog.json`, and add a matching newest-first section under `README.md` → Release Notes.
+- Write release notes for users: summarize observable fixes, compatibility changes, and safety-relevant behavior without exposing implementation-only details or claiming unverified hardware behavior.
+- Run `npm run format`, then `npm run build`, `npm test`, and `npm run lint`. The test postscript runs Homey publish-level validation and regenerates the tracked root `app.json`; inspect that generated diff and keep its version synchronized with the compose source.
+- Review the complete diff for unintended generated-manifest changes, then create one atomic release commit, push the release branch, and open a pull request targeting the default branch.
+- Do not create a tag, GitHub release, publish to Homey, or change the package version unless the user explicitly requests that action.
+- When a release is intended to gather real-world testing for open GitHub issues, add a polite comment describing the relevant improvements and release status. Do not claim the issue is fixed, close it prematurely, or request logs or diagnostics.
+
 ## Change discipline
 
 - Preserve backward compatibility for paired devices, saved settings, capability IDs, and Flow cards.

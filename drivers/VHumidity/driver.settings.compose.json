@@ -26,7 +26,7 @@
         "id": "hysteresis",
         "value": 1,
         "hint": {
-          "en": "With a hysteresis value of 1, the device will vary between 1 below the target humidity and 1 above the target humidity."
+          "en": "With a hysteresis value of 1, the humidity will vary between 1 below and 1 above the target. A value of 0 switches whenever the humidity crosses the target and may cause rapid switching."
         }
       },
       {

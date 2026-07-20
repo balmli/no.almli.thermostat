@@ -1,7 +1,7 @@
 # GitHub #58: Allow zero hysteresis
 
 - Issue: https://github.com/balmli/no.almli.thermostat/issues/58
-- Status: Confirmed bug
+- Status: Completed 2026-07-20
 - Priority: Normal
 
 ## Cause
@@ -23,3 +23,12 @@
 ## Done when
 
 An explicit zero switches at the target threshold, undefined values retain the existing defaults, documentation explains the tradeoff, and the full test suite passes.
+
+## Resolution
+
+- VThermo and VHumidity now use nullish defaults, preserving an explicitly configured zero hysteresis.
+- Zero hysteresis switches on either side of the target while retaining the current state exactly at the target.
+- Undefined hysteresis continues to use the existing VThermo default of 0.5 and VHumidity default of 1.
+- README and Homey setting hints warn that zero hysteresis can cause rapid switching and reduce equipment lifetime.
+- Regression tests cover zero, undefined defaults, and the existing positive hysteresis bands for both controllers.
+- The related zero target-temperature limit failure was fixed in the same branch and pull request.

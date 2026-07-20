@@ -243,9 +243,12 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
             if (thermostat.targetSettings.offset) {
                 targetTemp += thermostat.targetSettings.offset;
             }
-            if (thermostat.targetSettings.min && targetTemp < thermostat.targetSettings.min) {
+            if (typeof thermostat.targetSettings.min === 'number' && targetTemp < thermostat.targetSettings.min) {
                 targetTemp = thermostat.targetSettings.min;
-            } else if (thermostat.targetSettings.max && targetTemp > thermostat.targetSettings.max) {
+            } else if (
+                typeof thermostat.targetSettings.max === 'number' &&
+                targetTemp > thermostat.targetSettings.max
+            ) {
                 targetTemp = thermostat.targetSettings.max;
             }
         }
@@ -399,7 +402,7 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
         } else if (motionAlarm) {
             onoff = true;
         } else {
-            const hysteresis = deviceSettings.hysteresis || 0.5;
+            const hysteresis = deviceSettings.hysteresis ?? 0.5;
             const invert = deviceSettings.invert;
             if (temperature > targetTemperature + hysteresis) {
                 onoff = invert === true;

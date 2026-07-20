@@ -135,6 +135,19 @@ describe('VHumidityDeviceCalculator switching', () => {
         expect(calculator().resolveOnOff(device, 51, 50)).toBeUndefined();
     });
 
+    it('supports zero hysteresis without changing state exactly at the target', () => {
+        const device = makeVHumidity({deviceSettings: {hysteresis: 0}});
+        expect(calculator().resolveOnOff(device, 49.99, 50)).toBe(false);
+        expect(calculator().resolveOnOff(device, 50, 50)).toBeUndefined();
+        expect(calculator().resolveOnOff(device, 50.01, 50)).toBe(true);
+    });
+
+    it('uses the default hysteresis when the setting is undefined', () => {
+        const device = makeVHumidity({deviceSettings: {hysteresis: undefined}});
+        expect(calculator().resolveOnOff(device, 50.5, 50)).toBeUndefined();
+        expect(calculator().resolveOnOff(device, 51.01, 50)).toBe(true);
+    });
+
     it('reverses fan behavior for humidifiers', () => {
         const device = makeVHumidity({deviceSettings: {invert: true}});
         expect(calculator().resolveOnOff(device, 52, 50)).toBe(false);

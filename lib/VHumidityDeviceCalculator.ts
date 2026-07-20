@@ -172,7 +172,7 @@ export class VHumidityDeviceCalculator extends DeviceCalculator {
         if (!mainOnoff) {
             onoff = currentVtOnoff === true ? false : undefined;
         } else {
-            const hysteresis = deviceSettings.hysteresis || 1;
+            const hysteresis = deviceSettings.hysteresis ?? 1;
             const invert = deviceSettings.invert;
             if (humidity > targetHumidity + hysteresis) {
                 onoff = invert !== true;

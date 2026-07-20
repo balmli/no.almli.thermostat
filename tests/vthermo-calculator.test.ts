@@ -29,7 +29,7 @@ describe('VThermoDeviceCalculator temperature inputs', () => {
         expect(calculator.getTemperaturesInZone(root, settings).map(value => value.value)).toEqual([10, 20, 40]);
     });
 
-    it.fails('does not duplicate readings when several zones are selected', () => {
+    it('does not duplicate readings when several zones are selected', () => {
         const zones = [makeZone('one'), makeZone('two')];
         const calculator = new VThermoDeviceCalculator(
             new Zones(),
@@ -39,6 +39,8 @@ describe('VThermoDeviceCalculator temperature inputs', () => {
             ]),
         );
         expect(calculator.getTemperaturesInZone(zones, {sensor: true}).map(value => value.value)).toEqual([10, 20]);
+        expect(calculator.getTemperaturesInZone([], {sensor: true})).toEqual([]);
+        expect(calculator.getTemperaturesInZone(undefined, {sensor: true})).toEqual([]);
     });
 
     it('combines current, parent and direct-child sensor scopes', () => {

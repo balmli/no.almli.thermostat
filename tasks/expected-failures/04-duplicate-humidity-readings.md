@@ -1,5 +1,7 @@
 # Stop duplicating multi-zone humidity readings
 
+- Status: Completed 2026-07-20
+
 ## Problem
 
 `VHumidityDeviceCalculator.getHumiditiesInZone()` loops over every requested zone while querying the entire zone array in each iteration. Every selected humidity reading is consequently duplicated once per zone.
@@ -24,3 +26,7 @@ Query the complete zone array once, or use the current loop zone for each iterat
 - Empty and undefined scopes still return an empty array.
 - Change the related test from `it.fails` to `it`.
 - `npm test`, `npm run test:coverage`, `npm run lint`, and `npm run build` pass.
+
+## Resolution
+
+`getHumiditiesInZone()` now queries the complete supplied zone scope once, then applies the existing sensor-class and `measure_humidity` filters. Each matching humidity capability therefore contributes once regardless of the number of selected zones. The former `it.fails` case is a normal regression test and also covers empty and undefined zone scopes.

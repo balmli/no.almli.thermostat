@@ -39,22 +39,20 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
         const dcs: DeviceCapability[] = [];
         if (zone && tempSettings) {
             const zones = Array.isArray(zone) ? zone : [zone];
-            for (const z of zones) {
-                const devices = this.devicesObj.getDevicesFromZones(zones);
-                const temperatures = devices
-                    ?.filter(
-                        d =>
-                            (tempSettings.sensor && d.class === 'sensor') ||
-                            (tempSettings.thermostat && d.class === 'thermostat' && !d.isVThermo()) ||
-                            (tempSettings.vthermo && d.isVThermo()) ||
-                            (tempSettings.other && d.class !== 'sensor' && d.class !== 'thermostat'),
-                    )
-                    .filter(d => d.capabilitiesObj && d.capabilitiesObj.has('measure_temperature'))
-                    .map(d => d.capabilitiesObj && d.capabilitiesObj?.get('measure_temperature'));
-                if (temperatures) {
-                    // @ts-ignore
-                    dcs.push(...temperatures);
-                }
+            const devices = this.devicesObj.getDevicesFromZones(zones);
+            const temperatures = devices
+                ?.filter(
+                    d =>
+                        (tempSettings.sensor && d.class === 'sensor') ||
+                        (tempSettings.thermostat && d.class === 'thermostat' && !d.isVThermo()) ||
+                        (tempSettings.vthermo && d.isVThermo()) ||
+                        (tempSettings.other && d.class !== 'sensor' && d.class !== 'thermostat'),
+                )
+                .filter(d => d.capabilitiesObj && d.capabilitiesObj.has('measure_temperature'))
+                .map(d => d.capabilitiesObj && d.capabilitiesObj?.get('measure_temperature'));
+            if (temperatures) {
+                // @ts-ignore
+                dcs.push(...temperatures);
             }
         }
         return dcs;

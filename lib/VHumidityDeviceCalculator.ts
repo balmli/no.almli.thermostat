@@ -36,16 +36,14 @@ export class VHumidityDeviceCalculator extends DeviceCalculator {
         const dcs: DeviceCapability[] = [];
         if (zone) {
             const zones = Array.isArray(zone) ? zone : [zone];
-            for (const z of zones) {
-                const devices = this.devicesObj.getDevicesFromZones(zones);
-                const humidities = devices
-                    ?.filter(d => d.class === 'sensor')
-                    .filter(d => d.capabilitiesObj && d.capabilitiesObj.has('measure_humidity'))
-                    .map(d => d.capabilitiesObj && d.capabilitiesObj?.get('measure_humidity'));
-                if (humidities) {
-                    // @ts-ignore
-                    dcs.push(...humidities);
-                }
+            const devices = this.devicesObj.getDevicesFromZones(zones);
+            const humidities = devices
+                ?.filter(d => d.class === 'sensor')
+                .filter(d => d.capabilitiesObj && d.capabilitiesObj.has('measure_humidity'))
+                .map(d => d.capabilitiesObj && d.capabilitiesObj?.get('measure_humidity'));
+            if (humidities) {
+                // @ts-ignore
+                dcs.push(...humidities);
             }
         }
         return dcs;

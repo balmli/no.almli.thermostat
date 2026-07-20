@@ -18,7 +18,7 @@ describe('VHumidityDeviceCalculator measurements', () => {
         expect(calculator.getHumiditiesInZone(root).map(value => value.value)).toEqual([40]);
     });
 
-    it.fails('does not duplicate readings when several zones are selected', () => {
+    it('does not duplicate readings when several zones are selected', () => {
         const zones = [makeZone('one'), makeZone('two')];
         const calculator = new VHumidityDeviceCalculator(
             new Zones(),
@@ -28,6 +28,8 @@ describe('VHumidityDeviceCalculator measurements', () => {
             ]),
         );
         expect(calculator.getHumiditiesInZone(zones).map(value => value.value)).toEqual([40, 60]);
+        expect(calculator.getHumiditiesInZone([])).toEqual([]);
+        expect(calculator.getHumiditiesInZone(undefined)).toEqual([]);
     });
 
     it.each([

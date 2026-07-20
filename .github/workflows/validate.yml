@@ -1,0 +1,58 @@
+name: Validate Homey app
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+    pull_request:
+
+permissions:
+    contents: read
+    packages: read
+
+concurrency:
+    group: validate-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    validate:
+        name: Build, check, test, and validate
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@v7
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v7
+              with:
+                  node-version-file: .nvmrc
+                  cache: npm
+
+            - name: Configure GitHub Packages authentication
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN || github.token }}
+              run: npm config set '//npm.pkg.github.com/:_authToken' '${NODE_AUTH_TOKEN}' --location=project
+
+            - name: Install dependencies
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN || github.token }}
+              run: npm ci --ignore-scripts
+
+            - name: Build
+              run: npm run build
+
+            - name: Check formatting and lint
+              run: npm run lint
+
+            - name: Test
+              run: npm test
+
+            - name: Validate for publishing
+              uses: athombv/github-action-homey-app-validate@master
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN || github.token }}
+              with:
+                  level: publish

@@ -31,8 +31,8 @@ The failure can be reproduced and automatically recovered or failed safe, with r
 - Missing target or temperature input deliberately retains the current heater output. Automatically forcing heaters off is not a safe universal default because a sensor outage could leave a home cold or cause frozen pipes.
 - Calculation exceptions are logged and receive bounded automatic recovery attempts after 5 seconds, 30 seconds, and 2 minutes. A later device event starts a fresh calculation sequence.
 - App shutdown remains non-intrusive and does not change heater outputs.
-- Physical capability writes continue to use the confirmation and bounded retry behavior delivered with GitHub #49, so an unconfirmed off command is not mistaken for physical state.
+- Physical capability writes continue to use the confirmation and latest-command reconciliation delivered with GitHub #49, so an unconfirmed off command is not mistaken for physical state and obsolete commands cannot override newer intent.
 - The related all-stale aggregation and awaited physical-write failures were already resolved in their expected-failure tasks and remain covered by the full suite.
-- Regression tests cover output retention for missing inputs, transient calculation recovery, bounded calculation retries, stale-value fallback, rejected writes, capability confirmation, and bounded output retries.
+- Regression tests cover output retention for missing inputs, transient calculation recovery, bounded calculation retries, stale-value fallback, rejected writes, capability confirmation, rapid reversals, and duplicate output suppression.
 
 There is no software-only default that eliminates both overheating and loss-of-heating risk. VThermo does not claim certified safety behavior; independent hardware minimum/maximum temperature protection remains appropriate for the installation.

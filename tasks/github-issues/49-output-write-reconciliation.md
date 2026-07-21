@@ -22,8 +22,8 @@ This overlaps the broader fail-safe work for GitHub #57, but this task specifica
 
 1. Await every physical capability write and preserve error handling and request ordering.
 2. Track desired and last-confirmed physical values separately, or roll back/re-read the cached value after a failed write.
-3. Add bounded, idempotent retry with backoff for safety-critical `onoff: false` writes.
-4. Reconcile actual capability state after timeout or rejection so an intended write cannot permanently suppress later attempts.
+3. Keep the latest desired value pending and allow an opposite command to supersede an earlier queued write.
+4. Reconcile actual capability state after confirmation or rejection so an intended write cannot permanently suppress later commands.
 5. Apply the same guarantees to master-to-child `target_temperature` writes.
 6. Ensure contact-alarm and inactive-state transitions use the reliable shutdown path.
 7. Log the controller decision, write attempt, confirmation, retry, and final failure distinctly.
@@ -38,15 +38,16 @@ This overlaps the broader fail-safe work for GitHub #57, but this task specifica
 
 ## Done when
 
-VThermo cannot report a successfully applied output state solely from an unconfirmed write, failed writes are retried or surfaced clearly, and the regression cases pass.
+VThermo cannot report a successfully applied output state solely from an unconfirmed write, failed writes remain eligible for a later calculation, and the regression cases pass.
 
 ## Resolution
 
 - Physical capability requests no longer overwrite the API-observed value before Homey reports the change through the capability subscription.
 - Delayed and undelayed writes now share one awaited, sequential error-handling path.
-- A rejected or unconfirmed write remains eligible for recalculation instead of being suppressed by an optimistic cached value.
-- Unconfirmed `onoff` and `target_temperature` writes receive at most three automatic attempts, with delays of 5 and 10 seconds before the second and third attempts.
-- A matching capability event clears the pending write; an update still unconfirmed after the third attempt is logged explicitly. Later independent calculations may begin a new bounded attempt sequence.
-- Regression tests cover pending undelayed writes, rejection and retry eligibility, bounded backoff, capability-event confirmation, and continuation after a failed device.
+- A rejected write is cleared so it remains eligible for a later calculation instead of being suppressed by an optimistic cached value.
+- An accepted but unconfirmed command is not resent merely because another calculation runs.
+- A new opposite command supersedes the pending value even when the device still reports the newly desired state. This preserves command order when Homey has queued the earlier write.
+- Matching capability events and refreshed snapshots clear pending writes. Obsolete events do not replace the latest desired command.
+- Regression tests cover pending undelayed writes, rapid command reversal, duplicate suppression, obsolete and matching confirmations, rejected writes, and continuation after a failed device.
 
 Homey capability confirmation is still software-level confirmation, not proof of physical relay state. Independent hardware temperature limits remain appropriate for safety-critical heating.

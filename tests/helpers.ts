@@ -155,5 +155,7 @@ export function makeDevicesStub(devices: Device[]): Devices {
             inZones(zones).some(device => device.getLocalCapabilityValue('alarm_contact')?.value === true),
         hasMotionAlarm: (zones: Zone | Zone[] | undefined) =>
             inZones(zones).some(device => device.getLocalCapabilityValue('alarm_motion')?.value === true),
+        isPhysicalUpdateRequired: (device: Device, capabilityId: string, value: unknown) =>
+            device.hasChangedValue(capabilityId, value),
     } as Devices;
 }

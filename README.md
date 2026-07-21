@@ -184,7 +184,7 @@ Please report issues at the [issues section on Github](https://github.com/balmli
 
 ## Release Notes:
 
-#### 1.11.0
+#### 1.11.1
 
 - Improved Homey device subscription refresh and API lifecycle cleanup
 - Added bounded recovery for transient calculation failures

@@ -30,6 +30,8 @@ module.exports = class VThermoDevice extends BaseDevice {
         this.registerCapabilityListener('target_temperature', async (value: any, opts: any) => {
             // @ts-ignore
             this.homey.app.updateByDataId(this.getData().id, 'target_temperature', value);
+            // @ts-ignore
+            this.homey.app.startCalculation();
         });
     }
 

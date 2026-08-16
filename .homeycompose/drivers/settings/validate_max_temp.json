@@ -2,10 +2,14 @@
   "id": "validate_max_temp",
   "type": "number",
   "label": {
-    "en": "Maximum validate temperature"
+    "en": "Maximum validate temperature",
+    "no": "Maksimal gyldig temperatur",
+    "nl": "Maximale geldige temperatuur"
   },
   "hint": {
-    "en": "Temperatures above this value will not be used when calculating the temperature."
+    "en": "Temperatures above this value will not be used when calculating the temperature.",
+    "no": "Temperaturer over denne verdien vil bli ignorert ved beregning.",
+    "nl": "Temperaturen boven deze waarde worden genegeerd bij de berekening."
   },
   "value": 40,
   "min": -10,

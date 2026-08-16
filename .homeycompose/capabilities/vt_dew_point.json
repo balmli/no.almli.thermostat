@@ -1,0 +1,19 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Dew Point",
+    "no": "Duggpunkt",
+    "nl": "Dauwpunt"
+  },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "insights": true,
+  "units": {
+    "en": "°C",
+    "no": "°C",
+    "nl": "°C"
+  },
+  "decimals": 1,
+  "icon": "/assets/cooling.svg"
+}

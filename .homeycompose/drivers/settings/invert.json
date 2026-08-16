@@ -2,10 +2,14 @@
   "id": "invert",
   "type": "checkbox",
   "label": {
-    "en": "Invert switch"
+    "en": "Invert switch",
+    "no": "Inverter bryterlogikk",
+    "nl": "Schakelaar omkeren"
   },
   "value": false,
   "hint": {
-    "en": "Check this to invert the switching of the device."
+    "en": "Check this to invert the switching of the device.",
+    "no": "Kryss av her for å invertere inn/utkobling av enheten.",
+    "nl": "Vink dit aan om het schakelen van het apparaat om te keren."
   }
 }

@@ -2,10 +2,14 @@
   "id": "devices_sub_zones_thermostats",
   "type": "checkbox",
   "label": {
-    "en": "Thermostats"
+    "en": "Thermostats",
+    "no": "Termostater",
+    "nl": "Thermostaten"
   },
   "value": false,
   "hint": {
-    "en": "Will control thermostats in sub zones (one level down). This is achieved by setting the target temperature above / below the measured temperature."
+    "en": "Will control thermostats in sub zones (one level down). This is achieved by setting the target temperature above / below the measured temperature.",
+    "no": "Styrer termostater i undersoner (ett nivå ned) ved å justere måltemperaturen over/under målt romtemperatur.",
+    "nl": "Bedient thermostaten in subzones (één niveau omlaag) door de doeltemperatuur boven/onder de gemeten temperatuur in te stellen."
   }
 }

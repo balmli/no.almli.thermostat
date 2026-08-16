@@ -1,0 +1,15 @@
+{
+  "id": "vt_overheat_alarm_false",
+  "title": {
+    "en": "Overheat alarm cleared",
+    "no": "Overopphetingsalarm opphørt",
+    "nl": "Oververhittingsalarm opgeheven"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    }
+  ]
+}

@@ -1,7 +1,9 @@
 {
   "id": "vt_onoff_false",
   "title": {
-    "en": "Heating turned off"
+    "en": "Heating turned off",
+    "no": "Oppvarming slått av",
+    "nl": "Verwarmen uitgeschakeld"
   },
   "tokens": [
     {

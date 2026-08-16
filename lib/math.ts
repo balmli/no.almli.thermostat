@@ -28,6 +28,13 @@ export const newest = (arr: any[]) =>
         }))
         .reduce((a, b) => (a.ts > b.ts ? a : b)).value;
 
+export function dewPoint(temperature: number, humidity: number): number {
+    const a = 17.27;
+    const b = 237.7;
+    const alpha = (a * temperature) / (b + temperature) + Math.log(humidity / 100.0);
+    return round((b * alpha) / (a - alpha));
+}
+
 export function guid() {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)

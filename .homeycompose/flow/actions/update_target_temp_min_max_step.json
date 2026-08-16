@@ -1,13 +1,19 @@
 {
   "id": "update_target_temp_min_max_step",
   "title": {
-    "en": "Update target temperature min, max and step"
+    "en": "Set min / max / step for target temperature",
+    "no": "Sett min / maks / trinn for måltemperatur",
+    "nl": "Stel min / max / stap in voor doeltemperatuur"
   },
   "titleFormatted": {
-    "en": "Update target temperature min to [[temp_min]], max to [[temp_max]] and step to [[temp_step]]"
+    "en": "Set target temperature min to [[temp_min]]°, max to [[temp_max]]°, step to [[temp_step]]",
+    "no": "Sett måltemperatur min til [[temp_min]]°, maks til [[temp_max]]°, trinn til [[temp_step]]",
+    "nl": "Stel doeltemperatuur min in op [[temp_min]]°, max op [[temp_max]]°, stap op [[temp_step]]"
   },
   "hint": {
-    "en": "Update minimum, maximum and step for target temperature."
+    "en": "Update minimum, maximum and step for target temperature.",
+    "no": "Oppdater minimum, maksimum og trinn for måltemperatur.",
+    "nl": "Werk minimum, maximum en stap bij voor doeltemperatuur."
   },
   "args": [
     {
@@ -18,7 +24,9 @@
     {
       "name": "temp_min",
       "title": {
-        "en": "Target temperature minimum"
+        "en": "Target temperature minimum",
+        "no": "Minimum måltemperatur",
+        "nl": "Minimum doeltemperatuur"
       },
       "type": "range",
       "value": 1,
@@ -31,7 +39,9 @@
     {
       "name": "temp_max",
       "title": {
-        "en": "Target temperature maximum"
+        "en": "Target temperature maximum",
+        "no": "Maksimum måltemperatur",
+        "nl": "Maximum doeltemperatuur"
       },
       "type": "range",
       "value": 40,
@@ -44,20 +54,26 @@
     {
       "name": "temp_step",
       "title": {
-        "en": "Target temperature step (°C)"
+        "en": "Target temperature step (°C)",
+        "no": "Trinn for måltemperatur (°C)",
+        "nl": "Stap voor doeltemperatuur (°C)"
       },
       "type": "dropdown",
       "values": [
         {
           "id": "STEP50",
-          "label": {
-            "en": "0.50 °C"
+          "title": {
+            "en": "0.50 °C",
+            "no": "0.50 °C",
+            "nl": "0.50 °C"
           }
         },
         {
           "id": "STEP25",
-          "label": {
-            "en": "0.25 °C"
+          "title": {
+            "en": "0.25 °C",
+            "no": "0.25 °C",
+            "nl": "0.25 °C"
           }
         }
       ]

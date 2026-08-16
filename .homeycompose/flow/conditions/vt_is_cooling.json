@@ -1,0 +1,15 @@
+{
+  "id": "vt_is_cooling",
+  "title": {
+    "en": "Cooling is active",
+    "no": "Kjøling er aktiv",
+    "nl": "Koelen is actief"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    }
+  ]
+}

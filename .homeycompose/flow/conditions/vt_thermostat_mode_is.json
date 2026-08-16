@@ -1,0 +1,63 @@
+{
+  "id": "vt_thermostat_mode_is",
+  "title": {
+    "en": "Thermostat mode is",
+    "no": "Termostatmodus er",
+    "nl": "Thermostaatmodus is"
+  },
+  "titleFormatted": {
+    "en": "Thermostat mode is [[mode]]",
+    "no": "Termostatmodus er [[mode]]",
+    "nl": "Thermostaatmodus is [[mode]]"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    },
+    {
+      "name": "mode",
+      "title": {
+        "en": "Mode",
+        "no": "Modus",
+        "nl": "Modus"
+      },
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "auto",
+          "title": {
+            "en": "Auto",
+            "no": "Auto",
+            "nl": "Auto"
+          }
+        },
+        {
+          "id": "heat",
+          "title": {
+            "en": "Heat",
+            "no": "Varme",
+            "nl": "Verwarmen"
+          }
+        },
+        {
+          "id": "cool",
+          "title": {
+            "en": "Cool",
+            "no": "Kjøling",
+            "nl": "Koelen"
+          }
+        },
+        {
+          "id": "off",
+          "title": {
+            "en": "Off",
+            "no": "Av",
+            "nl": "Uit"
+          }
+        }
+      ]
+    }
+  ]
+}

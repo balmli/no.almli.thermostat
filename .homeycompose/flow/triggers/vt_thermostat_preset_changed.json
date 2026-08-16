@@ -1,0 +1,32 @@
+{
+  "id": "vt_thermostat_preset_changed",
+  "title": {
+    "en": "Thermostat preset changed",
+    "no": "Termostatforvalg ble endret",
+    "nl": "Thermostaat voorinstelling gewijzigd"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "preset",
+      "type": "string",
+      "title": {
+        "en": "Preset",
+        "no": "Forvalg",
+        "nl": "Voorinstelling"
+      },
+      "example": "eco"
+    }
+  ],
+  "titleFormatted": {
+    "en": "Thermostat preset changed to [[preset]]",
+    "no": "Termostatforvalg ble endret til [[preset]]",
+    "nl": "Thermostaat voorinstelling gewijzigd naar [[preset]]"
+  }
+}

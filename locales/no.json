@@ -1,0 +1,49 @@
+{
+  "capabilities": {
+    "target_temperature": {
+      "title": "Måltemperatur",
+      "desc": "Måltemperatur"
+    },
+    "measure_temperature": {
+      "title": "Temperatur",
+      "desc": "Gjeldende målt romtemperatur"
+    },
+    "vt_dew_point": {
+      "title": "Duggpunkt",
+      "desc": "Beregnet duggpunkttemperatur"
+    },
+    "vt_condensation_alarm": {
+      "title": "Kondensrisiko",
+      "desc": "Aktiv når romtemperaturen er nær duggpunktet"
+    },
+    "vt_thermostat_preset": {
+      "title": "Termostatforvalg",
+      "desc": "Klimaforvalg (Komfort, Øko, Borte, Boost)"
+    },
+    "thermostat_mode": {
+      "title": "Termostatmodus",
+      "desc": "Driftsmodus (Auto, Varme, Kjøling, Av)"
+    },
+    "vt_cooling": {
+      "title": "Kjøling",
+      "desc": "Kjøling aktiv"
+    },
+    "vt_onoff": {
+      "title": "Varme",
+      "desc": "Oppvarming aktiv"
+    },
+    "vh_target_humidity": {
+      "title": "Målfuktighet",
+      "desc": "Mål for relativ luftfuktighet i prosent"
+    },
+    "vh_target_humidity_view": {
+      "title": "Målfuktighet",
+      "desc": "Visning av målfuktighet"
+    }
+  },
+  "error": {
+    "switching_disabled": "Det er ikke tillatt å slå av enheten",
+    "invalid_temperature_input": "Ugyldig temperatur. Må være mellom -150 °C og 150 °C",
+    "invalid_target_temps": "Ugyldig minimums- eller maksimumstemperatur"
+  }
+}

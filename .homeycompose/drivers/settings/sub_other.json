@@ -2,10 +2,14 @@
   "id": "sub_other",
   "type": "checkbox",
   "label": {
-    "en": "Other devices"
+    "en": "Other devices",
+    "no": "Andre enheter",
+    "nl": "Andere apparaten"
   },
   "value": false,
   "hint": {
-    "en": "Other devices with temperature sensors in sub zones (one level down)."
+    "en": "Other devices with temperature sensors in sub zones (one level down).",
+    "no": "Andre enheter med temperatursensorer i undersoner (ett nivå ned).",
+    "nl": "Andere apparaten met temperatuursensoren in subzones (één niveau omlaag)."
   }
 }

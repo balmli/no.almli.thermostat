@@ -2,20 +2,26 @@
   "id": "target_step",
   "type": "dropdown",
   "label": {
-    "en": "Target temperature step (°C)"
+    "en": "Target temperature step",
+    "no": "Trinn for måltemperatur",
+    "nl": "Stap doeltemperatuur"
   },
   "value": "STEP50",
   "values": [
     {
       "id": "STEP50",
       "label": {
-        "en": "0.50 °C"
+        "en": "0.50 °C",
+        "no": "0.50 °C",
+        "nl": "0.50 °C"
       }
     },
     {
       "id": "STEP25",
       "label": {
-        "en": "0.25 °C"
+        "en": "0.25 °C",
+        "no": "0.25 °C",
+        "nl": "0.25 °C"
       }
     }
   ]

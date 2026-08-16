@@ -1,0 +1,15 @@
+{
+  "id": "devices_sub_zones_sockets_heaters",
+  "type": "checkbox",
+  "label": {
+    "en": "Smart plugs as heaters",
+    "no": "Smarte plugger som varme",
+    "nl": "Slimme stekkers als verwarming"
+  },
+  "value": false,
+  "hint": {
+    "en": "Will control smart sockets/plugs used as heaters in sub zones.",
+    "no": "Styrer smarte plugger/stikkontakter brukt som varmeovner i undersoner.",
+    "nl": "Bedient slimme stekkers gebruikt als verwarmingen in subzones."
+  }
+}

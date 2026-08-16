@@ -1,0 +1,15 @@
+{
+  "id": "vt_condensation_alarm_false",
+  "title": {
+    "en": "Condensation risk cleared",
+    "no": "Kondensrisiko opphørt",
+    "nl": "Condensatierisico opgeheven"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    }
+  ]
+}

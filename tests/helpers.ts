@@ -69,6 +69,9 @@ export function makeVThermo(options: DeviceOptions = {}): Device {
         capabilities: {
             onoff: true,
             [CAPABILITY_ACTIVE]: false,
+            vt_cooling: false,
+            vt_dew_point: 20,
+            vt_condensation_alarm: false,
             target_temperature: 20,
             measure_temperature: 20,
             ...options.capabilities,
@@ -153,6 +156,25 @@ export function makeDevicesStub(devices: Device[]): Devices {
             inZones(zones).filter(device => matchesClass(device, deviceClass)),
         hasContactAlarm: (zones: Zone | Zone[] | undefined) =>
             inZones(zones).some(device => device.getLocalCapabilityValue('alarm_contact')?.value === true),
+        getContactAlarmAge: (zones: Zone | Zone[] | undefined) => {
+            const list = inZones(zones).filter(d => d.getLocalCapabilityValue('alarm_contact')?.value === true);
+            if (list.length > 0) {
+                const now = Date.now();
+                const ages = list.map(d => {
+                    const lu = d.getLocalCapabilityValue('alarm_contact')?.lastUpdated;
+                    const ts = typeof lu === 'number' ? lu : new Date(lu).getTime();
+                    return now - (isNaN(ts) ? now : ts);
+                });
+                return Math.max(...ages);
+            }
+            return undefined;
+        },
+        getHumidityInZone: (zones: Zone | Zone[] | undefined) => {
+            const list = inZones(zones)
+                .map(d => d.getLocalCapabilityValue('measure_humidity')?.value)
+                .filter(v => typeof v === 'number' && !isNaN(v));
+            return list.length > 0 ? list[0] : undefined;
+        },
         hasMotionAlarm: (zones: Zone | Zone[] | undefined) =>
             inZones(zones).some(device => device.getLocalCapabilityValue('alarm_motion')?.value === true),
         isPhysicalUpdateRequired: (device: Device, capabilityId: string, value: unknown) =>

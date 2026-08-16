@@ -2,10 +2,14 @@
   "id": "target_diff_temp",
   "type": "number",
   "label": {
-    "en": "Target temperature offset"
+    "en": "Target temperature offset",
+    "no": "Forskyvning av måltemperatur",
+    "nl": "Doeltemperatuur compensatie"
   },
   "hint": {
-    "en": "Offset when the target temperature is updated from a master VThermo - thermostat."
+    "en": "Offset when the target temperature is updated from a master VThermo - thermostat.",
+    "no": "Forskyvning når måltemperaturen oppdateres fra en overordnet termostat.",
+    "nl": "Compensatie wanneer de doeltemperatuur wordt bijgewerkt vanaf een hoofdthermostaat."
   },
   "value": 0,
   "min": -30,

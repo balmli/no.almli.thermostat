@@ -1,14 +1,18 @@
 {
   "id": "vh_target_humidity_changed",
   "title": {
-    "en": "Target humidity changed"
+    "en": "Target humidity changed",
+    "no": "Målfuktighet ble endret",
+    "nl": "Doelluchtvochtigheid gewijzigd"
   },
   "tokens": [
     {
       "name": "humidity",
       "type": "number",
       "title": {
-        "en": "Humidity"
+        "en": "Target humidity",
+        "no": "Målfuktighet",
+        "nl": "Doelluchtvochtigheid"
       },
       "example": 35
     }
@@ -19,5 +23,10 @@
       "type": "device",
       "filter": "driver_id=VHumidity"
     }
-  ]
+  ],
+  "titleFormatted": {
+    "en": "Target humidity changed to [[humidity]]%",
+    "no": "Målfuktighet ble endret til [[humidity]]%",
+    "nl": "Doelluchtvochtigheid gewijzigd naar [[humidity]]%"
+  }
 }

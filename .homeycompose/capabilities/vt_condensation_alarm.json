@@ -1,0 +1,28 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Condensation Risk",
+    "no": "Kondensrisiko",
+    "nl": "Condensatierisico"
+  },
+  "desc": {
+    "en": "Active when room temperature is close to the dew point and cooling is suppressed.",
+    "no": "Aktiv når romtemperaturen er nær duggpunktet og kjøling undertrykkes.",
+    "nl": "Actief wanneer de kamertemperatuur dicht bij het dauwpunt ligt en koeling wordt onderdrukt."
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/droplet.svg",
+  "insights": true,
+  "insightsTitleTrue": {
+    "en": "Risk",
+    "no": "Risiko",
+    "nl": "Risico"
+  },
+  "insightsTitleFalse": {
+    "en": "Normal",
+    "no": "Normal",
+    "nl": "Normaal"
+  }
+}

@@ -6,11 +6,29 @@ export class Zone {
 }
 
 export enum DeviceClass {
+    airconditioner = 'airconditioner',
     heater = 'heater',
     fan = 'fan',
+    refrigerator = 'refrigerator',
+    sensor = 'sensor',
+    socket = 'socket',
     thermostat = 'thermostat',
     vthermo = 'vthermo',
     vhumidity = 'vhumidity',
+}
+
+export enum ThermostatMode {
+    AUTO = 'auto',
+    HEAT = 'heat',
+    COOL = 'cool',
+    OFF = 'off',
+}
+
+export enum ThermostatPreset {
+    COMFORT = 'comfort',
+    ECO = 'eco',
+    AWAY = 'away',
+    BOOST = 'boost',
 }
 
 export class DeviceCapability {
@@ -152,9 +170,13 @@ export class DeviceRequests {
 export const DRIVER_VTHERMO = 'homey:app:no.almli.thermostat:VThermo';
 export const DRIVER_VHUMIDITY = 'homey:app:no.almli.thermostat:VHumidity';
 
-export const SUPPORTED_CLASSES = ['fan', 'heater', 'sensor', 'socket', 'thermostat'];
+export const SUPPORTED_CLASSES = ['airconditioner', 'fan', 'heater', 'refrigerator', 'sensor', 'socket', 'thermostat'];
 
 export const CAPABILITY_ACTIVE = 'vt_onoff';
+export const CAPABILITY_COOLING = 'vt_cooling';
+export const CAPABILITY_PRESET = 'vt_thermostat_preset';
+export const CAPABILITY_DEW_POINT = 'vt_dew_point';
+export const CAPABILITY_CONDENSATION_ALARM = 'vt_condensation_alarm';
 
 export const SUPPORTED_CAPABILITIES = [
     'onoff',
@@ -162,13 +184,27 @@ export const SUPPORTED_CAPABILITIES = [
     'measure_humidity',
     'target_temperature',
     'thermostat_mode',
+    CAPABILITY_PRESET,
+    CAPABILITY_DEW_POINT,
+    CAPABILITY_CONDENSATION_ALARM,
     'alarm_contact',
     'alarm_motion',
     CAPABILITY_ACTIVE,
+    CAPABILITY_COOLING,
     'vh_target_humidity',
 ];
 
-export const SUPPORTED_UPDATE_CAPABILITIES = ['onoff', 'target_temperature'];
+export const SUPPORTED_UPDATE_CAPABILITIES = [
+    'onoff',
+    'measure_temperature',
+    'target_temperature',
+    CAPABILITY_ACTIVE,
+    CAPABILITY_COOLING,
+    CAPABILITY_DEW_POINT,
+    CAPABILITY_CONDENSATION_ALARM,
+    'vh_target_humidity',
+    'vh_target_humidity_view',
+];
 
 export enum CalcMethod {
     AVERAGE = 'AVERAGE',
@@ -198,6 +234,9 @@ export class TemperatureSettings {
 
 export class DeviceSettingssZone {
     clazz?: boolean;
+    coolers?: boolean;
+    sockets_heaters?: boolean;
+    sockets_coolers?: boolean;
     thermostats?: boolean;
 }
 
@@ -205,11 +244,21 @@ export class DeviceSettings {
     zone?: DeviceSettingssZone;
     sub_zones?: DeviceSettingssZone;
     contactAlarm?: boolean;
+    contactAlarmDelay?: number; // in millis
     motionAlarm?: boolean;
     hysteresis?: number;
     invert?: boolean;
     onoffEnabled?: boolean;
     deviceDelay?: number;
+    minOffDuration?: number; // in millis
+    minOnDuration?: number; // in millis
+    presetEcoOffset?: number;
+    presetAwayTemp?: number;
+    presetBoostOffset?: number;
+    failsafeEnabled?: boolean;
+    frostAlarmTemp?: number;
+    overheatAlarmTemp?: number;
+    condensationProtection?: boolean;
 }
 
 export class TargetSettingsZone {

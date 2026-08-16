@@ -27,6 +27,8 @@ describe('Devices registry', () => {
     it('accepts supported classes and temperature/alarm capabilities', () => {
         const devices = new Devices();
         expect(devices.validAndSupported(makeApiDevice({deviceClass: DeviceClass.fan}))).toBe(true);
+        expect(devices.validAndSupported(makeApiDevice({deviceClass: DeviceClass.airconditioner}))).toBe(true);
+        expect(devices.validAndSupported(makeApiDevice({deviceClass: DeviceClass.refrigerator}))).toBe(true);
         expect(
             devices.validAndSupported(makeApiDevice({deviceClass: 'other', capabilities: {measure_temperature: 20}})),
         ).toBe(true);

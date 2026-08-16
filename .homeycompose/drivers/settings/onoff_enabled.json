@@ -2,10 +2,14 @@
   "id": "onoff_enabled",
   "type": "checkbox",
   "label": {
-    "en": "On / off enabled"
+    "en": "On / off enabled",
+    "no": "På / av aktivert",
+    "nl": "Aan / uit ingeschakeld"
   },
   "value": true,
   "hint": {
-    "en": "When unchecked, the device cannot be turned off and its on/off switch will remain on."
+    "en": "When unchecked, the device cannot be turned off and its on/off switch will remain on.",
+    "no": "Når denne er avkrysset, kan ikke enheten slås av, og av/på-bryteren forblir på.",
+    "nl": "Wanneer uitgeschakeld kan het apparaat niet worden uitgezet en blijft de aan/uit-schakelaar aan."
   }
 }

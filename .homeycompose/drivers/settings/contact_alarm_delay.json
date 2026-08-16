@@ -1,0 +1,23 @@
+{
+  "id": "contact_alarm_delay",
+  "type": "number",
+  "label": {
+    "en": "Contact alarm delay",
+    "no": "Forsinkelse for kontaktalarm",
+    "nl": "Vertraging contactalarm"
+  },
+  "hint": {
+    "en": "Delay in seconds before turning off devices when a door/window contact alarm is triggered. Prevents turning off on brief openings.",
+    "no": "Forsinkelse i sekunder før enheter slås av ved åpent vindu/dør. Forhindrer unødig utkobling ved rask lufting.",
+    "nl": "Vertraging in seconden voordat apparaten worden uitgeschakeld bij een open raam/deur."
+  },
+  "value": 0,
+  "min": 0,
+  "max": 600,
+  "step": 1,
+  "units": {
+    "en": "s",
+    "no": "s",
+    "nl": "s"
+  }
+}

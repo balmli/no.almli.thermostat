@@ -1,0 +1,15 @@
+{
+  "id": "vt_is_overheat_alarm",
+  "title": {
+    "en": "Overheat alarm is active",
+    "no": "Overopphetingsalarm er aktiv",
+    "nl": "Oververhittingsalarm is actief"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    }
+  ]
+}

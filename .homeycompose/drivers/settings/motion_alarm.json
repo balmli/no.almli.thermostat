@@ -2,10 +2,14 @@
   "id": "motion_alarm",
   "type": "checkbox",
   "label": {
-    "en": "Turn on if motion alarm"
+    "en": "Turn on if motion alarm",
+    "no": "Slå på ved bevegelsesalarm",
+    "nl": "Inschakelen bij bewegingsalarm"
   },
   "value": false,
   "hint": {
-    "en": "Will turn on if motion alarm in the same zone."
+    "en": "Will turn on if motion alarm in the same zone.",
+    "no": "Slås på ved bevegelsesalarm i samme sone.",
+    "nl": "Schakelt in bij bewegingsalarm in dezelfde zone."
   }
 }

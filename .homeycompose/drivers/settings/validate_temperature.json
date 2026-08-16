@@ -2,10 +2,14 @@
   "id": "validate_temperature",
   "type": "checkbox",
   "label": {
-    "en": "Validate temperatures"
+    "en": "Validate temperatures",
+    "no": "Valider temperaturer",
+    "nl": "Valideer temperaturen"
   },
   "value": false,
   "hint": {
-    "en": "Check this to only accept temperatures in the validate min / max range. Temperatures outside this range not will be used when calculating the temperature."
+    "en": "Check this to only accept temperatures in the validate min / max range. Temperatures outside this range not will be used when calculating the temperature.",
+    "no": "Huk av her for kun å godta temperaturer innenfor gyldighetsområdet.",
+    "nl": "Vink dit aan om alleen temperaturen binnen het validatiebereik te accepteren."
   }
 }

@@ -2,10 +2,14 @@
   "id": "parent_other",
   "type": "checkbox",
   "label": {
-    "en": "Other devices"
+    "en": "Other devices",
+    "no": "Andre enheter",
+    "nl": "Andere apparaten"
   },
   "value": false,
   "hint": {
-    "en": "Other devices with temperature sensors in the parent zone."
+    "en": "Other devices with temperature sensors in the parent zone.",
+    "no": "Andre enheter med temperatursensorer i overordnet sone.",
+    "nl": "Andere apparaten met temperatuursensoren in de bovenliggende zone."
   }
 }

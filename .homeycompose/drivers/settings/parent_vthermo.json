@@ -2,10 +2,14 @@
   "id": "parent_vthermo",
   "type": "checkbox",
   "label": {
-    "en": "Other VThermos"
+    "en": "Other VThermos",
+    "no": "Andre VThermos",
+    "nl": "Andere VThermos"
   },
   "value": false,
   "hint": {
-    "en": "Other VThermos in the parent zone."
+    "en": "Other VThermos in the parent zone.",
+    "no": "Andre VThermoer i overordnet sone.",
+    "nl": "Andere VThermo's in de bovenliggende zone."
   }
 }

@@ -2,10 +2,14 @@
   "id": "devices_sub_zones_heaters",
   "type": "checkbox",
   "label": {
-    "en": "Heaters"
+    "en": "Heaters",
+    "no": "Varmeovner",
+    "nl": "Verwarmingselementen"
   },
   "value": false,
   "hint": {
-    "en": "Will control heaters in sub zones (one level down)."
+    "en": "Will control heaters in sub zones (one level down).",
+    "no": "Styrer varmeovner i undersoner (ett nivå ned).",
+    "nl": "Bedient verwarmingen in subzones (één niveau omlaag)."
   }
 }

@@ -2,10 +2,14 @@
   "id": "sub_sensors",
   "type": "checkbox",
   "label": {
-    "en": "Temperature sensors"
+    "en": "Temperature sensors",
+    "no": "Temperatursensorer",
+    "nl": "Temperatuursensoren"
   },
   "value": false,
   "hint": {
-    "en": "Standard temperature sensors in sub zones (one level down)."
+    "en": "Standard temperature sensors in sub zones (one level down).",
+    "no": "Standard temperatursensorer i undersoner (ett nivå ned).",
+    "nl": "Standaard temperatuursensoren in subzones (één niveau omlaag)."
   }
 }

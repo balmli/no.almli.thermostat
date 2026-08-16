@@ -2,7 +2,9 @@
   {
     "type": "group",
     "label": {
-      "en": "Humidity"
+      "en": "Humidity",
+      "no": "Luftfuktighet",
+      "nl": "Luchtvochtigheid"
     },
     "children": [
       {
@@ -18,7 +20,9 @@
   {
     "type": "group",
     "label": {
-      "en": "General settings"
+      "en": "General settings",
+      "no": "Generelle innstillinger",
+      "nl": "Algemene instellingen"
     },
     "children": [
       {
@@ -26,14 +30,18 @@
         "id": "hysteresis",
         "value": 1,
         "hint": {
-          "en": "With a hysteresis value of 1, the humidity will vary between 1 below and 1 above the target. A value of 0 switches whenever the humidity crosses the target and may cause rapid switching."
+          "en": "With a hysteresis value of 1, the humidity will vary between 1 below and 1 above the target. A value of 0 switches whenever the humidity crosses the target and may cause rapid switching.",
+          "no": "Med en hystereseverdi på 1 vil luftfuktigheten variere mellom 1 under og 1 over målet. En verdi på 0 kobler hver gang fuktigheten krysser målet.",
+          "nl": "Met een hysteresiswaarde van 1 varieert de luchtvochtigheid tussen 1 onder en 1 boven het doel. Een waarde van 0 schakelt zodra de vochtigheid het doel kruist."
         }
       },
       {
         "$extends": "invert",
         "id": "invert",
         "label": {
-          "en": "Invert for humidifier"
+          "en": "Invert for humidifier",
+          "no": "Inverter for luftfukter",
+          "nl": "Omkeren voor luchtbevochtiger"
         }
       },
       {
@@ -45,7 +53,9 @@
   {
     "type": "group",
     "label": {
-      "en": "Timing"
+      "en": "Timing",
+      "no": "Tidsstyring",
+      "nl": "Timing"
     },
     "children": [
       {

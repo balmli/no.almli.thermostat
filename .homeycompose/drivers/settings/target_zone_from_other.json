@@ -2,10 +2,14 @@
   "id": "target_zone_from_other",
   "type": "checkbox",
   "label": {
-    "en": "From other thermostat"
+    "en": "From other thermostat",
+    "no": "Fra annen termostat",
+    "nl": "Van andere thermostaat"
   },
   "value": false,
   "hint": {
-    "en": "Update target temperature on this VThermo from another thermostat in the same zone."
+    "en": "Update target temperature on this VThermo from another thermostat in the same zone.",
+    "no": "Oppdater måltemperatur på denne VThermoen fra en annen termostat i samme sone.",
+    "nl": "Doeltemperatuur op deze VThermo bijwerken vanaf een andere thermostaat in dezelfde zone."
   }
 }

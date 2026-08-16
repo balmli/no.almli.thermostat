@@ -1,0 +1,32 @@
+{
+  "id": "vt_dew_point_changed",
+  "title": {
+    "en": "The dew point changed",
+    "no": "Duggpunktet ble endret",
+    "nl": "Het dauwpunt is gewijzigd"
+  },
+  "titleFormatted": {
+    "en": "The dew point changed to [[dew_point]]°",
+    "no": "Duggpunktet ble endret til [[dew_point]]°",
+    "nl": "Het dauwpunt is gewijzigd naar [[dew_point]]°"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "dew_point",
+      "type": "number",
+      "title": {
+        "en": "Dew point (°C)",
+        "no": "Duggpunkt (°C)",
+        "nl": "Dauwpunt (°C)"
+      },
+      "example": 14.5
+    }
+  ]
+}

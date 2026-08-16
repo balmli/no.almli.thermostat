@@ -1,0 +1,49 @@
+{
+  "capabilities": {
+    "target_temperature": {
+      "title": "Doeltemperatuur",
+      "desc": "Doeltemperatuur"
+    },
+    "measure_temperature": {
+      "title": "Temperatuur",
+      "desc": "Huidige gemeten kamertemperatuur"
+    },
+    "vt_dew_point": {
+      "title": "Dauwpunt",
+      "desc": "Berekende dauwpunttemperatuur"
+    },
+    "vt_condensation_alarm": {
+      "title": "Condensatierisico",
+      "desc": "Actief wanneer de kamertemperatuur dicht bij het dauwpunt ligt"
+    },
+    "vt_thermostat_preset": {
+      "title": "Thermostaat voorinstelling",
+      "desc": "Klimaatvoorinstelling (Comfort, Eco, Afwezig, Boost)"
+    },
+    "thermostat_mode": {
+      "title": "Thermostaatmodus",
+      "desc": "Klimaatmodus (Auto, Verwarmen, Koelen, Uit)"
+    },
+    "vt_cooling": {
+      "title": "Koelen",
+      "desc": "Koelen actief"
+    },
+    "vt_onoff": {
+      "title": "Verwarmen",
+      "desc": "Verwarmen actief"
+    },
+    "vh_target_humidity": {
+      "title": "Doelluchtvochtigheid",
+      "desc": "Doel voor relatieve luchtvochtigheid in procenten"
+    },
+    "vh_target_humidity_view": {
+      "title": "Doelluchtvochtigheid",
+      "desc": "Weergave doelluchtvochtigheid"
+    }
+  },
+  "error": {
+    "switching_disabled": "Het uitschakelen van het apparaat is uitgeschakeld",
+    "invalid_temperature_input": "Ongeldige temperatuur. Moet tussen -150 °C en 150 °C liggen",
+    "invalid_target_temps": "Ongeldige minimum- of maximumtemperatuur"
+  }
+}

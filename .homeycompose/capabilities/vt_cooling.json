@@ -1,0 +1,23 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Cooling",
+    "no": "Kjøling",
+    "nl": "Koelen"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/cooling.svg",
+  "insights": true,
+  "insightsTitleTrue": {
+    "en": "Active",
+    "no": "Aktiv",
+    "nl": "Actief"
+  },
+  "insightsTitleFalse": {
+    "en": "Idle",
+    "no": "Inaktiv",
+    "nl": "Inactief"
+  }
+}

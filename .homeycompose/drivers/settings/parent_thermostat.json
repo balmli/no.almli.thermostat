@@ -2,10 +2,14 @@
   "id": "parent_thermostat",
   "type": "checkbox",
   "label": {
-    "en": "Other thermostats"
+    "en": "Other thermostats",
+    "no": "Andre termostater",
+    "nl": "Andere thermostaten"
   },
   "value": false,
   "hint": {
-    "en": "Other thermostats with temperature sensors in the parent zone."
+    "en": "Other thermostats with temperature sensors in the parent zone.",
+    "no": "Andre termostater med temperatursensorer i overordnet sone.",
+    "nl": "Andere thermostaten met temperatuursensoren in de bovenliggende zone."
   }
 }

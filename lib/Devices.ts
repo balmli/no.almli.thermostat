@@ -289,6 +289,48 @@ export class Devices {
     }
 
     /**
+     * Returns the duration in milliseconds that an active contact alarm has been open in the zone.
+     * @param zone
+     */
+    getContactAlarmAge(zone: Zone | Zone[] | undefined): number | undefined {
+        if (zone) {
+            const zones = Array.isArray(zone) ? zone : [zone];
+            const withContactAlarm = this.getDevicesFromZones(zones)
+                ?.filter(d => d.class === 'sensor')
+                ?.filter(d => d.hasCapability('alarm_contact'))
+                ?.filter(d => d.getLocalCapabilityValue('alarm_contact')?.value === true);
+            if (withContactAlarm && withContactAlarm.length > 0) {
+                const now = Date.now();
+                const ages = withContactAlarm.map(d => {
+                    const lu = d.getLocalCapabilityValue('alarm_contact')?.lastUpdated;
+                    const ts = typeof lu === 'number' ? lu : new Date(lu).getTime();
+                    return now - (isNaN(ts) ? now : ts);
+                });
+                return Math.max(...ages);
+            }
+        }
+        return undefined;
+    }
+
+    /**
+     * Returns measured humidity for the zone if available.
+     * @param zone
+     */
+    getHumidityInZone(zone: Zone | Zone[] | undefined): number | undefined {
+        if (zone) {
+            const zones = Array.isArray(zone) ? zone : [zone];
+            const withHumidity = this.getDevicesFromZones(zones)
+                ?.filter(d => d.hasCapability('measure_humidity'))
+                ?.map(d => d.getLocalCapabilityValue('measure_humidity')?.value)
+                ?.filter(v => typeof v === 'number' && !isNaN(v));
+            if (withHumidity && withHumidity.length > 0) {
+                return withHumidity[0];
+            }
+        }
+        return undefined;
+    }
+
+    /**
      * Returns true if there is a sensor with a motion alarm in the zone.
      * @param zone
      */
@@ -507,9 +549,11 @@ export class Devices {
                             localDevice.getValueStore().addValue(dr.value);
                         }
                         if (!!dr.trigger) {
+                            const tokens =
+                                dr.capabilityId === 'vt_dew_point' ? {dew_point: dr.value} : {state: dr.value ? 1 : 0};
                             await this.homey?.flow
                                 .getDeviceTriggerCard(dr.trigger)
-                                .trigger(localDevice, {state: dr.value ? 1 : 0}, {})
+                                .trigger(localDevice, tokens, {})
                                 .catch((err: any) =>
                                     this.logger?.error(`Trigger failed: ${dr.id} ${dr.capabilityId}:`, err),
                                 );

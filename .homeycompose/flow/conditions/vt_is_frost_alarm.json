@@ -1,0 +1,15 @@
+{
+  "id": "vt_is_frost_alarm",
+  "title": {
+    "en": "Frost alarm is active",
+    "no": "Frostalarm er aktiv",
+    "nl": "Vorstalarm is actief"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    }
+  ]
+}

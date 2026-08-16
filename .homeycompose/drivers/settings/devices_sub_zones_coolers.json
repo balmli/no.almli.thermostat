@@ -1,0 +1,15 @@
+{
+  "id": "devices_sub_zones_coolers",
+  "type": "checkbox",
+  "label": {
+    "en": "Coolers",
+    "no": "Klimaanlegg og vifter",
+    "nl": "Airconditioners en ventilatoren"
+  },
+  "value": false,
+  "hint": {
+    "en": "Will control coolers (air conditioners, fans, refrigerators) in sub zones.",
+    "no": "Styrer kjøleenheter (klimaanlegg, vifter, kjøleskap) i undersoner.",
+    "nl": "Bedient koelapparaten (airconditioners, ventilatoren, koelkasten) in subzones."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "condensation_protection",
+  "type": "checkbox",
+  "label": {
+    "en": "Dew point / condensation protection",
+    "no": "Kondens- og duggpunktbeskyttelse",
+    "nl": "Condensatie- en dauwpuntbescherming"
+  },
+  "hint": {
+    "en": "Automatically suppress cooling if room temperature approaches the dew point calculated from humidity in the same zone.",
+    "no": "Undertrykk kjøling hvis romtemperaturen nærmer seg det beregnede duggpunktet for å forhindre kondens.",
+    "nl": "Onderdruk koeling als de kamertemperatuur het berekende dauwpunt nadert om condensatie te voorkomen."
+  },
+  "value": false
+}

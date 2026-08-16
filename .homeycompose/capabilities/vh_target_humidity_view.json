@@ -1,13 +1,19 @@
 {
   "type": "number",
   "title": {
-    "en": "Target humidity"
+    "en": "Target humidity",
+    "no": "Målfuktighet",
+    "nl": "Doelluchtvochtigheid"
   },
   "desc": {
-    "en": "Target humidity in percent (%)"
+    "en": "Target humidity in percent (%)",
+    "no": "Mål for luftfuktighet i prosent (%)",
+    "nl": "Doelluchtvochtigheid in procenten (%)"
   },
   "units": {
-    "en": "%"
+    "en": "%",
+    "no": "%",
+    "nl": "%"
   },
   "insights": false,
   "getable": true,

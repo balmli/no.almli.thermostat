@@ -1,0 +1,23 @@
+{
+  "id": "min_on_duration",
+  "type": "number",
+  "label": {
+    "en": "Minimum on duration",
+    "no": "Minimum på-tid",
+    "nl": "Minimale aan-tijd"
+  },
+  "hint": {
+    "en": "Minimum duration a device must remain on before being allowed to switch back off.",
+    "no": "Minimumstid en enhet må forbli på før den kan slås av igjen.",
+    "nl": "Minimale duur dat een apparaat ingeschakeld moet blijven voordat het weer mag uitschakelen."
+  },
+  "value": 0,
+  "min": 0,
+  "max": 3600,
+  "step": 1,
+  "units": {
+    "en": "s",
+    "no": "s",
+    "nl": "s"
+  }
+}

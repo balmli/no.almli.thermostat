@@ -1,0 +1,15 @@
+{
+  "id": "failsafe_enabled",
+  "type": "checkbox",
+  "label": {
+    "en": "Fail-safe sensor protection",
+    "no": "Feilsikker sensorbeskyttelse",
+    "nl": "Fail-safe sensorbescherming"
+  },
+  "hint": {
+    "en": "Automatically turn off heaters and coolers if all temperature sensors in the zone are unavailable, stale, or reporting null.",
+    "no": "Slå av varme og kjøling automatisk dersom temperatursensoren blir utilgjengelig eller mangler verdi.",
+    "nl": "Schakel verwarming en koeling automatisch uit als de temperatuursensor onbeschikbaar wordt."
+  },
+  "value": true
+}

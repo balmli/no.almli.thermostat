@@ -1,0 +1,32 @@
+{
+  "id": "vt_thermostat_mode_changed",
+  "title": {
+    "en": "Thermostat mode changed",
+    "no": "Termostatmodus ble endret",
+    "nl": "Thermostaatmodus gewijzigd"
+  },
+  "tokens": [
+    {
+      "name": "mode",
+      "type": "string",
+      "title": {
+        "en": "Mode",
+        "no": "Modus",
+        "nl": "Modus"
+      },
+      "example": "heat"
+    }
+  ],
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    }
+  ],
+  "titleFormatted": {
+    "en": "Thermostat mode changed to [[mode]]",
+    "no": "Termostatmodus ble endret til [[mode]]",
+    "nl": "Thermostaatmodus gewijzigd naar [[mode]]"
+  }
+}

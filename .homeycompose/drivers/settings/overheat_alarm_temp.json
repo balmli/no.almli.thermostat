@@ -1,0 +1,23 @@
+{
+  "id": "overheat_alarm_temp",
+  "type": "number",
+  "label": {
+    "en": "Overheat alarm limit temperature",
+    "no": "Grensetemperatur for overopphetingsalarm",
+    "nl": "Grenstemperatuur voor oververhittingsalarm"
+  },
+  "hint": {
+    "en": "Triggers an overheat alarm flow and safety shutdown if temperature rises above this value. Set 0 to disable.",
+    "no": "Utløser overopphetingsalarm og kutter oppvarming hvis temperaturen stiger over denne verdien. Sett 0 for å deaktivere.",
+    "nl": "Activeert oververhittingsalarm en stopt verwarming als de temperatuur boven deze waarde stijgt."
+  },
+  "value": 40,
+  "min": 0,
+  "max": 60,
+  "step": 0.5,
+  "units": {
+    "en": "°C",
+    "no": "°C",
+    "nl": "°C"
+  }
+}

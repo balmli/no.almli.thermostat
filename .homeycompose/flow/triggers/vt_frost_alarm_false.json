@@ -1,0 +1,15 @@
+{
+  "id": "vt_frost_alarm_false",
+  "title": {
+    "en": "Frost alarm cleared",
+    "no": "Frostalarm opphørt",
+    "nl": "Vorstalarm opgeheven"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    }
+  ]
+}

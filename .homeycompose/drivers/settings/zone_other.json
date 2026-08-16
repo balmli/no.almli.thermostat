@@ -2,10 +2,14 @@
   "id": "zone_other",
   "type": "checkbox",
   "label": {
-    "en": "Other devices"
+    "en": "Other devices",
+    "no": "Andre enheter",
+    "nl": "Andere apparaten"
   },
   "value": false,
   "hint": {
-    "en": "Other devices with temperature sensors in the same zone."
+    "en": "Other devices with temperature sensors in the same zone.",
+    "no": "Andre enheter med temperatursensorer i samme sone.",
+    "nl": "Andere apparaten met temperatuursensoren in dezelfde zone."
   }
 }

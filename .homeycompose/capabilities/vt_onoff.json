@@ -1,7 +1,9 @@
 {
   "type": "boolean",
   "title": {
-    "en": "State"
+    "en": "State",
+    "no": "Status",
+    "nl": "Status"
   },
   "getable": true,
   "setable": false,
@@ -9,9 +11,13 @@
   "icon": "/assets/heating.svg",
   "insights": true,
   "insightsTitleTrue": {
-    "en": "Active"
+    "en": "Active",
+    "no": "Aktiv",
+    "nl": "Actief"
   },
   "insightsTitleFalse": {
-    "en": "Idle"
+    "en": "Idle",
+    "no": "Inaktiv",
+    "nl": "Inactief"
   }
 }

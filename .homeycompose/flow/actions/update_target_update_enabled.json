@@ -1,13 +1,19 @@
 {
   "id": "update_target_update_enabled",
   "title": {
-    "en": "Enable or disable target temperature update"
+    "en": "Enable or disable target temperature update",
+    "no": "Aktiver eller deaktiver oppdatering av måltemperatur",
+    "nl": "Doeltemperatuur bijwerken in- of uitschakelen"
   },
   "titleFormatted": {
-    "en": "[[enabled]] target temperature update"
+    "en": "[[enabled]] target temperature update",
+    "no": "[[enabled]] oppdatering av måltemperatur",
+    "nl": "[[enabled]] doeltemperatuur bijwerken"
   },
   "hint": {
-    "en": "Enable or disable being updated from a master VThermo - thermostat."
+    "en": "Enable or disable being updated from a master VThermo - thermostat.",
+    "no": "Aktiver eller deaktiver å bli oppdatert fra en overordnet VThermo-termostat.",
+    "nl": "Schakel bijwerken vanaf een hoofd VThermo-thermostaat in of uit."
   },
   "args": [
     {
@@ -18,20 +24,26 @@
     {
       "name": "enabled",
       "title": {
-        "en": "Target temperature update enabled or disabled"
+        "en": "Target temperature update",
+        "no": "Oppdatering av måltemperatur",
+        "nl": "Doeltemperatuur bijwerken"
       },
       "type": "dropdown",
       "values": [
         {
           "id": "false",
-          "label": {
-            "en": "Disable"
+          "title": {
+            "en": "Disable",
+            "no": "Deaktiver",
+            "nl": "Uitschakelen"
           }
         },
         {
           "id": "true",
-          "label": {
-            "en": "Enable"
+          "title": {
+            "en": "Enable",
+            "no": "Aktiver",
+            "nl": "Inschakelen"
           }
         }
       ]

@@ -2,16 +2,20 @@
   "id": "ignore_old_measurements",
   "type": "number",
   "label": {
-    "en": "Ignore old measurements"
+    "en": "Ignore old measurements",
+    "no": "Ignorer gamle målinger",
+    "nl": "Oude metingen negeren"
   },
   "hint": {
-    "en": "To ignore old measurements, set a value larger than 0. A value of eg. 7200 will ignore meaurements older than 2 hours (7200 seconds). Only used for Average, Minimum and Maximum, and when there are two or more sensors."
+    "en": "To ignore old measurements, set a value larger than 0. A value of eg. 7200 will ignore meaurements older than 2 hours (7200 seconds). Only used for Average, Minimum and Maximum, and when there are two or more sensors.",
+    "no": "For å ignorere gamle målinger, sett en verdi større enn 0 sekunder. F.eks. 7200 ignorerer målinger eldre enn 2 timer.",
+    "nl": "Om oude metingen te negeren, stel een waarde in groter dan 0 seconden."
   },
   "value": 0,
   "min": 0,
   "max": 86400,
   "step": 1,
   "units": {
-    "en": "seconds"
+    "en": "s"
   }
 }

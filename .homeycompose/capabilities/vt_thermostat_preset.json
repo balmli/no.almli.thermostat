@@ -1,0 +1,50 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Thermostat Preset",
+    "no": "Termostatforvalg",
+    "nl": "Thermostaat voorinstelling"
+  },
+  "desc": {
+    "en": "Climate preset mode (Comfort, Eco, Away, Boost)",
+    "no": "Klimaforvalg (Komfort, Øko, Borte, Boost)",
+    "nl": "Klimaatvoorinstelling (Comfort, Eco, Afwezig, Boost)"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "picker",
+  "values": [
+    {
+      "id": "comfort",
+      "title": {
+        "en": "Comfort",
+        "no": "Komfort",
+        "nl": "Comfort"
+      }
+    },
+    {
+      "id": "eco",
+      "title": {
+        "en": "Eco",
+        "no": "Øko",
+        "nl": "Eco"
+      }
+    },
+    {
+      "id": "away",
+      "title": {
+        "en": "Away",
+        "no": "Borte",
+        "nl": "Afwezig"
+      }
+    },
+    {
+      "id": "boost",
+      "title": {
+        "en": "Boost",
+        "no": "Boost",
+        "nl": "Boost"
+      }
+    }
+  ]
+}

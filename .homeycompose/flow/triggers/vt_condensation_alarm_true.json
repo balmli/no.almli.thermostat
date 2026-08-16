@@ -1,0 +1,20 @@
+{
+  "id": "vt_condensation_alarm_true",
+  "title": {
+    "en": "Condensation risk detected",
+    "no": "Kondensrisiko oppdaget",
+    "nl": "Condensatierisico gedetecteerd"
+  },
+  "hint": {
+    "en": "Triggered when room temperature approaches dew point during cooling.",
+    "no": "Utløses når romtemperaturen nærmer seg duggpunktet under kjøling.",
+    "nl": "Wordt geactiveerd wanneer de kamertemperatuur tijdens het koelen het dauwpunt nadert."
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    }
+  ]
+}

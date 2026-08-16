@@ -2,42 +2,56 @@
   "id": "calc_method",
   "type": "dropdown",
   "label": {
-    "en": "Temperature calculation method"
+    "en": "Temperature calculation method",
+    "no": "Beregningstemperatur",
+    "nl": "Berekeningstemperatuur"
   },
   "value": "AVERAGE",
   "values": [
     {
       "id": "AVERAGE",
       "label": {
-        "en": "Average"
+        "en": "Average",
+        "no": "Gjennomsnittlig temperatur",
+        "nl": "Gemiddelde temperatuur"
       }
     },
     {
       "id": "MIN",
       "label": {
-        "en": "Minimum"
+        "en": "Minimum",
+        "no": "Laveste temperatur",
+        "nl": "Laagste temperatuur"
       }
     },
     {
       "id": "MAX",
       "label": {
-        "en": "Maximum"
+        "en": "Maximum",
+        "no": "Høyeste temperatur",
+        "nl": "Hoogste temperatuur"
       }
     },
     {
       "id": "NEWEST",
       "label": {
-        "en": "Newest"
+        "en": "Newest",
+        "no": "Nyeste temperatur",
+        "nl": "Nieuwste temperatuur"
       }
     },
     {
       "id": "MANUAL",
       "label": {
-        "en": "Manual"
+        "en": "Manual",
+        "no": "Manuell temperatur (Flow)",
+        "nl": "Handmatige temperatuur (Flow)"
       }
     }
   ],
   "hint": {
-    "en": "Method for calculating the temperature if there are several temperature sensors."
+    "en": "Method for calculating the temperature if there are several temperature sensors.",
+    "no": "Velg metode for å beregne romtemperatur når det er flere sensorer.",
+    "nl": "Selecteer de methode om de kamertemperatuur te berekenen bij meerdere sensoren."
   }
 }

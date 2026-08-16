@@ -38,11 +38,28 @@ VThermo supports sensor and physical thermostat capabilities declared in Celsius
 - The temperature changed
 - Heating turned off
 - Heating turned on
+- Cooling turned off
+- Cooling turned on
+- Thermostat mode changed
+- Thermostat preset changed
+- Frost alarm activated
+- Frost alarm deactivated
+- Overheat alarm activated
+- Overheat alarm deactivated
+- Dew point changed
+- Condensation risk detected
+- Condensation risk cleared
 
 #### Conditions
 
 - Is switched on / off
 - Thermostat is active / idle
+- Thermostat is cooling / idle
+- Thermostat mode is (Auto / Heat / Cool / Off)
+- Thermostat preset is (Comfort / Eco / Away / Boost)
+- Frost alarm is active
+- Overheat alarm is active
+- Condensation risk is active
 
 #### Actions
 
@@ -50,6 +67,8 @@ VThermo supports sensor and physical thermostat capabilities declared in Celsius
 - Turn off
 - Toggle on / off
 - Set the target temperature
+- Set thermostat mode (Auto / Heat / Cool / Off)
+- Set thermostat preset (Comfort / Eco / Away / Boost)
 - Enable / disable 'Invert switch'
 - Update temperature to X °C
 - Update target temperature min, max and step
@@ -127,12 +146,36 @@ Select temperature sensors from the sub zones of the virtual thermostat, just on
 #### Control devices in the same zone
 
 - Heaters: uncheck this if controlling heaters in the same zone is not desired.
+- Coolers: check this to control coolers (air conditioners, fans, refrigerators) in the same zone.
+- Smart plugs as heaters: check this to control smart sockets/plugs used as heaters in the same zone.
+- Smart plugs as coolers: check this to control smart sockets/plugs used as coolers/fans in the same zone.
 - Thermostats: check this to control thermostats in the same zone. This is achieved by setting the target temperature above / below the measured temperature.
 
 #### Control devices in sub zones (one level)
 
 - Heaters: check this to control heaters in sub zones (one level down)
+- Coolers: check this to control coolers (air conditioners, fans, refrigerators) in sub zones (one level down)
+- Smart plugs as heaters: check this to control smart sockets/plugs used as heaters in sub zones (one level down)
+- Smart plugs as coolers: check this to control smart sockets/plugs used as coolers/fans in sub zones (one level down)
 - Thermostats: check this to control thermostats in sub zones (one level down). This is achieved by setting the target temperature above / below the measured temperature.
+
+#### Presets
+
+- Eco temperature offset (°C): temperature offset applied when in Eco mode (e.g. -2.0 °C).
+- Away fixed temperature (°C): target temperature used when in Away mode (e.g. 12.0 °C).
+- Boost temperature offset (°C): temperature offset applied when in Boost mode (e.g. +2.0 °C).
+
+#### Safety and Alarms
+
+- Emergency fail-safe shutdown: automatically turn off active heaters and coolers if temperature sensor readings are missing, dead, or unavailable.
+- Frost alarm threshold (°C): trigger frost alarm flow cards when temperature drops below this threshold (0 = disabled).
+- Overheat alarm threshold (°C): trigger overheat alarm flow cards and emergency cut off heating when temperature exceeds this threshold (0 = disabled).
+- Dew point / condensation protection: in cooling mode, dynamically calculates the dew point from humidity sensors and shuts off cooling when room temperature is within 1 °C of the dew point to prevent condensation damage.
+
+#### Compressor and Relay Protection
+
+- Minimum off duration (seconds): prevent turning on a heater or cooler compressor/relay if it was turned off recently (anti-short-cycling protection).
+- Minimum on duration (seconds): prevent rapid short on-cycles by ensuring a device stays on for a minimum duration.
 
 #### Target temperature
 
@@ -160,6 +203,7 @@ Select temperature sensors from the sub zones of the virtual thermostat, just on
 #### Contact and motion alarms
 
 - Turn off if contact alarm: check this to turn off heaters if there is a contact alarm in the same zone as the virtual thermostat.
+- Open-window delay (seconds): wait this duration before turning off climate control after a door/window contact sensor opens.
 - Turn on if motion alarm: check this to turn on heaters if there is a motion alarm in the same zone as the virtual thermostat.
 
 #### General settings
@@ -170,7 +214,7 @@ Select temperature sensors from the sub zones of the virtual thermostat, just on
 
 #### Timing
 
-- Delay in milliseconds between switching devices: if this value is set to a number larger than zero, it will add a delay between switching each devices on / off. This might help
+- Delay in milliseconds between switching devices: if this value is set to a number larger than zero, it will add a delay between switching each devices on / off. This might help avoid electrical surges when switching multiple devices simultaneously.
 
 #### Safety and recovery behavior
 

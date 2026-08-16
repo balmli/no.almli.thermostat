@@ -1,6 +1,10 @@
 import {
     CalcMethod,
     CAPABILITY_ACTIVE,
+    CAPABILITY_CONDENSATION_ALARM,
+    CAPABILITY_COOLING,
+    CAPABILITY_DEW_POINT,
+    CAPABILITY_PRESET,
     Device,
     DeviceCapability,
     DeviceClass,
@@ -44,9 +48,14 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
                 ?.filter(
                     d =>
                         (tempSettings.sensor && d.class === 'sensor') ||
-                        (tempSettings.thermostat && d.class === 'thermostat' && !d.isVThermo()) ||
+                        (tempSettings.thermostat &&
+                            (d.class === 'thermostat' || d.class === 'airconditioner') &&
+                            !d.isVThermo()) ||
                         (tempSettings.vthermo && d.isVThermo()) ||
-                        (tempSettings.other && d.class !== 'sensor' && d.class !== 'thermostat'),
+                        (tempSettings.other &&
+                            d.class !== 'sensor' &&
+                            d.class !== 'thermostat' &&
+                            d.class !== 'airconditioner'),
                 )
                 .filter(d => d.capabilitiesObj && d.capabilitiesObj.has('measure_temperature'))
                 .map(d => d.capabilitiesObj && d.capabilitiesObj?.get('measure_temperature'));
@@ -254,7 +263,7 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
     }
 
     /**
-     * Calculate if the VThermo, heaters and thermostats in the zone and sub zone (one level down) should be switched.
+     * Calculate if the VThermo, heaters, coolers and thermostats in the zone and sub zone (one level down) should be switched.
      * @param device
      * @param zone
      * @private
@@ -269,7 +278,7 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
 
         const mainOnoff = device.getLocalCapabilityValue('onoff');
         if (deviceSettings.onoffEnabled && mainOnoff?.value === false) {
-            this.addSwitchingRequests(device, zone, deviceSettings, requests, false);
+            this.addSwitchingRequests(device, zone, deviceSettings, requests, false, false);
             return requests;
         }
 
@@ -280,16 +289,125 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
 
         const temperature = device.getLocalCapabilityValue('measure_temperature');
         if (!temperature || temperature.value === undefined || temperature.value === null) {
+            if (deviceSettings.failsafeEnabled === true) {
+                this.addSwitchingRequests(device, zone, deviceSettings, requests, false, false);
+            }
             return requests;
         }
 
-        const contactAlarm = deviceSettings.contactAlarm && this.devicesObj.hasContactAlarm(zone);
+        if (deviceSettings.frostAlarmTemp && deviceSettings.frostAlarmTemp > 0) {
+            if (temperature.value < deviceSettings.frostAlarmTemp) {
+                const dr = new DeviceRequest();
+                dr.id = device.id;
+                dr.dataId = device.dataId;
+                dr.trigger = 'vt_frost_alarm_true';
+                requests.addRequest(dr);
+            } else if (temperature.value >= deviceSettings.frostAlarmTemp + 0.5) {
+                const dr = new DeviceRequest();
+                dr.id = device.id;
+                dr.dataId = device.dataId;
+                dr.trigger = 'vt_frost_alarm_false';
+                requests.addRequest(dr);
+            }
+        }
+
+        let overheatActive = false;
+        if (deviceSettings.overheatAlarmTemp && deviceSettings.overheatAlarmTemp > 0) {
+            if (temperature.value > deviceSettings.overheatAlarmTemp) {
+                overheatActive = true;
+                const dr = new DeviceRequest();
+                dr.id = device.id;
+                dr.dataId = device.dataId;
+                dr.trigger = 'vt_overheat_alarm_true';
+                requests.addRequest(dr);
+            } else if (temperature.value <= deviceSettings.overheatAlarmTemp - 0.5) {
+                const dr = new DeviceRequest();
+                dr.id = device.id;
+                dr.dataId = device.dataId;
+                dr.trigger = 'vt_overheat_alarm_false';
+                requests.addRequest(dr);
+            }
+        }
+
+        const contactAlarmActive = deviceSettings.contactAlarm && this.devicesObj.hasContactAlarm(zone);
+        let contactAlarm = false;
+        if (contactAlarmActive) {
+            const delay = deviceSettings.contactAlarmDelay ?? 0;
+            if (delay > 0) {
+                const age = this.devicesObj.getContactAlarmAge(zone) ?? 0;
+                contactAlarm = age >= delay;
+            } else {
+                contactAlarm = true;
+            }
+        }
         const motionAlarm = deviceSettings.motionAlarm && this.devicesObj.hasMotionAlarm(zone);
 
-        const onoff = this.resolveOnOff(device, temperature.value, targetTemperature.value, contactAlarm, motionAlarm);
+        const preset = device.getLocalCapabilityValue(CAPABILITY_PRESET)?.value || 'comfort';
+        let heatTarget = targetTemperature.value;
+        let coolTarget = targetTemperature.value;
 
-        if (onoff !== undefined) {
-            this.addSwitchingRequests(device, zone, deviceSettings, requests, onoff);
+        if (preset === 'eco') {
+            const ecoOffset = deviceSettings.presetEcoOffset ?? -2.0;
+            heatTarget += ecoOffset;
+            coolTarget -= ecoOffset;
+        } else if (preset === 'away') {
+            const awayTemp = deviceSettings.presetAwayTemp ?? 12.0;
+            heatTarget = awayTemp;
+            coolTarget = Math.max(awayTemp + 10.0, 30.0);
+        } else if (preset === 'boost') {
+            const boostOffset = deviceSettings.presetBoostOffset ?? 2.0;
+            heatTarget += boostOffset;
+            coolTarget -= boostOffset;
+        }
+
+        let condensationDetected = false;
+        const humidity = this.devicesObj.getHumidityInZone(zone);
+        if (typeof humidity === 'number') {
+            const dp = math.dewPoint(temperature.value, humidity);
+            if (device.hasCapability(CAPABILITY_DEW_POINT)) {
+                const drDp = this.updateAndCreateDeviceRequestIfChanged(device, CAPABILITY_DEW_POINT, dp);
+                if (drDp) {
+                    drDp.trigger = 'vt_dew_point_changed';
+                    requests.addRequest(drDp);
+                }
+            }
+            if (deviceSettings.condensationProtection) {
+                if (temperature.value <= dp + 1.0) {
+                    condensationDetected = true;
+                }
+            }
+        }
+
+        if (device.hasCapability(CAPABILITY_CONDENSATION_ALARM)) {
+            const drCond = this.updateAndCreateDeviceRequestIfChanged(
+                device,
+                CAPABILITY_CONDENSATION_ALARM,
+                condensationDetected,
+            );
+            if (drCond) {
+                drCond.trigger = `vt_condensation_alarm_${condensationDetected ? 'true' : 'false'}`;
+                requests.addRequest(drCond);
+            }
+        }
+
+        let {heatOnoff, coolOnoff} = this.resolveClimateOnOff(
+            device,
+            temperature.value,
+            heatTarget,
+            coolTarget,
+            contactAlarm,
+            motionAlarm,
+        );
+
+        if (overheatActive) {
+            heatOnoff = false;
+        }
+        if (condensationDetected) {
+            coolOnoff = false;
+        }
+
+        if (heatOnoff !== undefined || coolOnoff !== undefined) {
+            this.addSwitchingRequests(device, zone, deviceSettings, requests, heatOnoff, coolOnoff);
         }
 
         return requests;
@@ -300,16 +418,62 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
         zone: Zone,
         deviceSettings: DeviceSettings,
         requests: DeviceRequests,
-        onoff: boolean,
+        heatOnoff?: boolean,
+        coolOnoff?: boolean,
     ): void {
-        const dr = this.updateAndCreateDeviceRequestIfChanged(device, CAPABILITY_ACTIVE, onoff);
-        if (dr) {
-            dr.trigger = `vt_onoff_${dr.value ? 'true' : 'false'}`;
+        if (heatOnoff !== undefined) {
+            const drHeat = this.updateAndCreateDeviceRequestIfChanged(device, CAPABILITY_ACTIVE, heatOnoff);
+            if (drHeat) {
+                drHeat.trigger = `vt_onoff_${drHeat.value ? 'true' : 'false'}`;
+            }
+            requests.addRequest(drHeat);
+            this.heatersDeviceRequests(heatOnoff, zone, deviceSettings, requests);
         }
-        requests.addRequest(dr);
 
-        this.heatersDeviceRequests(onoff, zone, deviceSettings, requests);
-        this.thermostatsDeviceRequests(onoff, zone, deviceSettings, requests);
+        if (coolOnoff !== undefined && device.hasCapability(CAPABILITY_COOLING)) {
+            const drCool = this.updateAndCreateDeviceRequestIfChanged(device, CAPABILITY_COOLING, coolOnoff);
+            if (drCool) {
+                drCool.trigger = `vt_cooling_${drCool.value ? 'true' : 'false'}`;
+            }
+            requests.addRequest(drCool);
+        }
+
+        if (coolOnoff !== undefined) {
+            this.coolersDeviceRequests(coolOnoff, zone, deviceSettings, requests);
+        }
+
+        this.thermostatsDeviceRequests(heatOnoff, coolOnoff, zone, deviceSettings, requests);
+    }
+
+    private isShortCycling(
+        device: Device,
+        targetOnoff: boolean,
+        minOnDuration?: number,
+        minOffDuration?: number,
+    ): boolean {
+        const currentOnoff = device.getLocalCapabilityValue('onoff');
+        if (!currentOnoff || currentOnoff.value === undefined) {
+            return false;
+        }
+        const lastUpdated =
+            typeof currentOnoff.lastUpdated === 'number'
+                ? currentOnoff.lastUpdated
+                : new Date(currentOnoff.lastUpdated).getTime();
+        if (isNaN(lastUpdated)) {
+            return false;
+        }
+        const elapsed = Date.now() - lastUpdated;
+        if (targetOnoff === true && currentOnoff.value === false && minOffDuration && minOffDuration > 0) {
+            if (elapsed < minOffDuration) {
+                return true;
+            }
+        }
+        if (targetOnoff === false && currentOnoff.value === true && minOnDuration && minOnDuration > 0) {
+            if (elapsed < minOnDuration) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -328,6 +492,9 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
     ) {
         const heaters = this.getHeaters(zone, this.zonesObj, deviceSettings);
         for (const heater of heaters) {
+            if (this.isShortCycling(heater, onoff, deviceSettings.minOnDuration, deviceSettings.minOffDuration)) {
+                continue;
+            }
             const dr = this.updateAndCreateDeviceRequestIfChanged(heater, 'onoff', onoff);
             if (dr && deviceSettings.deviceDelay && deviceSettings.deviceDelay > 0) {
                 dr.deviceDelay = deviceSettings.deviceDelay;
@@ -337,15 +504,44 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
     }
 
     /**
-     * Device requests for setting the target temperature to simulate switching thermostats on / off.
+     * Device requests for switching coolers.
      * @param onoff
      * @param zone
      * @param deviceSettings
      * @param requests
      * @private
      */
-    private thermostatsDeviceRequests(
+    private coolersDeviceRequests(
         onoff: boolean,
+        zone: Zone,
+        deviceSettings: DeviceSettings,
+        requests: DeviceRequests,
+    ) {
+        const coolers = this.getCoolers(zone, this.zonesObj, deviceSettings);
+        for (const cooler of coolers) {
+            if (this.isShortCycling(cooler, onoff, deviceSettings.minOnDuration, deviceSettings.minOffDuration)) {
+                continue;
+            }
+            const dr = this.updateAndCreateDeviceRequestIfChanged(cooler, 'onoff', onoff);
+            if (dr && deviceSettings.deviceDelay && deviceSettings.deviceDelay > 0) {
+                dr.deviceDelay = deviceSettings.deviceDelay;
+            }
+            requests.addRequest(dr);
+        }
+    }
+
+    /**
+     * Device requests for setting the target temperature to simulate switching thermostats and ACs on / off.
+     * @param heatOnoff
+     * @param coolOnoff
+     * @param zone
+     * @param deviceSettings
+     * @param requests
+     * @private
+     */
+    private thermostatsDeviceRequests(
+        heatOnoff: boolean | undefined,
+        coolOnoff: boolean | undefined,
         zone: Zone,
         deviceSettings: DeviceSettings,
         requests: DeviceRequests,
@@ -360,9 +556,18 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
 
             if (thTargetTemperature && thTargetTemperature.value && thTemperature && thTemperature.value) {
                 let newTargetTemperature;
-                if (onoff && thTargetTemperature.value < thTemperature.value + MIN_THERMOSTAT_ONOFF) {
+                if (heatOnoff === true && thTargetTemperature.value < thTemperature.value + MIN_THERMOSTAT_ONOFF) {
                     newTargetTemperature = Math.ceil(thTemperature.value + THERMOSTAT_ONOFF);
-                } else if (!onoff && thTargetTemperature.value > thTemperature.value - MIN_THERMOSTAT_ONOFF) {
+                } else if (
+                    coolOnoff === true &&
+                    thTargetTemperature.value > thTemperature.value - MIN_THERMOSTAT_ONOFF
+                ) {
+                    newTargetTemperature = Math.floor(thTemperature.value - THERMOSTAT_ONOFF);
+                } else if (
+                    heatOnoff === false &&
+                    coolOnoff !== true &&
+                    thTargetTemperature.value > thTemperature.value - MIN_THERMOSTAT_ONOFF
+                ) {
                     newTargetTemperature = Math.floor(thTemperature.value - THERMOSTAT_ONOFF);
                 }
                 if (newTargetTemperature) {
@@ -381,7 +586,98 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
     }
 
     /**
-     * Resolve if the VThermo should be on or off.
+     * Resolve climate heating and cooling states.
+     * @param device
+     * @param temperature
+     * @param heatTarget
+     * @param coolTarget
+     * @param contactAlarm
+     * @param motionAlarm
+     */
+    resolveClimateOnOff(
+        device: Device,
+        temperature: number,
+        heatTarget: number,
+        coolTarget: number = heatTarget,
+        contactAlarm?: boolean,
+        motionAlarm?: boolean,
+    ): {heatOnoff?: boolean; coolOnoff?: boolean} {
+        const deviceSettings = device.deviceSettings;
+        if (!deviceSettings || !device.isVThermo()) {
+            this.logger?.error('Unable to resolve on / off. Unsupported device', device);
+            return {};
+        }
+
+        const currentOnoff = device.getLocalCapabilityValue('onoff')?.value;
+        const currentVtOnoff = device.getLocalCapabilityValue(CAPABILITY_ACTIVE)?.value;
+        const currentCooling = device.getLocalCapabilityValue(CAPABILITY_COOLING)?.value;
+        const modeCap = device.getLocalCapabilityValue('thermostat_mode')?.value;
+
+        const mainOnoff = deviceSettings.onoffEnabled ? currentOnoff !== false : true;
+
+        if (contactAlarm || !mainOnoff || modeCap === 'off') {
+            return {
+                heatOnoff: currentVtOnoff === true ? false : undefined,
+                coolOnoff: currentCooling === true ? false : undefined,
+            };
+        }
+
+        let mode = modeCap;
+        if (!mode) {
+            mode = deviceSettings.invert ? 'cool' : 'heat';
+        }
+
+        if (motionAlarm) {
+            if (mode === 'cool') {
+                return {heatOnoff: false, coolOnoff: true};
+            } else if (mode === 'heat') {
+                return {heatOnoff: true, coolOnoff: false};
+            } else if (mode === 'auto') {
+                if (temperature > (heatTarget + coolTarget) / 2) {
+                    return {heatOnoff: false, coolOnoff: true};
+                }
+                return {heatOnoff: true, coolOnoff: false};
+            }
+        }
+
+        const hysteresis = deviceSettings.hysteresis ?? 0.5;
+
+        if (mode === 'heat') {
+            let heatOnoff: boolean | undefined = undefined;
+            if (temperature > heatTarget + hysteresis) {
+                heatOnoff = false;
+            } else if (temperature < heatTarget - hysteresis) {
+                heatOnoff = true;
+            }
+            return {
+                heatOnoff,
+                coolOnoff: currentCooling === true ? false : undefined,
+            };
+        } else if (mode === 'cool') {
+            let coolOnoff: boolean | undefined = undefined;
+            if (temperature > coolTarget + hysteresis) {
+                coolOnoff = true;
+            } else if (temperature < coolTarget - hysteresis) {
+                coolOnoff = false;
+            }
+            return {
+                heatOnoff: currentVtOnoff === true ? false : undefined,
+                coolOnoff,
+            };
+        } else if (mode === 'auto') {
+            if (temperature < heatTarget - hysteresis) {
+                return {heatOnoff: true, coolOnoff: false};
+            } else if (temperature > coolTarget + hysteresis) {
+                return {heatOnoff: false, coolOnoff: true};
+            }
+            return {heatOnoff: false, coolOnoff: false};
+        }
+
+        return {};
+    }
+
+    /**
+     * Resolve if the VThermo should be on or off (legacy compatibility).
      * @param device
      * @param temperature
      * @param targetTemperature
@@ -395,37 +691,20 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
         contactAlarm?: boolean,
         motionAlarm?: boolean,
     ): boolean | undefined {
-        const deviceSettings = device.deviceSettings;
-        if (!deviceSettings) {
-            this.logger?.error('No device settings');
-            return;
+        const {heatOnoff, coolOnoff} = this.resolveClimateOnOff(
+            device,
+            temperature,
+            targetTemperature,
+            targetTemperature,
+            contactAlarm,
+            motionAlarm,
+        );
+        const modeCap = device.getLocalCapabilityValue('thermostat_mode')?.value;
+        const mode = modeCap || (device.deviceSettings?.invert ? 'cool' : 'heat');
+        if (mode === 'cool') {
+            return coolOnoff;
         }
-        if (!device.isVThermo()) {
-            this.logger?.error('Unable to resolve on / off.  Unsupported device', device);
-            return;
-        }
-
-        const currentOnoff = device.getLocalCapabilityValue('onoff').value;
-        const currentVtOnoff = device.getLocalCapabilityValue(CAPABILITY_ACTIVE).value;
-
-        const mainOnoff = deviceSettings.onoffEnabled ? currentOnoff : true;
-
-        let onoff = undefined;
-        if (contactAlarm || !mainOnoff) {
-            onoff = currentVtOnoff === true ? false : undefined;
-        } else if (motionAlarm) {
-            onoff = true;
-        } else {
-            const hysteresis = deviceSettings.hysteresis ?? 0.5;
-            const invert = deviceSettings.invert;
-            if (temperature > targetTemperature + hysteresis) {
-                onoff = invert === true;
-            } else if (temperature < targetTemperature - hysteresis) {
-                onoff = invert !== true;
-            }
-        }
-
-        return onoff;
+        return heatOnoff;
     }
 
     /**
@@ -437,16 +716,72 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
     getHeaters(zone: Zone, zonesObj: Zones, deviceSettings?: DeviceSettings): Device[] {
         const dcs: Device[] = [];
         if (deviceSettings) {
-            const zones = [];
-            if (deviceSettings.zone && deviceSettings.zone.clazz) {
-                zones.push(zone);
+            if (deviceSettings.zone && (deviceSettings.zone.clazz || deviceSettings.zone.sockets_heaters)) {
+                const zoneDevices = this.devicesObj.getDevicesFromZones([zone]);
+                const filtered = zoneDevices?.filter(
+                    d =>
+                        (deviceSettings.zone?.clazz && d.class === 'heater') ||
+                        (deviceSettings.zone?.sockets_heaters && d.class === 'socket'),
+                );
+                if (filtered) {
+                    dcs.push(...filtered);
+                }
             }
-            if (zone.children && deviceSettings.sub_zones && deviceSettings.sub_zones.clazz) {
-                zones.push(...zone.children);
+            if (
+                zone.children &&
+                deviceSettings.sub_zones &&
+                (deviceSettings.sub_zones.clazz || deviceSettings.sub_zones.sockets_heaters)
+            ) {
+                const subDevices = this.devicesObj.getDevicesFromZones(zone.children);
+                const filtered = subDevices?.filter(
+                    d =>
+                        (deviceSettings.sub_zones?.clazz && d.class === 'heater') ||
+                        (deviceSettings.sub_zones?.sockets_heaters && d.class === 'socket'),
+                );
+                if (filtered) {
+                    dcs.push(...filtered);
+                }
             }
-            const devices = this.devicesObj.getDevicesFromZones(zones, DeviceClass.heater);
-            if (devices) {
-                dcs.push(...devices);
+        }
+        return dcs;
+    }
+
+    /**
+     * Get coolers for a zone, with current zone and children zones.
+     * @param zone the zone
+     * @param zonesObj zone manager
+     * @param deviceSettings device settings
+     */
+    getCoolers(zone: Zone, zonesObj: Zones, deviceSettings?: DeviceSettings): Device[] {
+        const dcs: Device[] = [];
+        if (deviceSettings) {
+            if (deviceSettings.zone && (deviceSettings.zone.coolers || deviceSettings.zone.sockets_coolers)) {
+                const zoneDevices = this.devicesObj.getDevicesFromZones([zone]);
+                const filtered = zoneDevices?.filter(
+                    d =>
+                        (deviceSettings.zone?.coolers &&
+                            (d.class === 'airconditioner' || d.class === 'fan' || d.class === 'refrigerator')) ||
+                        (deviceSettings.zone?.sockets_coolers && d.class === 'socket'),
+                );
+                if (filtered) {
+                    dcs.push(...filtered);
+                }
+            }
+            if (
+                zone.children &&
+                deviceSettings.sub_zones &&
+                (deviceSettings.sub_zones.coolers || deviceSettings.sub_zones.sockets_coolers)
+            ) {
+                const subDevices = this.devicesObj.getDevicesFromZones(zone.children);
+                const filtered = subDevices?.filter(
+                    d =>
+                        (deviceSettings.sub_zones?.coolers &&
+                            (d.class === 'airconditioner' || d.class === 'fan' || d.class === 'refrigerator')) ||
+                        (deviceSettings.sub_zones?.sockets_coolers && d.class === 'socket'),
+                );
+                if (filtered) {
+                    dcs.push(...filtered);
+                }
             }
         }
         return dcs;
@@ -472,9 +807,12 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
             if (zone.children && deviceSettings.sub_zones && deviceSettings.sub_zones.thermostats) {
                 zones.push(...zone.children);
             }
-            const devices = this.devicesObj.getDevicesFromZones(zones, DeviceClass.thermostat);
-            if (devices) {
-                dcs.push(...devices);
+            const devices = this.devicesObj.getDevicesFromZones(zones);
+            const filtered = devices?.filter(
+                d => (d.class === 'thermostat' || d.class === 'airconditioner') && !d.isVThermo() && !d.isVHumidity(),
+            );
+            if (filtered) {
+                dcs.push(...filtered);
             }
         }
         return dcs;

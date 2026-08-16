@@ -1,0 +1,23 @@
+{
+  "id": "frost_alarm_temp",
+  "type": "number",
+  "label": {
+    "en": "Frost alarm limit temperature",
+    "no": "Grensetemperatur for frostalarm",
+    "nl": "Grenstemperatuur voor vorstalarm"
+  },
+  "hint": {
+    "en": "Triggers a frost alarm flow and emergency trigger when temperature drops below this value. Set 0 to disable.",
+    "no": "Utløser frostalarm-flow når temperaturen synker under denne verdien. Sett 0 for å deaktivere.",
+    "nl": "Activeert vorstalarm-flow wanneer de temperatuur onder deze waarde daalt. Stel in op 0 om uit te schakelen."
+  },
+  "value": 5,
+  "min": 0,
+  "max": 15,
+  "step": 0.5,
+  "units": {
+    "en": "°C",
+    "no": "°C",
+    "nl": "°C"
+  }
+}

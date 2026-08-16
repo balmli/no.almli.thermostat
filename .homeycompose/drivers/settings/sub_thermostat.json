@@ -2,10 +2,14 @@
   "id": "sub_thermostat",
   "type": "checkbox",
   "label": {
-    "en": "Other thermostats"
+    "en": "Other thermostats",
+    "no": "Andre termostater",
+    "nl": "Andere thermostaten"
   },
   "value": false,
   "hint": {
-    "en": "Other thermostats with temperature sensors in sub zones (one level down)."
+    "en": "Other thermostats with temperature sensors in sub zones (one level down).",
+    "no": "Andre termostater med temperatursensorer i undersoner (ett nivå ned).",
+    "nl": "Andere thermostaten met temperatuursensoren in subzones (één niveau omlaag)."
   }
 }

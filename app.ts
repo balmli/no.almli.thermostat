@@ -5,7 +5,7 @@ import {HomeyAPI, HomeyAPIV3Local} from 'homey-api';
 import {Devices} from './lib/Devices';
 import {Zones} from './lib/Zones';
 import {Calculator} from './lib/Calculator';
-import {CAPABILITY_ACTIVE} from './lib/types';
+import {CAPABILITY_ACTIVE, CAPABILITY_COOLING} from './lib/types';
 
 const Logger = require('./lib/Logger');
 
@@ -58,6 +58,36 @@ module.exports = class VThermoApp extends Homey.App {
             .registerRunListener((args, state) => args.device.getCapabilityValue(CAPABILITY_ACTIVE));
 
         this.homey.flow
+            .getConditionCard('vt_is_cooling')
+            .registerRunListener((args, state) => args.device.getCapabilityValue(CAPABILITY_COOLING) === true);
+
+        this.homey.flow
+            .getConditionCard('vt_thermostat_mode_is')
+            .registerRunListener((args, state) => args.device.getCapabilityValue('thermostat_mode') === args.mode);
+
+        this.homey.flow
+            .getConditionCard('vt_thermostat_preset_is')
+            .registerRunListener(
+                (args, state) => args.device.getCapabilityValue('vt_thermostat_preset') === args.preset,
+            );
+
+        this.homey.flow.getConditionCard('vt_is_frost_alarm').registerRunListener((args, state) => {
+            const temp = args.device.getCapabilityValue('measure_temperature');
+            const limit = args.device.getSetting('frost_alarm_temp');
+            return !!(limit && limit > 0 && typeof temp === 'number' && temp < limit);
+        });
+
+        this.homey.flow.getConditionCard('vt_is_overheat_alarm').registerRunListener((args, state) => {
+            const temp = args.device.getCapabilityValue('measure_temperature');
+            const limit = args.device.getSetting('overheat_alarm_temp');
+            return !!(limit && limit > 0 && typeof temp === 'number' && temp > limit);
+        });
+
+        this.homey.flow
+            .getConditionCard('vt_is_condensation_alarm')
+            .registerRunListener((args, state) => args.device.getCapabilityValue('vt_condensation_alarm') === true);
+
+        this.homey.flow
             .getConditionCard('vh_onoff_is_on')
             .registerRunListener((args, state) => args.device.getCapabilityValue(CAPABILITY_ACTIVE));
 
@@ -80,6 +110,14 @@ module.exports = class VThermoApp extends Homey.App {
         this.homey.flow
             .getActionCard('update_invert_switch')
             .registerRunListener((args, state) => args.device.updateInvertSwitch(args.invert_switch === 'true'));
+
+        this.homey.flow
+            .getActionCard('vt_set_thermostat_mode')
+            .registerRunListener((args, state) => args.device.updateThermostatMode(args.mode));
+
+        this.homey.flow
+            .getActionCard('vt_set_thermostat_preset')
+            .registerRunListener((args, state) => args.device.updateThermostatPreset(args.preset));
 
         this.homey.flow
             .getActionCard('update_measure_temperature')

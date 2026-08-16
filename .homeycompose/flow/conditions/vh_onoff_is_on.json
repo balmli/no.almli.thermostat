@@ -1,7 +1,9 @@
 {
   "id": "vh_onoff_is_on",
   "title": {
-    "en": "Humidity device is !{{active|idle}}"
+    "en": "Humidity control is on",
+    "no": "Fuktighetskontroll er på",
+    "nl": "Vochtigheidsregeling is aan"
   },
   "args": [
     {

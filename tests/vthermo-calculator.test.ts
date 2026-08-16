@@ -288,6 +288,397 @@ describe('VThermoDeviceCalculator switching', () => {
         expect(calc.getHeaters(root, new Zones(), settings).map(device => device.id)).toEqual(['root-heater']);
         expect(calc.getThermostats(root, new Zones(), settings).map(device => device.id)).toEqual(['child-thermostat']);
     });
+
+    it('selects coolers (air conditioners, fans, refrigerators) and sockets from enabled zone scopes', () => {
+        const child = makeZone('child', 'root');
+        const root = makeZone('root', undefined, [child]);
+        const ac = makeDevice({id: 'ac', deviceClass: DeviceClass.airconditioner, zone: 'root'});
+        const fan = makeDevice({id: 'fan', deviceClass: DeviceClass.fan, zone: 'root'});
+        const fridge = makeDevice({id: 'fridge', deviceClass: DeviceClass.refrigerator, zone: 'root'});
+        const socketHeater = makeDevice({id: 'socket-heater', deviceClass: DeviceClass.socket, zone: 'root'});
+        const socketCooler = makeDevice({id: 'socket-cooler', deviceClass: DeviceClass.socket, zone: 'child'});
+        const childAc = makeDevice({id: 'child-ac', deviceClass: DeviceClass.airconditioner, zone: 'child'});
+
+        const calc = new VThermoDeviceCalculator(
+            new Zones(),
+            makeDevicesStub([ac, fan, fridge, socketHeater, socketCooler, childAc]),
+        );
+
+        const settings = {
+            zone: {clazz: false, coolers: true, sockets_heaters: true, sockets_coolers: false, thermostats: false},
+            sub_zones: {clazz: false, coolers: true, sockets_heaters: false, sockets_coolers: true, thermostats: false},
+        };
+
+        expect(calc.getHeaters(root, new Zones(), settings).map(d => d.id)).toEqual(['socket-heater']);
+        expect(calc.getCoolers(root, new Zones(), settings).map(d => d.id)).toEqual([
+            'ac',
+            'fan',
+            'fridge',
+            'socket-cooler',
+            'child-ac',
+        ]);
+    });
+
+    it('handles cooling mode and generates vt_cooling requests', () => {
+        const root = makeZone('root');
+        const vthermo = makeVThermo({
+            capabilities: {
+                measure_temperature: 24,
+                target_temperature: 22,
+                thermostat_mode: 'cool',
+                vt_cooling: false,
+                [CAPABILITY_ACTIVE]: false,
+            },
+            deviceSettings: {
+                zone: {clazz: true, coolers: true, thermostats: false},
+                sub_zones: {clazz: false, coolers: false, thermostats: false},
+            },
+        });
+        const ac = makeDevice({id: 'ac', deviceClass: DeviceClass.airconditioner, capabilities: {onoff: false}});
+        const heater = makeDevice({id: 'heater', deviceClass: DeviceClass.heater, capabilities: {onoff: true}});
+
+        const requests = new VThermoDeviceCalculator(new Zones(), makeDevicesStub([vthermo, ac, heater]))
+            .calculateHeaterSwitching(vthermo, root)
+            .getRequests();
+
+        expect(requests).toContainEqual(
+            expect.objectContaining({capabilityId: 'vt_cooling', value: true, trigger: 'vt_cooling_true'}),
+        );
+        expect(requests).toContainEqual(expect.objectContaining({id: 'ac', capabilityId: 'onoff', value: true}));
+    });
+
+    it('handles auto climate mode by activating heat below setpoint and cool above setpoint', () => {
+        const root = makeZone('root');
+        const calc = (temp: number, initialActive = false, initialCooling = false) => {
+            const vthermo = makeVThermo({
+                capabilities: {
+                    measure_temperature: temp,
+                    target_temperature: 20,
+                    thermostat_mode: 'auto',
+                    vt_cooling: initialCooling,
+                    [CAPABILITY_ACTIVE]: initialActive,
+                },
+                deviceSettings: {
+                    hysteresis: 1.0,
+                    zone: {clazz: true, coolers: true, thermostats: false},
+                    sub_zones: {clazz: false, coolers: false, thermostats: false},
+                },
+            });
+            const ac = makeDevice({
+                id: 'ac',
+                deviceClass: DeviceClass.airconditioner,
+                capabilities: {onoff: initialCooling},
+            });
+            const heater = makeDevice({
+                id: 'heater',
+                deviceClass: DeviceClass.heater,
+                capabilities: {onoff: initialActive},
+            });
+            return new VThermoDeviceCalculator(
+                new Zones(),
+                makeDevicesStub([vthermo, ac, heater]),
+            ).calculateHeaterSwitching(vthermo, root);
+        };
+
+        // Below 19 (target 20 - hyst 1.0) transitioning from cooling: heat ON, cool OFF
+        const heatReqs = calc(18.5, false, true).getRequests();
+        expect(heatReqs).toContainEqual(expect.objectContaining({capabilityId: CAPABILITY_ACTIVE, value: true}));
+        expect(heatReqs).toContainEqual(expect.objectContaining({capabilityId: 'vt_cooling', value: false}));
+        expect(heatReqs).toContainEqual(expect.objectContaining({id: 'heater', capabilityId: 'onoff', value: true}));
+        expect(heatReqs).toContainEqual(expect.objectContaining({id: 'ac', capabilityId: 'onoff', value: false}));
+
+        // Above 21 (target 20 + hyst 1.0) transitioning from heating: heat OFF, cool ON
+        const coolReqs = calc(21.5, true, false).getRequests();
+        expect(coolReqs).toContainEqual(expect.objectContaining({capabilityId: CAPABILITY_ACTIVE, value: false}));
+        expect(coolReqs).toContainEqual(expect.objectContaining({capabilityId: 'vt_cooling', value: true}));
+        expect(coolReqs).toContainEqual(expect.objectContaining({id: 'heater', capabilityId: 'onoff', value: false}));
+        expect(coolReqs).toContainEqual(expect.objectContaining({id: 'ac', capabilityId: 'onoff', value: true}));
+
+        // Inside deadband (20.0) with both previously active: both turn OFF
+        const deadbandReqs = calc(20.0, true, true).getRequests();
+        expect(deadbandReqs).toContainEqual(expect.objectContaining({capabilityId: CAPABILITY_ACTIVE, value: false}));
+        expect(deadbandReqs).toContainEqual(expect.objectContaining({capabilityId: 'vt_cooling', value: false}));
+    });
+
+    it('shuts down heating and cooling in off mode', () => {
+        const root = makeZone('root');
+        const vthermo = makeVThermo({
+            capabilities: {
+                measure_temperature: 15,
+                target_temperature: 20,
+                thermostat_mode: 'off',
+                vt_cooling: true,
+                [CAPABILITY_ACTIVE]: true,
+            },
+            deviceSettings: {
+                zone: {clazz: true, coolers: true, thermostats: false},
+            },
+        });
+        const requests = new VThermoDeviceCalculator(new Zones(), makeDevicesStub([vthermo]))
+            .calculateHeaterSwitching(vthermo, root)
+            .getRequests();
+
+        expect(requests).toContainEqual(expect.objectContaining({capabilityId: CAPABILITY_ACTIVE, value: false}));
+        expect(requests).toContainEqual(expect.objectContaining({capabilityId: 'vt_cooling', value: false}));
+    });
+
+    it('prevents rapid short-cycling with min_off_duration and min_on_duration', () => {
+        const root = makeZone('root');
+        const vthermo = makeVThermo({
+            capabilities: {measure_temperature: 18, target_temperature: 20, [CAPABILITY_ACTIVE]: false},
+            deviceSettings: {
+                minOffDuration: 180_000,
+                minOnDuration: 60_000,
+                zone: {clazz: true, coolers: false, thermostats: false},
+            },
+        });
+        // Heater was switched OFF 30 seconds ago (within 180s min_off_duration)
+        const recentHeater = makeDevice({
+            id: 'recent-heater',
+            deviceClass: DeviceClass.heater,
+            capabilities: {onoff: false},
+        });
+        recentHeater.capabilitiesObj!.get('onoff')!.lastUpdated = Date.now() - 30_000;
+
+        const oldHeater = makeDevice({
+            id: 'old-heater',
+            deviceClass: DeviceClass.heater,
+            capabilities: {onoff: false},
+        });
+        oldHeater.capabilitiesObj!.get('onoff')!.lastUpdated = Date.now() - 200_000;
+
+        const requests = new VThermoDeviceCalculator(new Zones(), makeDevicesStub([vthermo, recentHeater, oldHeater]))
+            .calculateHeaterSwitching(vthermo, root)
+            .getRequests();
+
+        // oldHeater should turn ON, recentHeater should be suppressed due to anti-short-cycling
+        expect(requests).toContainEqual(
+            expect.objectContaining({id: 'old-heater', capabilityId: 'onoff', value: true}),
+        );
+        expect(requests).not.toContainEqual(expect.objectContaining({id: 'recent-heater'}));
+    });
+
+    it('honors contact_alarm_delay before turning off heating', () => {
+        const root = makeZone('root');
+        const vthermo = makeVThermo({
+            capabilities: {measure_temperature: 18, target_temperature: 20, [CAPABILITY_ACTIVE]: true},
+            deviceSettings: {
+                contactAlarm: true,
+                contactAlarmDelay: 30_000,
+                zone: {clazz: true, coolers: false, thermostats: false},
+            },
+        });
+        const heater = makeDevice({id: 'heater', deviceClass: DeviceClass.heater, capabilities: {onoff: true}});
+
+        // Contact sensor opened 10 seconds ago (< 30s delay)
+        const contactSensorRecent = makeDevice({
+            id: 'sensor',
+            deviceClass: DeviceClass.sensor,
+            capabilities: {alarm_contact: true},
+        });
+        contactSensorRecent.capabilitiesObj!.get('alarm_contact')!.lastUpdated = Date.now() - 10_000;
+
+        const reqsRecent = new VThermoDeviceCalculator(
+            new Zones(),
+            makeDevicesStub([vthermo, heater, contactSensorRecent]),
+        )
+            .calculateHeaterSwitching(vthermo, root)
+            .getRequests();
+
+        // Heating should remain ON because delay has not elapsed
+        expect(reqsRecent).not.toContainEqual(expect.objectContaining({capabilityId: CAPABILITY_ACTIVE, value: false}));
+
+        // Contact sensor opened 40 seconds ago (>= 30s delay)
+        const contactSensorOld = makeDevice({
+            id: 'sensor-old',
+            deviceClass: DeviceClass.sensor,
+            capabilities: {alarm_contact: true},
+        });
+        contactSensorOld.capabilitiesObj!.get('alarm_contact')!.lastUpdated = Date.now() - 40_000;
+
+        const reqsOld = new VThermoDeviceCalculator(new Zones(), makeDevicesStub([vthermo, heater, contactSensorOld]))
+            .calculateHeaterSwitching(vthermo, root)
+            .getRequests();
+
+        // Heating turns OFF after delay elapsed
+        expect(reqsOld).toContainEqual(expect.objectContaining({capabilityId: CAPABILITY_ACTIVE, value: false}));
+    });
+
+    it('applies thermostat_preset offsets and away temperature correctly', () => {
+        const root = makeZone('root');
+        const makePresetCalc = (preset: string, temp: number) => {
+            const vthermo = makeVThermo({
+                capabilities: {
+                    measure_temperature: temp,
+                    target_temperature: 20,
+                    vt_thermostat_preset: preset,
+                    thermostat_mode: 'heat',
+                    [CAPABILITY_ACTIVE]: false,
+                },
+                deviceSettings: {
+                    presetEcoOffset: -2.0,
+                    presetAwayTemp: 12.0,
+                    presetBoostOffset: 2.0,
+                    hysteresis: 0.5,
+                    zone: {clazz: true, coolers: false, thermostats: false},
+                },
+            });
+            const heater = makeDevice({id: 'heater', deviceClass: DeviceClass.heater, capabilities: {onoff: false}});
+            return new VThermoDeviceCalculator(
+                new Zones(),
+                makeDevicesStub([vthermo, heater]),
+            ).calculateHeaterSwitching(vthermo, root);
+        };
+
+        // Comfort (target 20): at 19.0 (below 19.5), heat turns ON
+        expect(makePresetCalc('comfort', 19.0).getRequests()).toContainEqual(
+            expect.objectContaining({capabilityId: CAPABILITY_ACTIVE, value: true}),
+        );
+
+        // Eco (target 20 - 2 = 18): at 19.0 (above 17.5), heat stays OFF
+        expect(makePresetCalc('eco', 19.0).getRequests()).not.toContainEqual(
+            expect.objectContaining({capabilityId: CAPABILITY_ACTIVE, value: true}),
+        );
+
+        // Away (target fixed 12.0): at 13.0, heat stays OFF; at 11.0 (below 11.5), heat turns ON
+        expect(makePresetCalc('away', 13.0).getRequests()).not.toContainEqual(
+            expect.objectContaining({capabilityId: CAPABILITY_ACTIVE, value: true}),
+        );
+        expect(makePresetCalc('away', 11.0).getRequests()).toContainEqual(
+            expect.objectContaining({capabilityId: CAPABILITY_ACTIVE, value: true}),
+        );
+    });
+
+    it('supports heating and cooling in auto mode with single setpoint and deadband', () => {
+        const root = makeZone('root');
+        const calcAuto = (temp: number) => {
+            const vthermo = makeVThermo({
+                capabilities: {
+                    measure_temperature: temp,
+                    target_temperature: 21.0,
+                    thermostat_mode: 'auto',
+                    vt_cooling: false,
+                    [CAPABILITY_ACTIVE]: false,
+                },
+                deviceSettings: {
+                    hysteresis: 0.5,
+                    zone: {clazz: true, coolers: true, thermostats: false},
+                },
+            });
+            const heater = makeDevice({id: 'heater', deviceClass: DeviceClass.heater, capabilities: {onoff: false}});
+            const ac = makeDevice({id: 'ac', deviceClass: DeviceClass.airconditioner, capabilities: {onoff: false}});
+            return new VThermoDeviceCalculator(
+                new Zones(),
+                makeDevicesStub([vthermo, heater, ac]),
+            ).calculateHeaterSwitching(vthermo, root);
+        };
+
+        // At 20.0 (below target 21.0 - 0.5): heat ON, cool OFF
+        const heatReqs = calcAuto(20.0).getRequests();
+        expect(heatReqs).toContainEqual(expect.objectContaining({id: 'heater', capabilityId: 'onoff', value: true}));
+        expect(heatReqs).not.toContainEqual(expect.objectContaining({id: 'ac', capabilityId: 'onoff', value: true}));
+
+        // At 21.0 (between 20.5 and 21.5): deadband, neither heat nor cool is ON
+        const midReqs = calcAuto(21.0).getRequests();
+        expect(midReqs).not.toContainEqual(expect.objectContaining({id: 'heater', capabilityId: 'onoff', value: true}));
+        expect(midReqs).not.toContainEqual(expect.objectContaining({id: 'ac', capabilityId: 'onoff', value: true}));
+
+        // At 22.0 (above target 21.0 + 0.5): cool ON, heat OFF
+        const coolReqs = calcAuto(22.0).getRequests();
+        expect(coolReqs).toContainEqual(expect.objectContaining({id: 'ac', capabilityId: 'onoff', value: true}));
+        expect(coolReqs).not.toContainEqual(
+            expect.objectContaining({id: 'heater', capabilityId: 'onoff', value: true}),
+        );
+    });
+
+    it('shuts down heating and cooling safely when fail-safe is enabled and temperature is missing', () => {
+        const root = makeZone('root');
+        const vthermo = makeVThermo({
+            capabilities: {
+                measure_temperature: null as any,
+                target_temperature: 20,
+                [CAPABILITY_ACTIVE]: true,
+                vt_cooling: true,
+            },
+            deviceSettings: {
+                failsafeEnabled: true,
+                zone: {clazz: true, coolers: true, thermostats: false},
+            },
+        });
+        const requests = new VThermoDeviceCalculator(new Zones(), makeDevicesStub([vthermo]))
+            .calculateHeaterSwitching(vthermo, root)
+            .getRequests();
+
+        expect(requests).toContainEqual(expect.objectContaining({capabilityId: CAPABILITY_ACTIVE, value: false}));
+        expect(requests).toContainEqual(expect.objectContaining({capabilityId: 'vt_cooling', value: false}));
+    });
+
+    it('triggers frost and overheat safety alarms and cuts off heating on overheat', () => {
+        const root = makeZone('root');
+        const calcSafety = (temp: number) => {
+            const vthermo = makeVThermo({
+                capabilities: {
+                    measure_temperature: temp,
+                    target_temperature: 20,
+                    [CAPABILITY_ACTIVE]: true,
+                },
+                deviceSettings: {
+                    frostAlarmTemp: 5.0,
+                    overheatAlarmTemp: 40.0,
+                    zone: {clazz: true, coolers: false, thermostats: false},
+                },
+            });
+            const heater = makeDevice({id: 'heater', deviceClass: DeviceClass.heater, capabilities: {onoff: true}});
+            return new VThermoDeviceCalculator(
+                new Zones(),
+                makeDevicesStub([vthermo, heater]),
+            ).calculateHeaterSwitching(vthermo, root);
+        };
+
+        // Frost alarm at 4°C (< 5°C limit)
+        const frostReqs = calcSafety(4.0).getRequests();
+        expect(frostReqs).toContainEqual(expect.objectContaining({trigger: 'vt_frost_alarm_true'}));
+
+        // Overheat alarm at 42°C (> 40°C limit): triggers overheat alarm and cuts off heating
+        const overheatReqs = calcSafety(42.0).getRequests();
+        expect(overheatReqs).toContainEqual(expect.objectContaining({trigger: 'vt_overheat_alarm_true'}));
+        expect(overheatReqs).toContainEqual(expect.objectContaining({capabilityId: CAPABILITY_ACTIVE, value: false}));
+    });
+
+    it('suppresses cooling when condensation protection detects room temp near dew point', () => {
+        const root = makeZone('root');
+        const vthermo = makeVThermo({
+            capabilities: {
+                measure_temperature: 24.0,
+                target_temperature: 20.0,
+                thermostat_mode: 'cool',
+                vt_cooling: true,
+            },
+            deviceSettings: {
+                condensationProtection: true,
+                zone: {clazz: false, coolers: true, thermostats: false},
+            },
+        });
+        // Humidity is 95% at 24°C -> Dew point is ~23.1°C (within 1°C of 24°C)
+        const humiditySensor = makeDevice({
+            id: 'hum-sensor',
+            deviceClass: DeviceClass.sensor,
+            zone: 'root',
+            capabilities: {measure_humidity: 95},
+        });
+        const ac = makeDevice({id: 'ac', deviceClass: DeviceClass.airconditioner, capabilities: {onoff: true}});
+
+        const requests = new VThermoDeviceCalculator(new Zones(), makeDevicesStub([vthermo, humiditySensor, ac]))
+            .calculateHeaterSwitching(vthermo, root)
+            .getRequests();
+
+        // Cooling should be shut off to prevent condensation
+        expect(requests).toContainEqual(expect.objectContaining({capabilityId: 'vt_cooling', value: false}));
+        expect(requests).toContainEqual(
+            expect.objectContaining({capabilityId: 'vt_dew_point', value: 23.15, trigger: 'vt_dew_point_changed'}),
+        );
+        expect(requests).toContainEqual(expect.objectContaining({capabilityId: 'vt_condensation_alarm', value: true}));
+    });
 });
 
 describe('VThermoDeviceCalculator target propagation', () => {

@@ -3,14 +3,19 @@
   "type": "number",
   "min": 0,
   "max": 5000,
+  "step": 50,
   "units": {
     "en": "ms"
   },
   "label": {
-    "en": "Delay in milliseconds between switching devices"
+    "en": "Delay in milliseconds between switching devices",
+    "no": "Forsinkelse i millisekunder mellom enhetskommandoer",
+    "nl": "Vertraging in milliseconden tussen schakelen van apparaten"
   },
   "value": 0,
   "hint": {
-    "en": "You can add a delay after each device has been switched on / off."
+    "en": "You can add a delay after each device has been switched on / off.",
+    "no": "Legg til en forsinkelse mellom hver enhet som slås av/på for å unngå overbelastning av trådløst nettverk.",
+    "nl": "Voeg een vertraging toe na het in-/uitschakelen van elk apparaat."
   }
 }

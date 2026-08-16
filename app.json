@@ -10,11 +10,15 @@
     "en": "VThermo"
   },
   "description": {
-    "en": "Virtual thermostat and humidity controller"
+    "en": "Virtual thermostat and humidity controller",
+    "no": "Virtuell termostat og fuktighetskontroller",
+    "nl": "Virtuele thermostaat en vochtigheidsregelaar"
   },
   "category": ["tools"],
   "tags": {
-    "en": ["thermostat", "temperature control", "heating", "virtual", "humidity"]
+    "en": ["thermostat", "temperature control", "heating", "virtual", "humidity"],
+    "no": ["termostat", "temperaturstyring", "oppvarming", "virtuell", "luftfuktighet"],
+    "nl": ["thermostaat", "temperatuurregeling", "verwarming", "virtueel", "luchtvochtigheid"]
   },
   "images": {
     "large": "/assets/images/large.png",
@@ -46,7 +50,9 @@
       {
         "id": "vh_onoff_false",
         "title": {
-          "en": "Humidity device turned off"
+          "en": "Humidity control turned off",
+          "no": "Fuktighetskontroll slått av",
+          "nl": "Vochtigheidsregeling uitgeschakeld"
         },
         "tokens": [
           {
@@ -69,7 +75,9 @@
       {
         "id": "vh_onoff_true",
         "title": {
-          "en": "Humidity device turned on"
+          "en": "Humidity control turned on",
+          "no": "Fuktighetskontroll slått på",
+          "nl": "Vochtigheidsregeling ingeschakeld"
         },
         "tokens": [
           {
@@ -92,14 +100,18 @@
       {
         "id": "vh_target_humidity_changed",
         "title": {
-          "en": "Target humidity changed"
+          "en": "Target humidity changed",
+          "no": "Målfuktighet ble endret",
+          "nl": "Doelluchtvochtigheid gewijzigd"
         },
         "tokens": [
           {
             "name": "humidity",
             "type": "number",
             "title": {
-              "en": "Humidity"
+              "en": "Target humidity",
+              "no": "Målfuktighet",
+              "nl": "Doelluchtvochtigheid"
             },
             "example": 35
           }
@@ -110,12 +122,164 @@
             "type": "device",
             "filter": "driver_id=VHumidity"
           }
+        ],
+        "titleFormatted": {
+          "en": "Target humidity changed to [[humidity]]%",
+          "no": "Målfuktighet ble endret til [[humidity]]%",
+          "nl": "Doelluchtvochtigheid gewijzigd naar [[humidity]]%"
+        }
+      },
+      {
+        "id": "vt_condensation_alarm_false",
+        "title": {
+          "en": "Condensation risk cleared",
+          "no": "Kondensrisiko opphørt",
+          "nl": "Condensatierisico opgeheven"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vt_condensation_alarm_true",
+        "title": {
+          "en": "Condensation risk detected",
+          "no": "Kondensrisiko oppdaget",
+          "nl": "Condensatierisico gedetecteerd"
+        },
+        "hint": {
+          "en": "Triggered when room temperature approaches dew point during cooling.",
+          "no": "Utløses når romtemperaturen nærmer seg duggpunktet under kjøling.",
+          "nl": "Wordt geactiveerd wanneer de kamertemperatuur tijdens het koelen het dauwpunt nadert."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vt_cooling_false",
+        "title": {
+          "en": "Cooling turned off",
+          "no": "Kjøling slått av",
+          "nl": "Koelen uitgeschakeld"
+        },
+        "tokens": [
+          {
+            "name": "state",
+            "type": "number",
+            "title": {
+              "en": "State"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vt_cooling_true",
+        "title": {
+          "en": "Cooling turned on",
+          "no": "Kjøling slått på",
+          "nl": "Koelen ingeschakeld"
+        },
+        "tokens": [
+          {
+            "name": "state",
+            "type": "number",
+            "title": {
+              "en": "State"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vt_dew_point_changed",
+        "title": {
+          "en": "The dew point changed",
+          "no": "Duggpunktet ble endret",
+          "nl": "Het dauwpunt is gewijzigd"
+        },
+        "titleFormatted": {
+          "en": "The dew point changed to [[dew_point]]°",
+          "no": "Duggpunktet ble endret til [[dew_point]]°",
+          "nl": "Het dauwpunt is gewijzigd naar [[dew_point]]°"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "dew_point",
+            "type": "number",
+            "title": {
+              "en": "Dew point (°C)",
+              "no": "Duggpunkt (°C)",
+              "nl": "Dauwpunt (°C)"
+            },
+            "example": 14.5
+          }
+        ]
+      },
+      {
+        "id": "vt_frost_alarm_false",
+        "title": {
+          "en": "Frost alarm cleared",
+          "no": "Frostalarm opphørt",
+          "nl": "Vorstalarm opgeheven"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vt_frost_alarm_true",
+        "title": {
+          "en": "Frost alarm triggered",
+          "no": "Frostalarm utløst",
+          "nl": "Vorstalarm geactiveerd"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
         ]
       },
       {
         "id": "vt_onoff_false",
         "title": {
-          "en": "Heating turned off"
+          "en": "Heating turned off",
+          "no": "Oppvarming slått av",
+          "nl": "Verwarmen uitgeschakeld"
         },
         "tokens": [
           {
@@ -137,7 +301,9 @@
       {
         "id": "vt_onoff_true",
         "title": {
-          "en": "Heating turned on"
+          "en": "Heating turned on",
+          "no": "Oppvarming slått på",
+          "nl": "Verwarmen ingeschakeld"
         },
         "tokens": [
           {
@@ -155,16 +321,114 @@
             "filter": "driver_id=VThermo"
           }
         ]
+      },
+      {
+        "id": "vt_overheat_alarm_false",
+        "title": {
+          "en": "Overheat alarm cleared",
+          "no": "Overopphetingsalarm opphørt",
+          "nl": "Oververhittingsalarm opgeheven"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vt_overheat_alarm_true",
+        "title": {
+          "en": "Overheat alarm triggered",
+          "no": "Overopphetingsalarm utløst",
+          "nl": "Oververhittingsalarm geactiveerd"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vt_thermostat_mode_changed",
+        "title": {
+          "en": "Thermostat mode changed",
+          "no": "Termostatmodus ble endret",
+          "nl": "Thermostaatmodus gewijzigd"
+        },
+        "tokens": [
+          {
+            "name": "mode",
+            "type": "string",
+            "title": {
+              "en": "Mode",
+              "no": "Modus",
+              "nl": "Modus"
+            },
+            "example": "heat"
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ],
+        "titleFormatted": {
+          "en": "Thermostat mode changed to [[mode]]",
+          "no": "Termostatmodus ble endret til [[mode]]",
+          "nl": "Thermostaatmodus gewijzigd naar [[mode]]"
+        }
+      },
+      {
+        "id": "vt_thermostat_preset_changed",
+        "title": {
+          "en": "Thermostat preset changed",
+          "no": "Termostatforvalg ble endret",
+          "nl": "Thermostaat voorinstelling gewijzigd"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "preset",
+            "type": "string",
+            "title": {
+              "en": "Preset",
+              "no": "Forvalg",
+              "nl": "Voorinstelling"
+            },
+            "example": "eco"
+          }
+        ],
+        "titleFormatted": {
+          "en": "Thermostat preset changed to [[preset]]",
+          "no": "Termostatforvalg ble endret til [[preset]]",
+          "nl": "Thermostaat voorinstelling gewijzigd naar [[preset]]"
+        }
       }
     ],
     "conditions": [
       {
         "id": "vh_humidity_decreased_last_mins",
         "title": {
-          "en": "Humidity has decreased..."
+          "en": "Humidity decreased the last minutes",
+          "no": "Luftfuktigheten har sunket de siste minuttene",
+          "nl": "Luchtvochtigheid is de afgelopen minuten gedaald"
         },
         "titleFormatted": {
-          "en": "Humidity !{{has|hasn't}} decreased more than [[change_pct_points]] last [[minutes]]"
+          "en": "Humidity decreased by at least [[change_pct_points]]% the last [[minutes]] minutes",
+          "no": "Luftfuktigheten har sunket med minst [[change_pct_points]]% de siste [[minutes]] minuttene",
+          "nl": "Luchtvochtigheid is met minstens [[change_pct_points]]% gedaald in de afgelopen [[minutes]] minuten"
         },
         "args": [
           {
@@ -175,7 +439,9 @@
           {
             "name": "change_pct_points",
             "title": {
-              "en": "Decrease in % points"
+              "en": "Decrease (%)",
+              "no": "Nedgang (%)",
+              "nl": "Daling (%)"
             },
             "type": "range",
             "min": 1,
@@ -187,7 +453,9 @@
           {
             "name": "minutes",
             "title": {
-              "en": "Minutes"
+              "en": "Minutes",
+              "no": "Minutter",
+              "nl": "Minuten"
             },
             "type": "range",
             "min": 1,
@@ -201,10 +469,14 @@
       {
         "id": "vh_humidity_increased_last_mins",
         "title": {
-          "en": "Humidity has increased..."
+          "en": "Humidity increased the last minutes",
+          "no": "Luftfuktigheten har økt de siste minuttene",
+          "nl": "Luchtvochtigheid is de afgelopen minuten gestegen"
         },
         "titleFormatted": {
-          "en": "Humidity !{{has|hasn't}} increased more than [[change_pct_points]] last [[minutes]]"
+          "en": "Humidity increased by at least [[change_pct_points]]% the last [[minutes]] minutes",
+          "no": "Luftfuktigheten har økt med minst [[change_pct_points]]% de siste [[minutes]] minuttene",
+          "nl": "Luchtvochtigheid is met minstens [[change_pct_points]]% gestegen in de afgelopen [[minutes]] minuten"
         },
         "args": [
           {
@@ -215,7 +487,9 @@
           {
             "name": "change_pct_points",
             "title": {
-              "en": "Increase in % points"
+              "en": "Increase (%)",
+              "no": "Økning (%)",
+              "nl": "Stijging (%)"
             },
             "type": "range",
             "min": 1,
@@ -227,7 +501,9 @@
           {
             "name": "minutes",
             "title": {
-              "en": "Minutes"
+              "en": "Minutes",
+              "no": "Minutter",
+              "nl": "Minuten"
             },
             "type": "range",
             "min": 1,
@@ -241,7 +517,9 @@
       {
         "id": "vh_onoff_is_on",
         "title": {
-          "en": "Humidity device is !{{active|idle}}"
+          "en": "Humidity control is on",
+          "no": "Fuktighetskontroll er på",
+          "nl": "Vochtigheidsregeling is aan"
         },
         "args": [
           {
@@ -252,9 +530,11 @@
         ]
       },
       {
-        "id": "vt_onoff_is_on",
+        "id": "vt_is_condensation_alarm",
         "title": {
-          "en": "Thermostat is !{{active|idle}}"
+          "en": "Condensation risk is active",
+          "no": "Kondensrisiko er aktiv",
+          "nl": "Condensatierisico is actief"
         },
         "args": [
           {
@@ -263,19 +543,211 @@
             "filter": "driver_id=VThermo"
           }
         ]
+      },
+      {
+        "id": "vt_is_cooling",
+        "title": {
+          "en": "Cooling is active",
+          "no": "Kjøling er aktiv",
+          "nl": "Koelen is actief"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vt_is_frost_alarm",
+        "title": {
+          "en": "Frost alarm is active",
+          "no": "Frostalarm er aktiv",
+          "nl": "Vorstalarm is actief"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vt_is_overheat_alarm",
+        "title": {
+          "en": "Overheat alarm is active",
+          "no": "Overopphetingsalarm er aktiv",
+          "nl": "Oververhittingsalarm is actief"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vt_onoff_is_on",
+        "title": {
+          "en": "Heating is active",
+          "no": "Oppvarming er aktiv",
+          "nl": "Verwarmen is actief"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          }
+        ]
+      },
+      {
+        "id": "vt_thermostat_mode_is",
+        "title": {
+          "en": "Thermostat mode is",
+          "no": "Termostatmodus er",
+          "nl": "Thermostaatmodus is"
+        },
+        "titleFormatted": {
+          "en": "Thermostat mode is [[mode]]",
+          "no": "Termostatmodus er [[mode]]",
+          "nl": "Thermostaatmodus is [[mode]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          },
+          {
+            "name": "mode",
+            "title": {
+              "en": "Mode",
+              "no": "Modus",
+              "nl": "Modus"
+            },
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "auto",
+                "title": {
+                  "en": "Auto",
+                  "no": "Auto",
+                  "nl": "Auto"
+                }
+              },
+              {
+                "id": "heat",
+                "title": {
+                  "en": "Heat",
+                  "no": "Varme",
+                  "nl": "Verwarmen"
+                }
+              },
+              {
+                "id": "cool",
+                "title": {
+                  "en": "Cool",
+                  "no": "Kjøling",
+                  "nl": "Koelen"
+                }
+              },
+              {
+                "id": "off",
+                "title": {
+                  "en": "Off",
+                  "no": "Av",
+                  "nl": "Uit"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "vt_thermostat_preset_is",
+        "title": {
+          "en": "Thermostat preset is",
+          "no": "Termostatforvalg er",
+          "nl": "Thermostaat voorinstelling is"
+        },
+        "titleFormatted": {
+          "en": "Thermostat preset is [[preset]]",
+          "no": "Termostatforvalg er [[preset]]",
+          "nl": "Thermostaat voorinstelling is [[preset]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          },
+          {
+            "name": "preset",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "comfort",
+                "title": {
+                  "en": "Comfort",
+                  "no": "Komfort",
+                  "nl": "Comfort"
+                }
+              },
+              {
+                "id": "eco",
+                "title": {
+                  "en": "Eco",
+                  "no": "Øko",
+                  "nl": "Eco"
+                }
+              },
+              {
+                "id": "away",
+                "title": {
+                  "en": "Away",
+                  "no": "Borte",
+                  "nl": "Afwezig"
+                }
+              },
+              {
+                "id": "boost",
+                "title": {
+                  "en": "Boost",
+                  "no": "Boost",
+                  "nl": "Boost"
+                }
+              }
+            ],
+            "title": {
+              "en": "Preset",
+              "no": "Forvalg",
+              "nl": "Voorinstelling"
+            }
+          }
+        ]
       }
     ],
     "actions": [
       {
         "id": "update_invert_switch",
         "title": {
-          "en": "Enable or disable 'Invert switch'"
+          "en": "Enable or disable 'Invert switch'",
+          "no": "Aktiver eller deaktiver 'Inverter bryter'",
+          "nl": "Schakel 'Schakelaar omkeren' in of uit"
         },
         "titleFormatted": {
-          "en": "[[invert_switch]] 'Invert switch'"
+          "en": "[[invert_switch]] 'Invert switch'",
+          "no": "[[invert_switch]] 'Inverter bryter'",
+          "nl": "[[invert_switch]] 'Schakelaar omkeren'"
         },
         "hint": {
-          "en": "Select 'Enable' and the thermostat will switch on if above the target, and switch off if below the target."
+          "en": "Select 'Enable' and the thermostat will switch on if above the target, and switch off if below the target.",
+          "no": "Velg 'Aktiver' og termostaten vil slå seg på over målet og av under målet.",
+          "nl": "Selecteer 'Inschakelen' en de thermostaat schakelt in boven het doel en uit onder het doel."
         },
         "args": [
           {
@@ -286,20 +758,26 @@
           {
             "name": "invert_switch",
             "title": {
-              "en": "Invert switch"
+              "en": "Invert switch",
+              "no": "Inverter bryter",
+              "nl": "Schakelaar omkeren"
             },
             "type": "dropdown",
             "values": [
               {
                 "id": "false",
-                "label": {
-                  "en": "Disable"
+                "title": {
+                  "en": "Disable",
+                  "no": "Deaktiver",
+                  "nl": "Uitschakelen"
                 }
               },
               {
                 "id": "true",
-                "label": {
-                  "en": "Enable"
+                "title": {
+                  "en": "Enable",
+                  "no": "Aktiver",
+                  "nl": "Inschakelen"
                 }
               }
             ]
@@ -309,13 +787,19 @@
       {
         "id": "update_measure_temperature",
         "title": {
-          "en": "Update temperature"
+          "en": "Set temperature",
+          "no": "Sett temperatur",
+          "nl": "Stel temperatuur in"
         },
         "titleFormatted": {
-          "en": "Update temperature to [[temperature]] °C"
+          "en": "Set temperature to [[temperature]]°",
+          "no": "Sett temperatur til [[temperature]]°",
+          "nl": "Stel temperatuur in op [[temperature]]°"
         },
         "hint": {
-          "en": "Update the temperature, e.g. from a temperature sensor in another zone."
+          "en": "Update the temperature, e.g. from a temperature sensor in another zone.",
+          "no": "Oppdater temperaturen, f.eks. fra en temperatursensor i en annen sone.",
+          "nl": "Werk de temperatuur bij, bijv. van een temperatuursensor in een andere zone."
         },
         "args": [
           {
@@ -326,14 +810,18 @@
           {
             "name": "temperature",
             "title": {
-              "en": "Temperature"
+              "en": "Temperature",
+              "no": "Temperatur",
+              "nl": "Temperatuur"
             },
             "type": "number",
             "min": -150,
             "max": 150,
             "label": " °C",
             "placeholder": {
-              "en": "Temperature..."
+              "en": "Temperature...",
+              "no": "Temperatur...",
+              "nl": "Temperatuur..."
             }
           }
         ]
@@ -341,13 +829,19 @@
       {
         "id": "update_target_temp_min_max_step",
         "title": {
-          "en": "Update target temperature min, max and step"
+          "en": "Set min / max / step for target temperature",
+          "no": "Sett min / maks / trinn for måltemperatur",
+          "nl": "Stel min / max / stap in voor doeltemperatuur"
         },
         "titleFormatted": {
-          "en": "Update target temperature min to [[temp_min]], max to [[temp_max]] and step to [[temp_step]]"
+          "en": "Set target temperature min to [[temp_min]]°, max to [[temp_max]]°, step to [[temp_step]]",
+          "no": "Sett måltemperatur min til [[temp_min]]°, maks til [[temp_max]]°, trinn til [[temp_step]]",
+          "nl": "Stel doeltemperatuur min in op [[temp_min]]°, max op [[temp_max]]°, stap op [[temp_step]]"
         },
         "hint": {
-          "en": "Update minimum, maximum and step for target temperature."
+          "en": "Update minimum, maximum and step for target temperature.",
+          "no": "Oppdater minimum, maksimum og trinn for måltemperatur.",
+          "nl": "Werk minimum, maximum en stap bij voor doeltemperatuur."
         },
         "args": [
           {
@@ -358,7 +852,9 @@
           {
             "name": "temp_min",
             "title": {
-              "en": "Target temperature minimum"
+              "en": "Target temperature minimum",
+              "no": "Minimum måltemperatur",
+              "nl": "Minimum doeltemperatuur"
             },
             "type": "range",
             "value": 1,
@@ -371,7 +867,9 @@
           {
             "name": "temp_max",
             "title": {
-              "en": "Target temperature maximum"
+              "en": "Target temperature maximum",
+              "no": "Maksimum måltemperatur",
+              "nl": "Maximum doeltemperatuur"
             },
             "type": "range",
             "value": 40,
@@ -384,20 +882,26 @@
           {
             "name": "temp_step",
             "title": {
-              "en": "Target temperature step (°C)"
+              "en": "Target temperature step (°C)",
+              "no": "Trinn for måltemperatur (°C)",
+              "nl": "Stap voor doeltemperatuur (°C)"
             },
             "type": "dropdown",
             "values": [
               {
                 "id": "STEP50",
-                "label": {
-                  "en": "0.50 °C"
+                "title": {
+                  "en": "0.50 °C",
+                  "no": "0.50 °C",
+                  "nl": "0.50 °C"
                 }
               },
               {
                 "id": "STEP25",
-                "label": {
-                  "en": "0.25 °C"
+                "title": {
+                  "en": "0.25 °C",
+                  "no": "0.25 °C",
+                  "nl": "0.25 °C"
                 }
               }
             ]
@@ -407,13 +911,19 @@
       {
         "id": "update_target_temp_offset",
         "title": {
-          "en": "Update target temperature offset"
+          "en": "Set target temperature offset",
+          "no": "Sett temperaturforskyvning",
+          "nl": "Stel doelcompensatie in"
         },
         "titleFormatted": {
-          "en": "Update target temperature offset to [[temp_offset]]"
+          "en": "Set target temperature offset to [[temp_offset]]°",
+          "no": "Sett temperaturforskyvning til [[temp_offset]]°",
+          "nl": "Stel doelcompensatie in op [[temp_offset]]°"
         },
         "hint": {
-          "en": "Update the offset when target temperature is updated from a master VThermo - thermostat."
+          "en": "Update the offset when target temperature is updated from a master VThermo - thermostat.",
+          "no": "Oppdater forskyvning når måltemperatur oppdateres fra en overordnet termostat.",
+          "nl": "Werk de compensatie bij wanneer de doeltemperatuur wordt bijgewerkt vanaf een hoofdthermostaat."
         },
         "args": [
           {
@@ -439,13 +949,19 @@
       {
         "id": "update_target_update_enabled",
         "title": {
-          "en": "Enable or disable target temperature update"
+          "en": "Enable or disable target temperature update",
+          "no": "Aktiver eller deaktiver oppdatering av måltemperatur",
+          "nl": "Doeltemperatuur bijwerken in- of uitschakelen"
         },
         "titleFormatted": {
-          "en": "[[enabled]] target temperature update"
+          "en": "[[enabled]] target temperature update",
+          "no": "[[enabled]] oppdatering av måltemperatur",
+          "nl": "[[enabled]] doeltemperatuur bijwerken"
         },
         "hint": {
-          "en": "Enable or disable being updated from a master VThermo - thermostat."
+          "en": "Enable or disable being updated from a master VThermo - thermostat.",
+          "no": "Aktiver eller deaktiver å bli oppdatert fra en overordnet VThermo-termostat.",
+          "nl": "Schakel bijwerken vanaf een hoofd VThermo-thermostaat in of uit."
         },
         "args": [
           {
@@ -456,20 +972,26 @@
           {
             "name": "enabled",
             "title": {
-              "en": "Target temperature update enabled or disabled"
+              "en": "Target temperature update",
+              "no": "Oppdatering av måltemperatur",
+              "nl": "Doeltemperatuur bijwerken"
             },
             "type": "dropdown",
             "values": [
               {
                 "id": "false",
-                "label": {
-                  "en": "Disable"
+                "title": {
+                  "en": "Disable",
+                  "no": "Deaktiver",
+                  "nl": "Uitschakelen"
                 }
               },
               {
                 "id": "true",
-                "label": {
-                  "en": "Enable"
+                "title": {
+                  "en": "Enable",
+                  "no": "Aktiver",
+                  "nl": "Inschakelen"
                 }
               }
             ]
@@ -479,13 +1001,19 @@
       {
         "id": "vh_set_target_humidity",
         "title": {
-          "en": "Set the target humidity"
+          "en": "Set target humidity",
+          "no": "Sett målfuktighet",
+          "nl": "Stel doelluchtvochtigheid in"
         },
         "titleFormatted": {
-          "en": "Set the target humidity to [[vh_target_humidity]]"
+          "en": "Set target humidity to [[vh_target_humidity]]%",
+          "no": "Sett målfuktighet til [[vh_target_humidity]]%",
+          "nl": "Stel doelluchtvochtigheid in op [[vh_target_humidity]]%"
         },
         "hint": {
-          "en": "Set the target humidity."
+          "en": "Set the target humidity.",
+          "no": "Sett målfuktigheten.",
+          "nl": "Stel de doelluchtvochtigheid in."
         },
         "args": [
           {
@@ -496,7 +1024,9 @@
           {
             "name": "vh_target_humidity",
             "title": {
-              "en": "Target humidity"
+              "en": "Target humidity",
+              "no": "Målfuktighet",
+              "nl": "Doelluchtvochtigheid"
             },
             "type": "range",
             "min": 1,
@@ -504,6 +1034,142 @@
             "step": 1,
             "label": "%",
             "labelDecimals": 0
+          }
+        ]
+      },
+      {
+        "id": "vt_set_thermostat_mode",
+        "title": {
+          "en": "Set thermostat mode",
+          "no": "Sett termostatmodus",
+          "nl": "Stel thermostaatmodus in"
+        },
+        "titleFormatted": {
+          "en": "Set thermostat mode to [[mode]]",
+          "no": "Sett termostatmodus til [[mode]]",
+          "nl": "Stel thermostaatmodus in op [[mode]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=VThermo"
+          },
+          {
+            "name": "mode",
+            "title": {
+              "en": "Mode",
+              "no": "Modus",
+              "nl": "Modus"
+            },
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "auto",
+                "title": {
+                  "en": "Auto",
+                  "no": "Auto",
+                  "nl": "Auto"
+                }
+              },
+              {
+                "id": "heat",
+                "title": {
+                  "en": "Heat",
+                  "no": "Varme",
+                  "nl": "Verwarmen"
+                }
+              },
+              {
+                "id": "cool",
+                "title": {
+                  "en": "Cool",
+                  "no": "Kjøling",
+                  "nl": "Koelen"
+                }
+              },
+              {
+                "id": "off",
+                "title": {
+                  "en": "Off",
+                  "no": "Av",
+                  "nl": "Uit"
+                }
+              }
+            ]
+          }
+        ],
+        "hint": {
+          "en": "Set the thermostat mode to Auto, Heat, Cool, or Off.",
+          "no": "Sett termostatmodus til Auto, Varme, Kjøling eller Av.",
+          "nl": "Stel de thermostaatmodus in op Auto, Verwarmen, Koelen of Uit."
+        }
+      },
+      {
+        "id": "vt_set_thermostat_preset",
+        "title": {
+          "en": "Set thermostat preset",
+          "no": "Sett termostatforvalg",
+          "nl": "Stel thermostaat voorinstelling in"
+        },
+        "titleFormatted": {
+          "en": "Set thermostat preset to [[preset]]",
+          "no": "Sett termostatforvalg til [[preset]]",
+          "nl": "Stel thermostaat voorinstelling in op [[preset]]"
+        },
+        "hint": {
+          "en": "Set the thermostat preset to Comfort, Eco, Away, or Boost.",
+          "no": "Sett termostatforvalg til Komfort, Øko, Borte eller Boost.",
+          "nl": "Stel de thermostaatvoorinstelling in op Comfort, Eco, Afwezig of Boost."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=VThermo"
+          },
+          {
+            "name": "preset",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "comfort",
+                "title": {
+                  "en": "Comfort",
+                  "no": "Komfort",
+                  "nl": "Comfort"
+                }
+              },
+              {
+                "id": "eco",
+                "title": {
+                  "en": "Eco",
+                  "no": "Øko",
+                  "nl": "Eco"
+                }
+              },
+              {
+                "id": "away",
+                "title": {
+                  "en": "Away",
+                  "no": "Borte",
+                  "nl": "Afwezig"
+                }
+              },
+              {
+                "id": "boost",
+                "title": {
+                  "en": "Boost",
+                  "no": "Boost",
+                  "nl": "Boost"
+                }
+              }
+            ],
+            "title": {
+              "en": "Preset",
+              "no": "Forvalg",
+              "nl": "Voorinstelling"
+            }
           }
         ]
       }
@@ -539,61 +1205,79 @@
         {
           "type": "group",
           "label": {
-            "en": "Humidity"
+            "en": "Humidity",
+            "no": "Luftfuktighet",
+            "nl": "Luchtvochtigheid"
           },
           "children": [
             {
               "id": "calc_method_humidity",
               "type": "dropdown",
               "label": {
-                "en": "Humidity calculation method"
+                "en": "Humidity calculation method",
+                "no": "Beregningsfuktighet",
+                "nl": "Berekeningsluchtvochtigheid"
               },
               "value": "AVERAGE",
               "values": [
                 {
                   "id": "AVERAGE",
                   "label": {
-                    "en": "Average"
+                    "en": "Average",
+                    "no": "Gjennomsnittlig fuktighet",
+                    "nl": "Gemiddelde luchtvochtigheid"
                   }
                 },
                 {
                   "id": "MIN",
                   "label": {
-                    "en": "Minimum"
+                    "en": "Minimum",
+                    "no": "Laveste fuktighet",
+                    "nl": "Laagste luchtvochtigheid"
                   }
                 },
                 {
                   "id": "MAX",
                   "label": {
-                    "en": "Maximum"
+                    "en": "Maximum",
+                    "no": "Høyeste fuktighet",
+                    "nl": "Hoogste luchtvochtigheid"
                   }
                 },
                 {
                   "id": "NEWEST",
                   "label": {
-                    "en": "Newest"
+                    "en": "Newest",
+                    "no": "Nyeste fuktighet",
+                    "nl": "Nieuwste luchtvochtigheid"
                   }
                 }
               ],
               "hint": {
-                "en": "Method for calculating the humidity if there are several humidity sensors."
+                "en": "Method for calculating the humidity if there are several humidity sensors.",
+                "no": "Velg metode for å beregne relativ fuktighet når det er flere sensorer.",
+                "nl": "Selecteer de methode om de luchtvochtigheid te berekenen bij meerdere sensoren."
               }
             },
             {
               "id": "ignore_old_measurements",
               "type": "number",
               "label": {
-                "en": "Ignore old measurements"
+                "en": "Ignore old measurements",
+                "no": "Ignorer gamle målinger",
+                "nl": "Oude metingen negeren"
               },
               "hint": {
-                "en": "To ignore old measurements, set a value larger than 0. A value of eg. 7200 will ignore meaurements older than 2 hours (7200 seconds). Only used for Average, Minimum and Maximum, and when there are two or more sensors."
+                "en": "To ignore old measurements, set a value larger than 0. A value of eg. 7200 will ignore meaurements older than 2 hours (7200 seconds). Only used for Average, Minimum and Maximum, and when there are two or more sensors.",
+                "no": "For å ignorere gamle målinger, sett en verdi større enn 0 sekunder. F.eks. 7200 ignorerer målinger eldre enn 2 timer.",
+                "nl": "Om oude metingen te negeren, stel een waarde in groter dan 0 seconden."
               },
               "value": 0,
               "min": 0,
               "max": 86400,
               "step": 1,
               "units": {
-                "en": "seconds"
+                "en": "s"
               }
             }
           ]
@@ -601,40 +1285,60 @@
         {
           "type": "group",
           "label": {
-            "en": "General settings"
+            "en": "General settings",
+            "no": "Generelle innstillinger",
+            "nl": "Algemene instellingen"
           },
           "children": [
             {
               "id": "hysteresis",
               "value": 1,
               "hint": {
-                "en": "With a hysteresis value of 1, the humidity will vary between 1 below and 1 above the target. A value of 0 switches whenever the humidity crosses the target and may cause rapid switching."
+                "en": "With a hysteresis value of 1, the humidity will vary between 1 below and 1 above the target. A value of 0 switches whenever the humidity crosses the target and may cause rapid switching.",
+                "no": "Med en hystereseverdi på 1 vil luftfuktigheten variere mellom 1 under og 1 over målet. En verdi på 0 kobler hver gang fuktigheten krysser målet.",
+                "nl": "Met een hysteresiswaarde van 1 varieert de luchtvochtigheid tussen 1 onder en 1 boven het doel. Een waarde van 0 schakelt zodra de vochtigheid het doel kruist."
               },
               "type": "number",
               "label": {
-                "en": "Hysteresis"
+                "en": "Hysteresis",
+                "no": "Hysterese",
+                "nl": "Hysteresis"
+              },
+              "min": 0,
+              "max": 10,
+              "step": 0.1,
+              "units": {
+                "en": "°C"
               }
             },
             {
               "id": "invert",
               "label": {
-                "en": "Invert for humidifier"
+                "en": "Invert for humidifier",
+                "no": "Inverter for luftfukter",
+                "nl": "Omkeren voor luchtbevochtiger"
               },
               "type": "checkbox",
               "value": false,
               "hint": {
-                "en": "Check this to invert the switching of the device."
+                "en": "Check this to invert the switching of the device.",
+                "no": "Kryss av her for å invertere inn/utkobling av enheten.",
+                "nl": "Vink dit aan om het schakelen van het apparaat om te keren."
               }
             },
             {
               "id": "onoff_enabled",
               "type": "checkbox",
               "label": {
-                "en": "On / off enabled"
+                "en": "On / off enabled",
+                "no": "På / av aktivert",
+                "nl": "Aan / uit ingeschakeld"
               },
               "value": true,
               "hint": {
-                "en": "When unchecked, the device cannot be turned off and its on/off switch will remain on."
+                "en": "When unchecked, the device cannot be turned off and its on/off switch will remain on.",
+                "no": "Når denne er avkrysset, kan ikke enheten slås av, og av/på-bryteren forblir på.",
+                "nl": "Wanneer uitgeschakeld kan het apparaat niet worden uitgezet en blijft de aan/uit-schakelaar aan."
               }
             }
           ]
@@ -642,7 +1346,9 @@
         {
           "type": "group",
           "label": {
-            "en": "Timing"
+            "en": "Timing",
+            "no": "Tidsstyring",
+            "nl": "Timing"
           },
           "children": [
             {
@@ -650,15 +1356,20 @@
               "type": "number",
               "min": 0,
               "max": 5000,
+              "step": 50,
               "units": {
                 "en": "ms"
               },
               "label": {
-                "en": "Delay in milliseconds between switching devices"
+                "en": "Delay in milliseconds between switching devices",
+                "no": "Forsinkelse i millisekunder mellom enhetskommandoer",
+                "nl": "Vertraging in milliseconden tussen schakelen van apparaten"
               },
               "value": 0,
               "hint": {
-                "en": "You can add a delay after each device has been switched on / off."
+                "en": "You can add a delay after each device has been switched on / off.",
+                "no": "Legg til en forsinkelse mellom hver enhet som slås av/på for å unngå overbelastning av trådløst nettverk.",
+                "nl": "Voeg een vertraging toe na het in-/uitschakelen van elk apparaat."
               }
             }
           ]
@@ -689,76 +1400,238 @@
         "en": "VThermo"
       },
       "class": "thermostat",
-      "capabilities": ["onoff", "vt_onoff", "target_temperature", "measure_temperature"],
+      "capabilities": [
+        "onoff",
+        "vt_onoff",
+        "vt_cooling",
+        "target_temperature",
+        "measure_temperature",
+        "vt_dew_point",
+        "vt_condensation_alarm",
+        "thermostat_mode",
+        "vt_thermostat_preset"
+      ],
+      "capabilitiesOptions": {
+        "target_temperature": {
+          "min": 5,
+          "max": 35,
+          "step": 0.5
+        },
+        "measure_temperature": {
+          "decimals": 1
+        },
+        "vt_dew_point": {
+          "title": {
+            "en": "Dew Point",
+            "no": "Duggpunkt",
+            "nl": "Dauwpunt"
+          },
+          "units": {
+            "en": "°C",
+            "no": "°C",
+            "nl": "°C"
+          },
+          "decimals": 1,
+          "icon": "/assets/cooling.svg"
+        },
+        "vt_condensation_alarm": {
+          "title": {
+            "en": "Condensation Risk",
+            "no": "Kondensrisiko",
+            "nl": "Condensatierisico"
+          },
+          "icon": "/assets/droplet.svg"
+        },
+        "vt_cooling": {
+          "title": {
+            "en": "Cooling",
+            "no": "Kjøling",
+            "nl": "Koelen"
+          }
+        },
+        "vt_onoff": {
+          "title": {
+            "en": "Heating",
+            "no": "Varme",
+            "nl": "Verwarmen"
+          }
+        },
+        "thermostat_mode": {
+          "title": {
+            "en": "Thermostat Mode",
+            "no": "Termostatmodus",
+            "nl": "Thermostaatmodus"
+          },
+          "values": [
+            {
+              "id": "auto",
+              "title": {
+                "en": "Auto",
+                "no": "Auto",
+                "nl": "Auto"
+              }
+            },
+            {
+              "id": "heat",
+              "title": {
+                "en": "Heat",
+                "no": "Varme",
+                "nl": "Verwarmen"
+              }
+            },
+            {
+              "id": "cool",
+              "title": {
+                "en": "Cool",
+                "no": "Kjøling",
+                "nl": "Koelen"
+              }
+            },
+            {
+              "id": "off",
+              "title": {
+                "en": "Off",
+                "no": "Av",
+                "nl": "Uit"
+              }
+            }
+          ]
+        },
+        "vt_thermostat_preset": {
+          "title": {
+            "en": "Thermostat Preset",
+            "no": "Termostatforvalg",
+            "nl": "Thermostaat voorinstelling"
+          },
+          "values": [
+            {
+              "id": "comfort",
+              "title": {
+                "en": "Comfort",
+                "no": "Komfort",
+                "nl": "Comfort"
+              }
+            },
+            {
+              "id": "eco",
+              "title": {
+                "en": "Eco",
+                "no": "Øko",
+                "nl": "Eco"
+              }
+            },
+            {
+              "id": "away",
+              "title": {
+                "en": "Away",
+                "no": "Borte",
+                "nl": "Afwezig"
+              }
+            },
+            {
+              "id": "boost",
+              "title": {
+                "en": "Boost",
+                "no": "Boost",
+                "nl": "Boost"
+              }
+            }
+          ]
+        }
+      },
       "settings": [
         {
           "type": "group",
           "label": {
-            "en": "Temperature"
+            "en": "Temperature",
+            "no": "Temperatur",
+            "nl": "Temperatuur"
           },
           "children": [
             {
               "id": "calc_method",
               "type": "dropdown",
               "label": {
-                "en": "Temperature calculation method"
+                "en": "Temperature calculation method",
+                "no": "Beregningstemperatur",
+                "nl": "Berekeningstemperatuur"
               },
               "value": "AVERAGE",
               "values": [
                 {
                   "id": "AVERAGE",
                   "label": {
-                    "en": "Average"
+                    "en": "Average",
+                    "no": "Gjennomsnittlig temperatur",
+                    "nl": "Gemiddelde temperatuur"
                   }
                 },
                 {
                   "id": "MIN",
                   "label": {
-                    "en": "Minimum"
+                    "en": "Minimum",
+                    "no": "Laveste temperatur",
+                    "nl": "Laagste temperatuur"
                   }
                 },
                 {
                   "id": "MAX",
                   "label": {
-                    "en": "Maximum"
+                    "en": "Maximum",
+                    "no": "Høyeste temperatur",
+                    "nl": "Hoogste temperatuur"
                   }
                 },
                 {
                   "id": "NEWEST",
                   "label": {
-                    "en": "Newest"
+                    "en": "Newest",
+                    "no": "Nyeste temperatur",
+                    "nl": "Nieuwste temperatuur"
                   }
                 },
                 {
                   "id": "MANUAL",
                   "label": {
-                    "en": "Manual"
+                    "en": "Manual",
+                    "no": "Manuell temperatur (Flow)",
+                    "nl": "Handmatige temperatuur (Flow)"
                   }
                 }
               ],
               "hint": {
-                "en": "Method for calculating the temperature if there are several temperature sensors."
+                "en": "Method for calculating the temperature if there are several temperature sensors.",
+                "no": "Velg metode for å beregne romtemperatur når det er flere sensorer.",
+                "nl": "Selecteer de methode om de kamertemperatuur te berekenen bij meerdere sensoren."
               }
             },
             {
               "id": "validate_temperature",
               "type": "checkbox",
               "label": {
-                "en": "Validate temperatures"
+                "en": "Validate temperatures",
+                "no": "Valider temperaturer",
+                "nl": "Valideer temperaturen"
               },
               "value": false,
               "hint": {
-                "en": "Check this to only accept temperatures in the validate min / max range. Temperatures outside this range not will be used when calculating the temperature."
+                "en": "Check this to only accept temperatures in the validate min / max range. Temperatures outside this range not will be used when calculating the temperature.",
+                "no": "Huk av her for kun å godta temperaturer innenfor gyldighetsområdet.",
+                "nl": "Vink dit aan om alleen temperaturen binnen het validatiebereik te accepteren."
               }
             },
             {
               "id": "validate_min_temp",
               "type": "number",
               "label": {
-                "en": "Minimum validate temperature"
+                "en": "Minimum validate temperature",
+                "no": "Minimal gyldig temperatur",
+                "nl": "Minimale geldige temperatuur"
               },
               "hint": {
-                "en": "Temperatures below this value will not be used when calculating the temperature."
+                "en": "Temperatures below this value will not be used when calculating the temperature.",
+                "no": "Temperaturer under denne verdien vil bli ignorert ved beregning.",
+                "nl": "Temperaturen onder deze waarde worden genegeerd bij de berekening."
               },
               "value": 1,
               "min": -10,
@@ -772,10 +1645,14 @@
               "id": "validate_max_temp",
               "type": "number",
               "label": {
-                "en": "Maximum validate temperature"
+                "en": "Maximum validate temperature",
+                "no": "Maksimal gyldig temperatur",
+                "nl": "Maximale geldige temperatuur"
               },
               "hint": {
-                "en": "Temperatures above this value will not be used when calculating the temperature."
+                "en": "Temperatures above this value will not be used when calculating the temperature.",
+                "no": "Temperaturer over denne verdien vil bli ignorert ved beregning.",
+                "nl": "Temperaturen boven deze waarde worden genegeerd bij de berekening."
               },
               "value": 40,
               "min": -10,
@@ -789,56 +1666,74 @@
               "id": "ignore_old_measurements",
               "type": "number",
               "label": {
-                "en": "Ignore old measurements"
+                "en": "Ignore old measurements",
+                "no": "Ignorer gamle målinger",
+                "nl": "Oude metingen negeren"
               },
               "hint": {
-                "en": "To ignore old measurements, set a value larger than 0. A value of eg. 7200 will ignore meaurements older than 2 hours (7200 seconds). Only used for Average, Minimum and Maximum, and when there are two or more sensors."
+                "en": "To ignore old measurements, set a value larger than 0. A value of eg. 7200 will ignore meaurements older than 2 hours (7200 seconds). Only used for Average, Minimum and Maximum, and when there are two or more sensors.",
+                "no": "For å ignorere gamle målinger, sett en verdi større enn 0 sekunder. F.eks. 7200 ignorerer målinger eldre enn 2 timer.",
+                "nl": "Om oude metingen te negeren, stel een waarde in groter dan 0 seconden."
               },
               "value": 0,
               "min": 0,
               "max": 86400,
               "step": 1,
               "units": {
-                "en": "seconds"
+                "en": "s"
               }
             },
             {
               "type": "group",
               "label": {
-                "en": "Temperature sensors in the same zone"
+                "en": "Temperature sensors in the same zone",
+                "no": "Temperatursensorer i samme sone",
+                "nl": "Temperatuursensoren in dezelfde zone"
               },
               "children": [
                 {
                   "id": "zone_sensors",
                   "type": "checkbox",
                   "label": {
-                    "en": "Temperature sensors"
+                    "en": "Temperature sensors",
+                    "no": "Temperatursensorer",
+                    "nl": "Temperatuursensoren"
                   },
                   "value": true,
                   "hint": {
-                    "en": "Standard temperature sensors in the same zone."
+                    "en": "Standard temperature sensors in the same zone.",
+                    "no": "Standard temperatursensorer i samme sone.",
+                    "nl": "Standaard temperatuursensoren in dezelfde zone."
                   }
                 },
                 {
                   "id": "thermostat",
                   "type": "checkbox",
                   "label": {
-                    "en": "Other thermostats"
+                    "en": "Other thermostats",
+                    "no": "Andre termostater",
+                    "nl": "Andere thermostaten"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Other thermostats with temperature sensors in the same zone."
+                    "en": "Other thermostats with temperature sensors in the same zone.",
+                    "no": "Andre termostater med temperatursensorer i samme sone.",
+                    "nl": "Andere thermostaten met temperatuursensoren in dezelfde zone."
                   }
                 },
                 {
                   "id": "zone_other",
                   "type": "checkbox",
                   "label": {
-                    "en": "Other devices"
+                    "en": "Other devices",
+                    "no": "Andre enheter",
+                    "nl": "Andere apparaten"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Other devices with temperature sensors in the same zone."
+                    "en": "Other devices with temperature sensors in the same zone.",
+                    "no": "Andre enheter med temperatursensorer i samme sone.",
+                    "nl": "Andere apparaten met temperatuursensoren in dezelfde zone."
                   }
                 }
               ]
@@ -846,51 +1741,69 @@
             {
               "type": "group",
               "label": {
-                "en": "Temperature sensors from the parent zone"
+                "en": "Temperature sensors from the parent zone",
+                "no": "Temperatursensorer fra overordnet sone",
+                "nl": "Temperatuursensoren uit de bovenliggende zone"
               },
               "children": [
                 {
                   "id": "parent_sensors",
                   "type": "checkbox",
                   "label": {
-                    "en": "Temperature sensors"
+                    "en": "Temperature sensors",
+                    "no": "Temperatursensorer",
+                    "nl": "Temperatuursensoren"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Standard temperature sensors in the parent zone."
+                    "en": "Standard temperature sensors in the parent zone.",
+                    "no": "Standard temperatursensorer i overordnet sone.",
+                    "nl": "Standaard temperatuursensoren in de bovenliggende zone."
                   }
                 },
                 {
                   "id": "parent_thermostat",
                   "type": "checkbox",
                   "label": {
-                    "en": "Other thermostats"
+                    "en": "Other thermostats",
+                    "no": "Andre termostater",
+                    "nl": "Andere thermostaten"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Other thermostats with temperature sensors in the parent zone."
+                    "en": "Other thermostats with temperature sensors in the parent zone.",
+                    "no": "Andre termostater med temperatursensorer i overordnet sone.",
+                    "nl": "Andere thermostaten met temperatuursensoren in de bovenliggende zone."
                   }
                 },
                 {
                   "id": "parent_vthermo",
                   "type": "checkbox",
                   "label": {
-                    "en": "Other VThermos"
+                    "en": "Other VThermos",
+                    "no": "Andre VThermos",
+                    "nl": "Andere VThermos"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Other VThermos in the parent zone."
+                    "en": "Other VThermos in the parent zone.",
+                    "no": "Andre VThermoer i overordnet sone.",
+                    "nl": "Andere VThermo's in de bovenliggende zone."
                   }
                 },
                 {
                   "id": "parent_other",
                   "type": "checkbox",
                   "label": {
-                    "en": "Other devices"
+                    "en": "Other devices",
+                    "no": "Andre enheter",
+                    "nl": "Andere apparaten"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Other devices with temperature sensors in the parent zone."
+                    "en": "Other devices with temperature sensors in the parent zone.",
+                    "no": "Andre enheter med temperatursensorer i overordnet sone.",
+                    "nl": "Andere apparaten met temperatuursensoren in de bovenliggende zone."
                   }
                 }
               ]
@@ -898,51 +1811,69 @@
             {
               "type": "group",
               "label": {
-                "en": "Temperature sensors from sub zones (one level)"
+                "en": "Temperature sensors from sub zones (one level)",
+                "no": "Temperatursensorer fra undersoner (ett nivå)",
+                "nl": "Temperatuursensoren uit subzones (één niveau)"
               },
               "children": [
                 {
                   "id": "sub_sensors",
                   "type": "checkbox",
                   "label": {
-                    "en": "Temperature sensors"
+                    "en": "Temperature sensors",
+                    "no": "Temperatursensorer",
+                    "nl": "Temperatuursensoren"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Standard temperature sensors in sub zones (one level down)."
+                    "en": "Standard temperature sensors in sub zones (one level down).",
+                    "no": "Standard temperatursensorer i undersoner (ett nivå ned).",
+                    "nl": "Standaard temperatuursensoren in subzones (één niveau omlaag)."
                   }
                 },
                 {
                   "id": "sub_thermostat",
                   "type": "checkbox",
                   "label": {
-                    "en": "Other thermostats"
+                    "en": "Other thermostats",
+                    "no": "Andre termostater",
+                    "nl": "Andere thermostaten"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Other thermostats with temperature sensors in sub zones (one level down)."
+                    "en": "Other thermostats with temperature sensors in sub zones (one level down).",
+                    "no": "Andre termostater med temperatursensorer i undersoner (ett nivå ned).",
+                    "nl": "Andere thermostaten met temperatuursensoren in subzones (één niveau omlaag)."
                   }
                 },
                 {
                   "id": "sub_vthermo",
                   "type": "checkbox",
                   "label": {
-                    "en": "Other VThermos"
+                    "en": "Other VThermos",
+                    "no": "Andre VThermos",
+                    "nl": "Andere VThermos"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Other VThermos in sub zones (one level down)."
+                    "en": "Other VThermos in sub zones (one level down).",
+                    "no": "Andre VThermoer i undersoner (ett nivå ned).",
+                    "nl": "Andere VThermo's in subzones (één niveau omlaag)."
                   }
                 },
                 {
                   "id": "sub_other",
                   "type": "checkbox",
                   "label": {
-                    "en": "Other devices"
+                    "en": "Other devices",
+                    "no": "Andre enheter",
+                    "nl": "Andere apparaten"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Other devices with temperature sensors in sub zones (one level down)."
+                    "en": "Other devices with temperature sensors in sub zones (one level down).",
+                    "no": "Andre enheter med temperatursensorer i undersoner (ett nivå ned).",
+                    "nl": "Andere apparaten met temperatuursensoren in subzones (één niveau omlaag)."
                   }
                 }
               ]
@@ -952,35 +1883,92 @@
         {
           "type": "group",
           "label": {
-            "en": "Devices"
+            "en": "Devices",
+            "no": "Enheter",
+            "nl": "Apparaten"
           },
           "children": [
             {
               "type": "group",
               "label": {
-                "en": "Control devices in the same zone"
+                "en": "Control devices in the same zone",
+                "no": "Styr enheter i samme sone",
+                "nl": "Apparaten in dezelfde zone bedienen"
               },
               "children": [
                 {
                   "id": "devices_zone_heaters",
                   "type": "checkbox",
                   "label": {
-                    "en": "Heaters"
+                    "en": "Heaters",
+                    "no": "Varmeovner",
+                    "nl": "Verwarmingselementen"
                   },
                   "value": true,
                   "hint": {
-                    "en": "Will control heaters in the same zone."
+                    "en": "Will control heaters in the same zone.",
+                    "no": "Styrer varmeovner i samme sone.",
+                    "nl": "Bedient verwarmingen in dezelfde zone."
+                  }
+                },
+                {
+                  "id": "devices_zone_coolers",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Coolers",
+                    "no": "Klimaanlegg og vifter",
+                    "nl": "Airconditioners en ventilatoren"
+                  },
+                  "value": true,
+                  "hint": {
+                    "en": "Will control coolers (air conditioners, fans, refrigerators) in the same zone.",
+                    "no": "Styrer kjøleenheter (klimaanlegg, vifter, kjøleskap) i samme sone.",
+                    "nl": "Bedient koelapparaten (airconditioners, ventilatoren, koelkasten) in dezelfde zone."
+                  }
+                },
+                {
+                  "id": "devices_zone_sockets_heaters",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Smart plugs as heaters",
+                    "no": "Smarte plugger som varme",
+                    "nl": "Slimme stekkers als verwarming"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Will control smart sockets/plugs used as heaters in the same zone.",
+                    "no": "Styrer smarte plugger/stikkontakter brukt som varmeovner i samme sone.",
+                    "nl": "Bedient slimme stekkers gebruikt als verwarmingen in dezelfde zone."
+                  }
+                },
+                {
+                  "id": "devices_zone_sockets_coolers",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Smart plugs as coolers",
+                    "no": "Smarte plugger som kjøling",
+                    "nl": "Slimme stekkers als koeling"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Will control smart sockets/plugs used as coolers/fans in the same zone.",
+                    "no": "Styrer smarte plugger/stikkontakter brukt som kjøling/vifter i samme sone.",
+                    "nl": "Bedient slimme stekkers gebruikt als koeling/ventilatoren in dezelfde zone."
                   }
                 },
                 {
                   "id": "devices_zone_thermostats",
                   "type": "checkbox",
                   "label": {
-                    "en": "Thermostats"
+                    "en": "Thermostats",
+                    "no": "Termostater",
+                    "nl": "Thermostaten"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Will control thermostats in the same zone. This is achieved by setting the target temperature above / below the measured temperature."
+                    "en": "Will control thermostats in the same zone. This is achieved by setting the target temperature above / below the measured temperature.",
+                    "no": "Styrer termostater i samme sone ved å justere måltemperaturen over/under målt romtemperatur.",
+                    "nl": "Bedient thermostaten in dezelfde zone door de doeltemperatuur boven/onder de gemeten temperatuur in te stellen."
                   }
                 }
               ]
@@ -988,29 +1976,84 @@
             {
               "type": "group",
               "label": {
-                "en": "Control devices in sub zones (one level)"
+                "en": "Control devices in sub zones (one level)",
+                "no": "Styr enheter i undersoner (ett nivå)",
+                "nl": "Apparaten in subzones (één niveau) bedienen"
               },
               "children": [
                 {
                   "id": "devices_sub_zones_heaters",
                   "type": "checkbox",
                   "label": {
-                    "en": "Heaters"
+                    "en": "Heaters",
+                    "no": "Varmeovner",
+                    "nl": "Verwarmingselementen"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Will control heaters in sub zones (one level down)."
+                    "en": "Will control heaters in sub zones (one level down).",
+                    "no": "Styrer varmeovner i undersoner (ett nivå ned).",
+                    "nl": "Bedient verwarmingen in subzones (één niveau omlaag)."
+                  }
+                },
+                {
+                  "id": "devices_sub_zones_coolers",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Coolers",
+                    "no": "Klimaanlegg og vifter",
+                    "nl": "Airconditioners en ventilatoren"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Will control coolers (air conditioners, fans, refrigerators) in sub zones.",
+                    "no": "Styrer kjøleenheter (klimaanlegg, vifter, kjøleskap) i undersoner.",
+                    "nl": "Bedient koelapparaten (airconditioners, ventilatoren, koelkasten) in subzones."
+                  }
+                },
+                {
+                  "id": "devices_sub_zones_sockets_heaters",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Smart plugs as heaters",
+                    "no": "Smarte plugger som varme",
+                    "nl": "Slimme stekkers als verwarming"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Will control smart sockets/plugs used as heaters in sub zones.",
+                    "no": "Styrer smarte plugger/stikkontakter brukt som varmeovner i undersoner.",
+                    "nl": "Bedient slimme stekkers gebruikt als verwarmingen in subzones."
+                  }
+                },
+                {
+                  "id": "devices_sub_zones_sockets_coolers",
+                  "type": "checkbox",
+                  "label": {
+                    "en": "Smart plugs as coolers",
+                    "no": "Smarte plugger som kjøling",
+                    "nl": "Slimme stekkers als koeling"
+                  },
+                  "value": false,
+                  "hint": {
+                    "en": "Will control smart sockets/plugs used as coolers/fans in sub zones.",
+                    "no": "Styrer smarte plugger/stikkontakter brukt som kjøling/vifter i undersoner.",
+                    "nl": "Bedient slimme stekkers gebruikt als koeling/ventilatoren in subzones."
                   }
                 },
                 {
                   "id": "devices_sub_zones_thermostats",
                   "type": "checkbox",
                   "label": {
-                    "en": "Thermostats"
+                    "en": "Thermostats",
+                    "no": "Termostater",
+                    "nl": "Thermostaten"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Will control thermostats in sub zones (one level down). This is achieved by setting the target temperature above / below the measured temperature."
+                    "en": "Will control thermostats in sub zones (one level down). This is achieved by setting the target temperature above / below the measured temperature.",
+                    "no": "Styrer termostater i undersoner (ett nivå ned) ved å justere måltemperaturen over/under målt romtemperatur.",
+                    "nl": "Bedient thermostaten in subzones (één niveau omlaag) door de doeltemperatuur boven/onder de gemeten temperatuur in te stellen."
                   }
                 }
               ]
@@ -1020,17 +2063,23 @@
         {
           "type": "group",
           "label": {
-            "en": "Target temperature"
+            "en": "Target temperature",
+            "no": "Måltemperatur",
+            "nl": "Doeltemperatuur"
           },
           "children": [
             {
               "id": "target_diff_temp",
               "type": "number",
               "label": {
-                "en": "Target temperature offset"
+                "en": "Target temperature offset",
+                "no": "Forskyvning av måltemperatur",
+                "nl": "Doeltemperatuur compensatie"
               },
               "hint": {
-                "en": "Offset when the target temperature is updated from a master VThermo - thermostat."
+                "en": "Offset when the target temperature is updated from a master VThermo - thermostat.",
+                "no": "Forskyvning når måltemperaturen oppdateres fra en overordnet termostat.",
+                "nl": "Compensatie wanneer de doeltemperatuur wordt bijgewerkt vanaf een hoofdthermostaat."
               },
               "value": 0,
               "min": -30,
@@ -1044,21 +2093,29 @@
               "id": "target_update_enabled",
               "type": "checkbox",
               "label": {
-                "en": "Target temperature update enabled"
+                "en": "Target temperature update enabled",
+                "no": "Oppdatering av måltemperatur aktivert",
+                "nl": "Doeltemperatuur bijwerken ingeschakeld"
               },
               "value": true,
               "hint": {
-                "en": "Uncheck this to disable being updating from a master VThermo - thermostat."
+                "en": "Uncheck this to disable being updating from a master VThermo - thermostat.",
+                "no": "Fjern avkrysning for å forhindre oppdatering fra en overordnet VThermo-termostat.",
+                "nl": "Vink dit uit om te voorkomen dat deze wordt bijgewerkt door een hoofd-VThermo-thermostaat."
               }
             },
             {
               "id": "target_min_temp",
               "type": "number",
               "label": {
-                "en": "Minimum target temperature"
+                "en": "Minimum target temperature",
+                "no": "Minimum måltemperatur",
+                "nl": "Minimum doeltemperatuur"
               },
               "hint": {
-                "en": "Minimum target temperature when the target temperature is updated from a master VThermo - thermostat."
+                "en": "Minimum target temperature when the target temperature is updated from a master VThermo - thermostat.",
+                "no": "Minimal måltemperatur ved oppdatering fra overordnet termostat.",
+                "nl": "Minimale doeltemperatuur bij bijwerken vanaf hoofdthermostaat."
               },
               "value": 1,
               "min": -10,
@@ -1072,10 +2129,14 @@
               "id": "target_max_temp",
               "type": "number",
               "label": {
-                "en": "Maximum target temperature"
+                "en": "Maximum target temperature",
+                "no": "Maksimum måltemperatur",
+                "nl": "Maximum doeltemperatuur"
               },
               "hint": {
-                "en": "Maximum target temperature when the target temperature is updated from a master VThermo - thermostat."
+                "en": "Maximum target temperature when the target temperature is updated from a master VThermo - thermostat.",
+                "no": "Maksimal måltemperatur ved oppdatering fra overordnet termostat.",
+                "nl": "Maximale doeltemperatuur bij bijwerken vanaf hoofdthermostaat."
               },
               "value": 40,
               "min": -10,
@@ -1089,20 +2150,26 @@
               "id": "target_step",
               "type": "dropdown",
               "label": {
-                "en": "Target temperature step (°C)"
+                "en": "Target temperature step",
+                "no": "Trinn for måltemperatur",
+                "nl": "Stap doeltemperatuur"
               },
               "value": "STEP50",
               "values": [
                 {
                   "id": "STEP50",
                   "label": {
-                    "en": "0.50 °C"
+                    "en": "0.50 °C",
+                    "no": "0.50 °C",
+                    "nl": "0.50 °C"
                   }
                 },
                 {
                   "id": "STEP25",
                   "label": {
-                    "en": "0.25 °C"
+                    "en": "0.25 °C",
+                    "no": "0.25 °C",
+                    "nl": "0.25 °C"
                   }
                 }
               ]
@@ -1110,29 +2177,39 @@
             {
               "type": "group",
               "label": {
-                "en": "Target temperature in the same zone"
+                "en": "Target temperature in the same zone",
+                "no": "Måltemperatur i samme sone",
+                "nl": "Doeltemperatuur in dezelfde zone"
               },
               "children": [
                 {
                   "id": "target_zone_from_other",
                   "type": "checkbox",
                   "label": {
-                    "en": "From other thermostat"
+                    "en": "From other thermostat",
+                    "no": "Fra annen termostat",
+                    "nl": "Van andere thermostaat"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Update target temperature on this VThermo from another thermostat in the same zone."
+                    "en": "Update target temperature on this VThermo from another thermostat in the same zone.",
+                    "no": "Oppdater måltemperatur på denne VThermoen fra en annen termostat i samme sone.",
+                    "nl": "Doeltemperatuur op deze VThermo bijwerken vanaf een andere thermostaat in dezelfde zone."
                   }
                 },
                 {
                   "id": "target_zone_to_other",
                   "type": "checkbox",
                   "label": {
-                    "en": "Update other thermostats"
+                    "en": "Update other thermostats",
+                    "no": "Oppdater andre termostater",
+                    "nl": "Andere thermostaten bijwerken"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Update target temperature of other thermostats (not VThermos) in the same zone."
+                    "en": "Update target temperature of other thermostats (not VThermos) in the same zone.",
+                    "no": "Oppdater måltemperatur for andre termostater (ikke VThermo) i samme sone.",
+                    "nl": "Doeltemperatuur bijwerken van andere thermostaten (geen VThermo) in dezelfde zone."
                   }
                 }
               ]
@@ -1140,29 +2217,39 @@
             {
               "type": "group",
               "label": {
-                "en": "Target temperature to sub zones (one level)"
+                "en": "Target temperature to sub zones (one level)",
+                "no": "Måltemperatur til undersoner (ett nivå)",
+                "nl": "Doeltemperatuur naar subzones (één niveau)"
               },
               "children": [
                 {
                   "id": "target_sub_zones_to_vthermo",
                   "type": "checkbox",
                   "label": {
-                    "en": "Update other VThermos"
+                    "en": "Update other VThermos",
+                    "no": "Oppdater andre VThermos",
+                    "nl": "Andere VThermos bijwerken"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Update target temperature of other VThermos in sub zones (one level down)."
+                    "en": "Update target temperature of other VThermos in sub zones (one level down).",
+                    "no": "Oppdater måltemperatur for andre VThermoer i undersoner (ett nivå ned).",
+                    "nl": "Doeltemperatuur bijwerken van andere VThermo's in subzones (één niveau omlaag)."
                   }
                 },
                 {
                   "id": "target_sub_zones_to_other",
                   "type": "checkbox",
                   "label": {
-                    "en": "Update other thermostats"
+                    "en": "Update other thermostats",
+                    "no": "Oppdater andre termostater",
+                    "nl": "Andere thermostaten bijwerken"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Update target temperature of other thermostats (not VThermos) in sub zones (one level down)."
+                    "en": "Update target temperature of other thermostats (not VThermos) in sub zones (one level down).",
+                    "no": "Oppdater måltemperatur for andre termostater (ikke VThermo) i undersoner (ett nivå ned).",
+                    "nl": "Doeltemperatuur bijwerken van andere thermostaten (geen VThermo) in subzones (één niveau omlaag)."
                   }
                 }
               ]
@@ -1170,29 +2257,39 @@
             {
               "type": "group",
               "label": {
-                "en": "Target temperature to sub zones (all levels)"
+                "en": "Target temperature to sub zones (all levels)",
+                "no": "Måltemperatur til undersoner (alle nivåer)",
+                "nl": "Doeltemperatuur naar subzones (alle niveaus)"
               },
               "children": [
                 {
                   "id": "target_all_sub_zones_to_vthermo",
                   "type": "checkbox",
                   "label": {
-                    "en": "Update other VThermos"
+                    "en": "Update other VThermos",
+                    "no": "Oppdater andre VThermos",
+                    "nl": "Andere VThermos bijwerken"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Update target temperature of other VThermos in all sub zones (all levels down)."
+                    "en": "Update target temperature of other VThermos in all sub zones (all levels down).",
+                    "no": "Oppdater måltemperatur for andre VThermoer i alle undersoner (alle nivåer ned).",
+                    "nl": "Doeltemperatuur bijwerken van andere VThermo's in alle subzones (alle niveaus omlaag)."
                   }
                 },
                 {
                   "id": "target_all_sub_zones_to_other",
                   "type": "checkbox",
                   "label": {
-                    "en": "Update other thermostats"
+                    "en": "Update other thermostats",
+                    "no": "Oppdater andre termostater",
+                    "nl": "Andere thermostaten bijwerken"
                   },
                   "value": false,
                   "hint": {
-                    "en": "Update target temperature of other thermostats (not VThermos) in all sub zones (all levels down)."
+                    "en": "Update target temperature of other thermostats (not VThermos) in all sub zones (all levels down).",
+                    "no": "Oppdater måltemperatur for andre termostater (ikke VThermo) i alle undersoner (alle nivåer ned).",
+                    "nl": "Doeltemperatuur bijwerken van andere thermostaten (geen VThermo) in alle subzones (alle niveaus omlaag)."
                   }
                 }
               ]
@@ -1202,29 +2299,62 @@
         {
           "type": "group",
           "label": {
-            "en": "Contact and motion alarms"
+            "en": "Contact and motion alarms",
+            "no": "Kontakt- og bevegelsesalarmer",
+            "nl": "Contact- en bewegingsalarmen"
           },
           "children": [
             {
               "id": "contact_alarm",
               "type": "checkbox",
               "label": {
-                "en": "Turn off if contact alarm"
+                "en": "Turn off if contact alarm",
+                "no": "Slå av ved kontaktalarm",
+                "nl": "Uitschakelen bij contactalarm"
               },
               "value": false,
               "hint": {
-                "en": "Will turn off if contact alarm in the same zone."
+                "en": "Will turn off if contact alarm in the same zone.",
+                "no": "Slå av enheter når en dør- eller vinduskontakt åpnes.",
+                "nl": "Schakel apparaten uit wanneer een deur- of raamcontactalarm afgaat."
+              }
+            },
+            {
+              "id": "contact_alarm_delay",
+              "type": "number",
+              "label": {
+                "en": "Contact alarm delay",
+                "no": "Forsinkelse for kontaktalarm",
+                "nl": "Vertraging contactalarm"
+              },
+              "hint": {
+                "en": "Delay in seconds before turning off devices when a door/window contact alarm is triggered. Prevents turning off on brief openings.",
+                "no": "Forsinkelse i sekunder før enheter slås av ved åpent vindu/dør. Forhindrer unødig utkobling ved rask lufting.",
+                "nl": "Vertraging in seconden voordat apparaten worden uitgeschakeld bij een open raam/deur."
+              },
+              "value": 0,
+              "min": 0,
+              "max": 600,
+              "step": 1,
+              "units": {
+                "en": "s",
+                "no": "s",
+                "nl": "s"
               }
             },
             {
               "id": "motion_alarm",
               "type": "checkbox",
               "label": {
-                "en": "Turn on if motion alarm"
+                "en": "Turn on if motion alarm",
+                "no": "Slå på ved bevegelsesalarm",
+                "nl": "Inschakelen bij bewegingsalarm"
               },
               "value": false,
               "hint": {
-                "en": "Will turn on if motion alarm in the same zone."
+                "en": "Will turn on if motion alarm in the same zone.",
+                "no": "Slås på ved bevegelsesalarm i samme sone.",
+                "nl": "Schakelt in bij bewegingsalarm in dezelfde zone."
               }
             }
           ]
@@ -1232,40 +2362,225 @@
         {
           "type": "group",
           "label": {
-            "en": "General settings"
+            "en": "Thermostat presets",
+            "no": "Termostatforvalg",
+            "nl": "Thermostaat voorinstellingen"
+          },
+          "children": [
+            {
+              "id": "preset_eco_offset",
+              "type": "number",
+              "label": {
+                "en": "Eco preset temperature offset",
+                "no": "Temperaturforskyvning for Øko-forvalg",
+                "nl": "Temperatuurcompensatie voor Eco-voorinstelling"
+              },
+              "hint": {
+                "en": "Offset applied to target temperature when Eco preset is active (-X °C for heating, +X °C for cooling).",
+                "no": "Forskyvning lagt til måltemperatur når Øko er aktiv (-X °C for varme, +X °C for kjøling).",
+                "nl": "Compensatie toegepast op doeltemperatuur wanneer Eco actief is (-X °C voor verwarmen, +X °C voor koelen)."
+              },
+              "value": -2,
+              "min": -10,
+              "max": 0,
+              "step": 0.5,
+              "units": {
+                "en": "°C",
+                "no": "°C",
+                "nl": "°C"
+              }
+            },
+            {
+              "id": "preset_away_temp",
+              "type": "number",
+              "label": {
+                "en": "Away preset temperature",
+                "no": "Temperatur for Borte-forvalg",
+                "nl": "Temperatuur voor Afwezig-voorinstelling"
+              },
+              "hint": {
+                "en": "Target temperature used for frost protection when Away preset is active.",
+                "no": "Måltemperatur som brukes for frostbeskyttelse når Borte-forvalget er aktivt.",
+                "nl": "Doeltemperatuur die wordt gebruikt als vorstbeveiliging wanneer Afwezig actief is."
+              },
+              "value": 12,
+              "min": 4,
+              "max": 25,
+              "step": 0.5,
+              "units": {
+                "en": "°C",
+                "no": "°C",
+                "nl": "°C"
+              }
+            },
+            {
+              "id": "preset_boost_offset",
+              "type": "number",
+              "label": {
+                "en": "Boost preset temperature offset",
+                "no": "Temperaturforskyvning for Boost-forvalg",
+                "nl": "Temperatuurcompensatie voor Boost-voorinstelling"
+              },
+              "hint": {
+                "en": "Offset applied to target temperature when Boost preset is active (+X °C for heating, -X °C for cooling).",
+                "no": "Forskyvning lagt til måltemperatur når Boost er aktiv (+X °C for varme, -X °C for kjøling).",
+                "nl": "Compensatie toegepast op doeltemperatuur wanneer Boost actief is (+X °C voor verwarmen, -X °C voor koelen)."
+              },
+              "value": 2,
+              "min": 0,
+              "max": 10,
+              "step": 0.5,
+              "units": {
+                "en": "°C",
+                "no": "°C",
+                "nl": "°C"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Safety and Protection",
+            "no": "Sikkerhet og beskyttelse",
+            "nl": "Veiligheid en beveiliging"
+          },
+          "children": [
+            {
+              "id": "failsafe_enabled",
+              "type": "checkbox",
+              "label": {
+                "en": "Fail-safe sensor protection",
+                "no": "Feilsikker sensorbeskyttelse",
+                "nl": "Fail-safe sensorbescherming"
+              },
+              "hint": {
+                "en": "Automatically turn off heaters and coolers if all temperature sensors in the zone are unavailable, stale, or reporting null.",
+                "no": "Slå av varme og kjøling automatisk dersom temperatursensoren blir utilgjengelig eller mangler verdi.",
+                "nl": "Schakel verwarming en koeling automatisch uit als de temperatuursensor onbeschikbaar wordt."
+              },
+              "value": true
+            },
+            {
+              "id": "frost_alarm_temp",
+              "type": "number",
+              "label": {
+                "en": "Frost alarm limit temperature",
+                "no": "Grensetemperatur for frostalarm",
+                "nl": "Grenstemperatuur voor vorstalarm"
+              },
+              "hint": {
+                "en": "Triggers a frost alarm flow and emergency trigger when temperature drops below this value. Set 0 to disable.",
+                "no": "Utløser frostalarm-flow når temperaturen synker under denne verdien. Sett 0 for å deaktivere.",
+                "nl": "Activeert vorstalarm-flow wanneer de temperatuur onder deze waarde daalt. Stel in op 0 om uit te schakelen."
+              },
+              "value": 5,
+              "min": 0,
+              "max": 15,
+              "step": 0.5,
+              "units": {
+                "en": "°C",
+                "no": "°C",
+                "nl": "°C"
+              }
+            },
+            {
+              "id": "overheat_alarm_temp",
+              "type": "number",
+              "label": {
+                "en": "Overheat alarm limit temperature",
+                "no": "Grensetemperatur for overopphetingsalarm",
+                "nl": "Grenstemperatuur voor oververhittingsalarm"
+              },
+              "hint": {
+                "en": "Triggers an overheat alarm flow and safety shutdown if temperature rises above this value. Set 0 to disable.",
+                "no": "Utløser overopphetingsalarm og kutter oppvarming hvis temperaturen stiger over denne verdien. Sett 0 for å deaktivere.",
+                "nl": "Activeert oververhittingsalarm en stopt verwarming als de temperatuur boven deze waarde stijgt."
+              },
+              "value": 40,
+              "min": 0,
+              "max": 60,
+              "step": 0.5,
+              "units": {
+                "en": "°C",
+                "no": "°C",
+                "nl": "°C"
+              }
+            },
+            {
+              "id": "condensation_protection",
+              "type": "checkbox",
+              "label": {
+                "en": "Dew point / condensation protection",
+                "no": "Kondens- og duggpunktbeskyttelse",
+                "nl": "Condensatie- en dauwpuntbescherming"
+              },
+              "hint": {
+                "en": "Automatically suppress cooling if room temperature approaches the dew point calculated from humidity in the same zone.",
+                "no": "Undertrykk kjøling hvis romtemperaturen nærmer seg det beregnede duggpunktet for å forhindre kondens.",
+                "nl": "Onderdruk koeling als de kamertemperatuur het berekende dauwpunt nadert om condensatie te voorkomen."
+              },
+              "value": false
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "General settings",
+            "no": "Generelle innstillinger",
+            "nl": "Algemene instellingen"
           },
           "children": [
             {
               "id": "hysteresis",
               "type": "number",
               "label": {
-                "en": "Hysteresis"
+                "en": "Hysteresis",
+                "no": "Hysterese",
+                "nl": "Hysteresis"
               },
               "value": 0.5,
+              "min": 0,
+              "max": 10,
+              "step": 0.1,
+              "units": {
+                "en": "°C"
+              },
               "hint": {
-                "en": "With a hysteresis value of 0.5, the temperature will vary between 0.5 below and 0.5 above the target temperature. A value of 0 switches whenever the temperature crosses the target and may cause rapid switching."
+                "en": "With a hysteresis value of 0.5, the temperature will vary between 0.5 below and 0.5 above the target temperature. A value of 0 switches whenever the temperature crosses the target and may cause rapid switching.",
+                "no": "Med en hystereseverdi på 0.5 varierer temperaturen mellom 0.5 under og 0.5 over måltemperatur.",
+                "nl": "Met een hysteresiswaarde van 0.5 varieert de temperatuur tussen 0.5 onder en 0.5 boven de doeltemperatuur."
               }
             },
             {
               "id": "invert",
               "type": "checkbox",
               "label": {
-                "en": "Invert switch"
+                "en": "Invert switch",
+                "no": "Inverter bryterlogikk",
+                "nl": "Schakelaar omkeren"
               },
               "value": false,
               "hint": {
-                "en": "Check this to invert the switching of the device."
+                "en": "Check this to invert the switching of the device.",
+                "no": "Kryss av her for å invertere inn/utkobling av enheten.",
+                "nl": "Vink dit aan om het schakelen van het apparaat om te keren."
               }
             },
             {
               "id": "onoff_enabled",
               "type": "checkbox",
               "label": {
-                "en": "On / off enabled"
+                "en": "On / off enabled",
+                "no": "På / av aktivert",
+                "nl": "Aan / uit ingeschakeld"
               },
               "value": true,
               "hint": {
-                "en": "When unchecked, the device cannot be turned off and its on/off switch will remain on."
+                "en": "When unchecked, the device cannot be turned off and its on/off switch will remain on.",
+                "no": "Når denne er avkrysset, kan ikke enheten slås av, og av/på-bryteren forblir på.",
+                "nl": "Wanneer uitgeschakeld kan het apparaat niet worden uitgezet en blijft de aan/uit-schakelaar aan."
               }
             }
           ]
@@ -1273,7 +2588,9 @@
         {
           "type": "group",
           "label": {
-            "en": "Timing"
+            "en": "Timing and Anti-Short-Cycling",
+            "no": "Tidsstyring og anti-kortsyklus",
+            "nl": "Timing en anti-pendel"
           },
           "children": [
             {
@@ -1281,15 +2598,66 @@
               "type": "number",
               "min": 0,
               "max": 5000,
+              "step": 50,
               "units": {
                 "en": "ms"
               },
               "label": {
-                "en": "Delay in milliseconds between switching devices"
+                "en": "Delay in milliseconds between switching devices",
+                "no": "Forsinkelse i millisekunder mellom enhetskommandoer",
+                "nl": "Vertraging in milliseconden tussen schakelen van apparaten"
               },
               "value": 0,
               "hint": {
-                "en": "You can add a delay after each device has been switched on / off."
+                "en": "You can add a delay after each device has been switched on / off.",
+                "no": "Legg til en forsinkelse mellom hver enhet som slås av/på for å unngå overbelastning av trådløst nettverk.",
+                "nl": "Voeg een vertraging toe na het in-/uitschakelen van elk apparaat."
+              }
+            },
+            {
+              "id": "min_off_duration",
+              "type": "number",
+              "label": {
+                "en": "Minimum off duration / anti-short-cycle",
+                "no": "Minimum av-tid / anti-kortsyklus",
+                "nl": "Minimale uit-tijd / anti-pendel"
+              },
+              "hint": {
+                "en": "Minimum duration a device must remain off before being allowed to switch back on. Recommended: 180s for ACs and heat pumps.",
+                "no": "Minimumstid en enhet må forbli av før den kan slås på igjen. Anbefalt: 180s for varmepumper og klimaanlegg.",
+                "nl": "Minimale duur dat een apparaat uit moet blijven voordat het weer mag inschakelen. Aanbevolen: 180s voor warmtepompen."
+              },
+              "value": 0,
+              "min": 0,
+              "max": 3600,
+              "step": 1,
+              "units": {
+                "en": "s",
+                "no": "s",
+                "nl": "s"
+              }
+            },
+            {
+              "id": "min_on_duration",
+              "type": "number",
+              "label": {
+                "en": "Minimum on duration",
+                "no": "Minimum på-tid",
+                "nl": "Minimale aan-tijd"
+              },
+              "hint": {
+                "en": "Minimum duration a device must remain on before being allowed to switch back off.",
+                "no": "Minimumstid en enhet må forbli på før den kan slås av igjen.",
+                "nl": "Minimale duur dat een apparaat ingeschakeld moet blijven voordat het weer mag uitschakelen."
+              },
+              "value": 0,
+              "min": 0,
+              "max": 3600,
+              "step": 1,
+              "units": {
+                "en": "s",
+                "no": "s",
+                "nl": "s"
               }
             }
           ]
@@ -1301,15 +2669,21 @@
     "vh_target_humidity": {
       "type": "number",
       "title": {
-        "en": "Target humidity"
+        "en": "Target humidity",
+        "no": "Målfuktighet",
+        "nl": "Doelluchtvochtigheid"
       },
       "desc": {
-        "en": "Target humidity in percent (%)"
+        "en": "Target humidity in percent (%)",
+        "no": "Mål for luftfuktighet i prosent (%)",
+        "nl": "Doelluchtvochtigheid in procenten (%)"
       },
       "getable": true,
       "setable": true,
       "units": {
-        "en": "%"
+        "en": "%",
+        "no": "%",
+        "nl": "%"
       },
       "uiComponent": "slider",
       "insights": true,
@@ -1321,13 +2695,19 @@
     "vh_target_humidity_view": {
       "type": "number",
       "title": {
-        "en": "Target humidity"
+        "en": "Target humidity",
+        "no": "Målfuktighet",
+        "nl": "Doelluchtvochtigheid"
       },
       "desc": {
-        "en": "Target humidity in percent (%)"
+        "en": "Target humidity in percent (%)",
+        "no": "Mål for luftfuktighet i prosent (%)",
+        "nl": "Doelluchtvochtigheid in procenten (%)"
       },
       "units": {
-        "en": "%"
+        "en": "%",
+        "no": "%",
+        "nl": "%"
       },
       "insights": false,
       "getable": true,
@@ -1335,10 +2715,82 @@
       "uiComponent": "sensor",
       "icon": "/assets/target.svg"
     },
+    "vt_condensation_alarm": {
+      "type": "boolean",
+      "title": {
+        "en": "Condensation Risk",
+        "no": "Kondensrisiko",
+        "nl": "Condensatierisico"
+      },
+      "desc": {
+        "en": "Active when room temperature is close to the dew point and cooling is suppressed.",
+        "no": "Aktiv når romtemperaturen er nær duggpunktet og kjøling undertrykkes.",
+        "nl": "Actief wanneer de kamertemperatuur dicht bij het dauwpunt ligt en koeling wordt onderdrukt."
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/droplet.svg",
+      "insights": true,
+      "insightsTitleTrue": {
+        "en": "Risk",
+        "no": "Risiko",
+        "nl": "Risico"
+      },
+      "insightsTitleFalse": {
+        "en": "Normal",
+        "no": "Normal",
+        "nl": "Normaal"
+      }
+    },
+    "vt_cooling": {
+      "type": "boolean",
+      "title": {
+        "en": "Cooling",
+        "no": "Kjøling",
+        "nl": "Koelen"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/cooling.svg",
+      "insights": true,
+      "insightsTitleTrue": {
+        "en": "Active",
+        "no": "Aktiv",
+        "nl": "Actief"
+      },
+      "insightsTitleFalse": {
+        "en": "Idle",
+        "no": "Inaktiv",
+        "nl": "Inactief"
+      }
+    },
+    "vt_dew_point": {
+      "type": "number",
+      "title": {
+        "en": "Dew Point",
+        "no": "Duggpunkt",
+        "nl": "Dauwpunt"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "units": {
+        "en": "°C",
+        "no": "°C",
+        "nl": "°C"
+      },
+      "decimals": 1,
+      "icon": "/assets/cooling.svg"
+    },
     "vt_onoff": {
       "type": "boolean",
       "title": {
-        "en": "State"
+        "en": "State",
+        "no": "Status",
+        "nl": "Status"
       },
       "getable": true,
       "setable": false,
@@ -1346,11 +2798,65 @@
       "icon": "/assets/heating.svg",
       "insights": true,
       "insightsTitleTrue": {
-        "en": "Active"
+        "en": "Active",
+        "no": "Aktiv",
+        "nl": "Actief"
       },
       "insightsTitleFalse": {
-        "en": "Idle"
+        "en": "Idle",
+        "no": "Inaktiv",
+        "nl": "Inactief"
       }
+    },
+    "vt_thermostat_preset": {
+      "type": "enum",
+      "title": {
+        "en": "Thermostat Preset",
+        "no": "Termostatforvalg",
+        "nl": "Thermostaat voorinstelling"
+      },
+      "desc": {
+        "en": "Climate preset mode (Comfort, Eco, Away, Boost)",
+        "no": "Klimaforvalg (Komfort, Øko, Borte, Boost)",
+        "nl": "Klimaatvoorinstelling (Comfort, Eco, Afwezig, Boost)"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "picker",
+      "values": [
+        {
+          "id": "comfort",
+          "title": {
+            "en": "Comfort",
+            "no": "Komfort",
+            "nl": "Comfort"
+          }
+        },
+        {
+          "id": "eco",
+          "title": {
+            "en": "Eco",
+            "no": "Øko",
+            "nl": "Eco"
+          }
+        },
+        {
+          "id": "away",
+          "title": {
+            "en": "Away",
+            "no": "Borte",
+            "nl": "Afwezig"
+          }
+        },
+        {
+          "id": "boost",
+          "title": {
+            "en": "Boost",
+            "no": "Boost",
+            "nl": "Boost"
+          }
+        }
+      ]
     }
   }
 }

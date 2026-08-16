@@ -1,7 +1,9 @@
 {
   "id": "vt_onoff_is_on",
   "title": {
-    "en": "Thermostat is !{{active|idle}}"
+    "en": "Heating is active",
+    "no": "Oppvarming er aktiv",
+    "nl": "Verwarmen is actief"
   },
   "args": [
     {

@@ -1,0 +1,23 @@
+{
+  "id": "preset_away_temp",
+  "type": "number",
+  "label": {
+    "en": "Away preset temperature",
+    "no": "Temperatur for Borte-forvalg",
+    "nl": "Temperatuur voor Afwezig-voorinstelling"
+  },
+  "hint": {
+    "en": "Target temperature used for frost protection when Away preset is active.",
+    "no": "Måltemperatur som brukes for frostbeskyttelse når Borte-forvalget er aktivt.",
+    "nl": "Doeltemperatuur die wordt gebruikt als vorstbeveiliging wanneer Afwezig actief is."
+  },
+  "value": 12,
+  "min": 4,
+  "max": 25,
+  "step": 0.5,
+  "units": {
+    "en": "°C",
+    "no": "°C",
+    "nl": "°C"
+  }
+}

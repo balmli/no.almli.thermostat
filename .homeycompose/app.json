@@ -9,11 +9,15 @@
     "en": "VThermo"
   },
   "description": {
-    "en": "Virtual thermostat and humidity controller"
+    "en": "Virtual thermostat and humidity controller",
+    "no": "Virtuell termostat og fuktighetskontroller",
+    "nl": "Virtuele thermostaat en vochtigheidsregelaar"
   },
   "category": ["tools"],
   "tags": {
-    "en": ["thermostat", "temperature control", "heating", "virtual", "humidity"]
+    "en": ["thermostat", "temperature control", "heating", "virtual", "humidity"],
+    "no": ["termostat", "temperaturstyring", "oppvarming", "virtuell", "luftfuktighet"],
+    "nl": ["thermostaat", "temperatuurregeling", "verwarming", "virtueel", "luchtvochtigheid"]
   },
   "images": {
     "large": "/assets/images/large.png",

@@ -1,13 +1,19 @@
 {
   "id": "vh_set_target_humidity",
   "title": {
-    "en": "Set the target humidity"
+    "en": "Set target humidity",
+    "no": "Sett målfuktighet",
+    "nl": "Stel doelluchtvochtigheid in"
   },
   "titleFormatted": {
-    "en": "Set the target humidity to [[vh_target_humidity]]"
+    "en": "Set target humidity to [[vh_target_humidity]]%",
+    "no": "Sett målfuktighet til [[vh_target_humidity]]%",
+    "nl": "Stel doelluchtvochtigheid in op [[vh_target_humidity]]%"
   },
   "hint": {
-    "en": "Set the target humidity."
+    "en": "Set the target humidity.",
+    "no": "Sett målfuktigheten.",
+    "nl": "Stel de doelluchtvochtigheid in."
   },
   "args": [
     {
@@ -18,7 +24,9 @@
     {
       "name": "vh_target_humidity",
       "title": {
-        "en": "Target humidity"
+        "en": "Target humidity",
+        "no": "Målfuktighet",
+        "nl": "Doelluchtvochtigheid"
       },
       "type": "range",
       "min": 1,

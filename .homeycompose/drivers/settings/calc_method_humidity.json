@@ -2,36 +2,48 @@
   "id": "calc_method_humidity",
   "type": "dropdown",
   "label": {
-    "en": "Humidity calculation method"
+    "en": "Humidity calculation method",
+    "no": "Beregningsfuktighet",
+    "nl": "Berekeningsluchtvochtigheid"
   },
   "value": "AVERAGE",
   "values": [
     {
       "id": "AVERAGE",
       "label": {
-        "en": "Average"
+        "en": "Average",
+        "no": "Gjennomsnittlig fuktighet",
+        "nl": "Gemiddelde luchtvochtigheid"
       }
     },
     {
       "id": "MIN",
       "label": {
-        "en": "Minimum"
+        "en": "Minimum",
+        "no": "Laveste fuktighet",
+        "nl": "Laagste luchtvochtigheid"
       }
     },
     {
       "id": "MAX",
       "label": {
-        "en": "Maximum"
+        "en": "Maximum",
+        "no": "Høyeste fuktighet",
+        "nl": "Hoogste luchtvochtigheid"
       }
     },
     {
       "id": "NEWEST",
       "label": {
-        "en": "Newest"
+        "en": "Newest",
+        "no": "Nyeste fuktighet",
+        "nl": "Nieuwste luchtvochtigheid"
       }
     }
   ],
   "hint": {
-    "en": "Method for calculating the humidity if there are several humidity sensors."
+    "en": "Method for calculating the humidity if there are several humidity sensors.",
+    "no": "Velg metode for å beregne relativ fuktighet når det er flere sensorer.",
+    "nl": "Selecteer de methode om de luchtvochtigheid te berekenen bij meerdere sensoren."
   }
 }

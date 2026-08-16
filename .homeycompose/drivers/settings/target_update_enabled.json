@@ -2,10 +2,14 @@
   "id": "target_update_enabled",
   "type": "checkbox",
   "label": {
-    "en": "Target temperature update enabled"
+    "en": "Target temperature update enabled",
+    "no": "Oppdatering av måltemperatur aktivert",
+    "nl": "Doeltemperatuur bijwerken ingeschakeld"
   },
   "value": true,
   "hint": {
-    "en": "Uncheck this to disable being updating from a master VThermo - thermostat."
+    "en": "Uncheck this to disable being updating from a master VThermo - thermostat.",
+    "no": "Fjern avkrysning for å forhindre oppdatering fra en overordnet VThermo-termostat.",
+    "nl": "Vink dit uit om te voorkomen dat deze wordt bijgewerkt door een hoofd-VThermo-thermostaat."
   }
 }

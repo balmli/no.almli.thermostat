@@ -2,10 +2,14 @@
   "id": "contact_alarm",
   "type": "checkbox",
   "label": {
-    "en": "Turn off if contact alarm"
+    "en": "Turn off if contact alarm",
+    "no": "Slå av ved kontaktalarm",
+    "nl": "Uitschakelen bij contactalarm"
   },
   "value": false,
   "hint": {
-    "en": "Will turn off if contact alarm in the same zone."
+    "en": "Will turn off if contact alarm in the same zone.",
+    "no": "Slå av enheter når en dør- eller vinduskontakt åpnes.",
+    "nl": "Schakel apparaten uit wanneer een deur- of raamcontactalarm afgaat."
   }
 }

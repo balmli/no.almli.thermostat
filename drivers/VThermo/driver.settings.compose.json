@@ -2,7 +2,9 @@
   {
     "type": "group",
     "label": {
-      "en": "Temperature"
+      "en": "Temperature",
+      "no": "Temperatur",
+      "nl": "Temperatuur"
     },
     "children": [
       {
@@ -28,7 +30,9 @@
       {
         "type": "group",
         "label": {
-          "en": "Temperature sensors in the same zone"
+          "en": "Temperature sensors in the same zone",
+          "no": "Temperatursensorer i samme sone",
+          "nl": "Temperatuursensoren in dezelfde zone"
         },
         "children": [
           {
@@ -48,7 +52,9 @@
       {
         "type": "group",
         "label": {
-          "en": "Temperature sensors from the parent zone"
+          "en": "Temperature sensors from the parent zone",
+          "no": "Temperatursensorer fra overordnet sone",
+          "nl": "Temperatuursensoren uit de bovenliggende zone"
         },
         "children": [
           {
@@ -72,7 +78,9 @@
       {
         "type": "group",
         "label": {
-          "en": "Temperature sensors from sub zones (one level)"
+          "en": "Temperature sensors from sub zones (one level)",
+          "no": "Temperatursensorer fra undersoner (ett nivå)",
+          "nl": "Temperatuursensoren uit subzones (één niveau)"
         },
         "children": [
           {
@@ -98,18 +106,34 @@
   {
     "type": "group",
     "label": {
-      "en": "Devices"
+      "en": "Devices",
+      "no": "Enheter",
+      "nl": "Apparaten"
     },
     "children": [
       {
         "type": "group",
         "label": {
-          "en": "Control devices in the same zone"
+          "en": "Control devices in the same zone",
+          "no": "Styr enheter i samme sone",
+          "nl": "Apparaten in dezelfde zone bedienen"
         },
         "children": [
           {
             "$extends": "devices_zone_heaters",
             "id": "devices_zone_heaters"
+          },
+          {
+            "$extends": "devices_zone_coolers",
+            "id": "devices_zone_coolers"
+          },
+          {
+            "$extends": "devices_zone_sockets_heaters",
+            "id": "devices_zone_sockets_heaters"
+          },
+          {
+            "$extends": "devices_zone_sockets_coolers",
+            "id": "devices_zone_sockets_coolers"
           },
           {
             "$extends": "devices_zone_thermostats",
@@ -120,12 +144,26 @@
       {
         "type": "group",
         "label": {
-          "en": "Control devices in sub zones (one level)"
+          "en": "Control devices in sub zones (one level)",
+          "no": "Styr enheter i undersoner (ett nivå)",
+          "nl": "Apparaten in subzones (één niveau) bedienen"
         },
         "children": [
           {
             "$extends": "devices_sub_zones_heaters",
             "id": "devices_sub_zones_heaters"
+          },
+          {
+            "$extends": "devices_sub_zones_coolers",
+            "id": "devices_sub_zones_coolers"
+          },
+          {
+            "$extends": "devices_sub_zones_sockets_heaters",
+            "id": "devices_sub_zones_sockets_heaters"
+          },
+          {
+            "$extends": "devices_sub_zones_sockets_coolers",
+            "id": "devices_sub_zones_sockets_coolers"
           },
           {
             "$extends": "devices_sub_zones_thermostats",
@@ -138,7 +176,9 @@
   {
     "type": "group",
     "label": {
-      "en": "Target temperature"
+      "en": "Target temperature",
+      "no": "Måltemperatur",
+      "nl": "Doeltemperatuur"
     },
     "children": [
       {
@@ -164,7 +204,9 @@
       {
         "type": "group",
         "label": {
-          "en": "Target temperature in the same zone"
+          "en": "Target temperature in the same zone",
+          "no": "Måltemperatur i samme sone",
+          "nl": "Doeltemperatuur in dezelfde zone"
         },
         "children": [
           {
@@ -180,7 +222,9 @@
       {
         "type": "group",
         "label": {
-          "en": "Target temperature to sub zones (one level)"
+          "en": "Target temperature to sub zones (one level)",
+          "no": "Måltemperatur til undersoner (ett nivå)",
+          "nl": "Doeltemperatuur naar subzones (één niveau)"
         },
         "children": [
           {
@@ -196,7 +240,9 @@
       {
         "type": "group",
         "label": {
-          "en": "Target temperature to sub zones (all levels)"
+          "en": "Target temperature to sub zones (all levels)",
+          "no": "Måltemperatur til undersoner (alle nivåer)",
+          "nl": "Doeltemperatuur naar subzones (alle niveaus)"
         },
         "children": [
           {
@@ -214,12 +260,18 @@
   {
     "type": "group",
     "label": {
-      "en": "Contact and motion alarms"
+      "en": "Contact and motion alarms",
+      "no": "Kontakt- og bevegelsesalarmer",
+      "nl": "Contact- en bewegingsalarmen"
     },
     "children": [
       {
         "$extends": "contact_alarm",
         "id": "contact_alarm"
+      },
+      {
+        "$extends": "contact_alarm_delay",
+        "id": "contact_alarm_delay"
       },
       {
         "$extends": "motion_alarm",
@@ -230,7 +282,57 @@
   {
     "type": "group",
     "label": {
-      "en": "General settings"
+      "en": "Thermostat presets",
+      "no": "Termostatforvalg",
+      "nl": "Thermostaat voorinstellingen"
+    },
+    "children": [
+      {
+        "$extends": "preset_eco_offset",
+        "id": "preset_eco_offset"
+      },
+      {
+        "$extends": "preset_away_temp",
+        "id": "preset_away_temp"
+      },
+      {
+        "$extends": "preset_boost_offset",
+        "id": "preset_boost_offset"
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "Safety and Protection",
+      "no": "Sikkerhet og beskyttelse",
+      "nl": "Veiligheid en beveiliging"
+    },
+    "children": [
+      {
+        "$extends": "failsafe_enabled",
+        "id": "failsafe_enabled"
+      },
+      {
+        "$extends": "frost_alarm_temp",
+        "id": "frost_alarm_temp"
+      },
+      {
+        "$extends": "overheat_alarm_temp",
+        "id": "overheat_alarm_temp"
+      },
+      {
+        "$extends": "condensation_protection",
+        "id": "condensation_protection"
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "General settings",
+      "no": "Generelle innstillinger",
+      "nl": "Algemene instellingen"
     },
     "children": [
       {
@@ -250,12 +352,22 @@
   {
     "type": "group",
     "label": {
-      "en": "Timing"
+      "en": "Timing and Anti-Short-Cycling",
+      "no": "Tidsstyring og anti-kortsyklus",
+      "nl": "Timing en anti-pendel"
     },
     "children": [
       {
         "$extends": "device_delay",
         "id": "device_delay"
+      },
+      {
+        "$extends": "min_off_duration",
+        "id": "min_off_duration"
+      },
+      {
+        "$extends": "min_on_duration",
+        "id": "min_on_duration"
       }
     ]
   }

@@ -1,0 +1,24 @@
+{
+  "id": "vt_cooling_false",
+  "title": {
+    "en": "Cooling turned off",
+    "no": "Kjøling slått av",
+    "nl": "Koelen uitgeschakeld"
+  },
+  "tokens": [
+    {
+      "name": "state",
+      "type": "number",
+      "title": {
+        "en": "State"
+      }
+    }
+  ],
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    }
+  ]
+}

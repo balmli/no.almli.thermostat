@@ -1,0 +1,68 @@
+{
+  "id": "vt_set_thermostat_preset",
+  "title": {
+    "en": "Set thermostat preset",
+    "no": "Sett termostatforvalg",
+    "nl": "Stel thermostaat voorinstelling in"
+  },
+  "titleFormatted": {
+    "en": "Set thermostat preset to [[preset]]",
+    "no": "Sett termostatforvalg til [[preset]]",
+    "nl": "Stel thermostaat voorinstelling in op [[preset]]"
+  },
+  "hint": {
+    "en": "Set the thermostat preset to Comfort, Eco, Away, or Boost.",
+    "no": "Sett termostatforvalg til Komfort, Øko, Borte eller Boost.",
+    "nl": "Stel de thermostaatvoorinstelling in op Comfort, Eco, Afwezig of Boost."
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    },
+    {
+      "name": "preset",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "comfort",
+          "title": {
+            "en": "Comfort",
+            "no": "Komfort",
+            "nl": "Comfort"
+          }
+        },
+        {
+          "id": "eco",
+          "title": {
+            "en": "Eco",
+            "no": "Øko",
+            "nl": "Eco"
+          }
+        },
+        {
+          "id": "away",
+          "title": {
+            "en": "Away",
+            "no": "Borte",
+            "nl": "Afwezig"
+          }
+        },
+        {
+          "id": "boost",
+          "title": {
+            "en": "Boost",
+            "no": "Boost",
+            "nl": "Boost"
+          }
+        }
+      ],
+      "title": {
+        "en": "Preset",
+        "no": "Forvalg",
+        "nl": "Voorinstelling"
+      }
+    }
+  ]
+}

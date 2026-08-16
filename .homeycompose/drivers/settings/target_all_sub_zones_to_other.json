@@ -2,10 +2,14 @@
   "id": "target_all_sub_zones_to_other",
   "type": "checkbox",
   "label": {
-    "en": "Update other thermostats"
+    "en": "Update other thermostats",
+    "no": "Oppdater andre termostater",
+    "nl": "Andere thermostaten bijwerken"
   },
   "value": false,
   "hint": {
-    "en": "Update target temperature of other thermostats (not VThermos) in all sub zones (all levels down)."
+    "en": "Update target temperature of other thermostats (not VThermos) in all sub zones (all levels down).",
+    "no": "Oppdater måltemperatur for andre termostater (ikke VThermo) i alle undersoner (alle nivåer ned).",
+    "nl": "Doeltemperatuur bijwerken van andere thermostaten (geen VThermo) in alle subzones (alle niveaus omlaag)."
   }
 }

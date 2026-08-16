@@ -1,13 +1,19 @@
 {
   "id": "update_measure_temperature",
   "title": {
-    "en": "Update temperature"
+    "en": "Set temperature",
+    "no": "Sett temperatur",
+    "nl": "Stel temperatuur in"
   },
   "titleFormatted": {
-    "en": "Update temperature to [[temperature]] °C"
+    "en": "Set temperature to [[temperature]]°",
+    "no": "Sett temperatur til [[temperature]]°",
+    "nl": "Stel temperatuur in op [[temperature]]°"
   },
   "hint": {
-    "en": "Update the temperature, e.g. from a temperature sensor in another zone."
+    "en": "Update the temperature, e.g. from a temperature sensor in another zone.",
+    "no": "Oppdater temperaturen, f.eks. fra en temperatursensor i en annen sone.",
+    "nl": "Werk de temperatuur bij, bijv. van een temperatuursensor in een andere zone."
   },
   "args": [
     {
@@ -18,14 +24,18 @@
     {
       "name": "temperature",
       "title": {
-        "en": "Temperature"
+        "en": "Temperature",
+        "no": "Temperatur",
+        "nl": "Temperatuur"
       },
       "type": "number",
       "min": -150,
       "max": 150,
       "label": " °C",
       "placeholder": {
-        "en": "Temperature..."
+        "en": "Temperature...",
+        "no": "Temperatur...",
+        "nl": "Temperatuur..."
       }
     }
   ]

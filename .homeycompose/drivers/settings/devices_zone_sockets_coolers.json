@@ -1,0 +1,15 @@
+{
+  "id": "devices_zone_sockets_coolers",
+  "type": "checkbox",
+  "label": {
+    "en": "Smart plugs as coolers",
+    "no": "Smarte plugger som kjøling",
+    "nl": "Slimme stekkers als koeling"
+  },
+  "value": false,
+  "hint": {
+    "en": "Will control smart sockets/plugs used as coolers/fans in the same zone.",
+    "no": "Styrer smarte plugger/stikkontakter brukt som kjøling/vifter i samme sone.",
+    "nl": "Bedient slimme stekkers gebruikt als koeling/ventilatoren in dezelfde zone."
+  }
+}

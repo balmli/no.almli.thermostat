@@ -1,10 +1,14 @@
 {
   "id": "vh_humidity_decreased_last_mins",
   "title": {
-    "en": "Humidity has decreased..."
+    "en": "Humidity decreased the last minutes",
+    "no": "Luftfuktigheten har sunket de siste minuttene",
+    "nl": "Luchtvochtigheid is de afgelopen minuten gedaald"
   },
   "titleFormatted": {
-    "en": "Humidity !{{has|hasn't}} decreased more than [[change_pct_points]] last [[minutes]]"
+    "en": "Humidity decreased by at least [[change_pct_points]]% the last [[minutes]] minutes",
+    "no": "Luftfuktigheten har sunket med minst [[change_pct_points]]% de siste [[minutes]] minuttene",
+    "nl": "Luchtvochtigheid is met minstens [[change_pct_points]]% gedaald in de afgelopen [[minutes]] minuten"
   },
   "args": [
     {
@@ -15,11 +19,13 @@
     {
       "name": "change_pct_points",
       "title": {
-        "en": "Decrease in % points"
+        "en": "Decrease (%)",
+        "no": "Nedgang (%)",
+        "nl": "Daling (%)"
       },
       "type": "range",
-      "min": 1.0,
-      "max": 50.0,
+      "min": 1,
+      "max": 50,
       "step": 0.5,
       "label": " % points",
       "labelDecimals": 1
@@ -27,7 +33,9 @@
     {
       "name": "minutes",
       "title": {
-        "en": "Minutes"
+        "en": "Minutes",
+        "no": "Minutter",
+        "nl": "Minuten"
       },
       "type": "range",
       "min": 1,

@@ -1,7 +1,9 @@
 {
   "id": "vh_onoff_true",
   "title": {
-    "en": "Humidity device turned on"
+    "en": "Humidity control turned on",
+    "no": "Fuktighetskontroll slått på",
+    "nl": "Vochtigheidsregeling ingeschakeld"
   },
   "tokens": [
     {

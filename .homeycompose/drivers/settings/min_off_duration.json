@@ -1,0 +1,23 @@
+{
+  "id": "min_off_duration",
+  "type": "number",
+  "label": {
+    "en": "Minimum off duration / anti-short-cycle",
+    "no": "Minimum av-tid / anti-kortsyklus",
+    "nl": "Minimale uit-tijd / anti-pendel"
+  },
+  "hint": {
+    "en": "Minimum duration a device must remain off before being allowed to switch back on. Recommended: 180s for ACs and heat pumps.",
+    "no": "Minimumstid en enhet må forbli av før den kan slås på igjen. Anbefalt: 180s for varmepumper og klimaanlegg.",
+    "nl": "Minimale duur dat een apparaat uit moet blijven voordat het weer mag inschakelen. Aanbevolen: 180s voor warmtepompen."
+  },
+  "value": 0,
+  "min": 0,
+  "max": 3600,
+  "step": 1,
+  "units": {
+    "en": "s",
+    "no": "s",
+    "nl": "s"
+  }
+}

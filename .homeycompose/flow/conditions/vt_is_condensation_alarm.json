@@ -1,0 +1,15 @@
+{
+  "id": "vt_is_condensation_alarm",
+  "title": {
+    "en": "Condensation risk is active",
+    "no": "Kondensrisiko er aktiv",
+    "nl": "Condensatierisico is actief"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    }
+  ]
+}

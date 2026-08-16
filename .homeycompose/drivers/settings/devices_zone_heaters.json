@@ -2,10 +2,14 @@
   "id": "devices_zone_heaters",
   "type": "checkbox",
   "label": {
-    "en": "Heaters"
+    "en": "Heaters",
+    "no": "Varmeovner",
+    "nl": "Verwarmingselementen"
   },
   "value": true,
   "hint": {
-    "en": "Will control heaters in the same zone."
+    "en": "Will control heaters in the same zone.",
+    "no": "Styrer varmeovner i samme sone.",
+    "nl": "Bedient verwarmingen in dezelfde zone."
   }
 }

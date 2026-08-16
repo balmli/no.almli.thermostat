@@ -1,4 +1,46 @@
 {
+  "capabilities": {
+    "target_temperature": {
+      "title": "Target Temperature",
+      "desc": "Target temperature"
+    },
+    "measure_temperature": {
+      "title": "Temperature",
+      "desc": "Current measured room temperature"
+    },
+    "vt_dew_point": {
+      "title": "Dew Point",
+      "desc": "Calculated dew point temperature"
+    },
+    "vt_condensation_alarm": {
+      "title": "Condensation Risk",
+      "desc": "Active when room temperature is close to the dew point"
+    },
+    "vt_thermostat_preset": {
+      "title": "Thermostat Preset",
+      "desc": "Climate preset mode (Comfort, Eco, Away, Boost)"
+    },
+    "thermostat_mode": {
+      "title": "Thermostat Mode",
+      "desc": "Climate operating mode (Auto, Heat, Cool, Off)"
+    },
+    "vt_cooling": {
+      "title": "Cooling",
+      "desc": "Cooling active state"
+    },
+    "vt_onoff": {
+      "title": "Heating",
+      "desc": "Heating active state"
+    },
+    "vh_target_humidity": {
+      "title": "Target Humidity",
+      "desc": "Target relative humidity in percent"
+    },
+    "vh_target_humidity_view": {
+      "title": "Target Humidity",
+      "desc": "Target relative humidity view"
+    }
+  },
   "error": {
     "switching_disabled": "Switching the device off has been disabled",
     "invalid_temperature_input": "Invalid temperature. Must be between -150 °C and 150 °C",

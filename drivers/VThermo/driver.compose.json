@@ -5,5 +5,143 @@
   },
   "$extends": ["defaults"],
   "class": "thermostat",
-  "capabilities": ["onoff", "vt_onoff", "target_temperature", "measure_temperature"]
+  "capabilities": [
+    "onoff",
+    "vt_onoff",
+    "vt_cooling",
+    "target_temperature",
+    "measure_temperature",
+    "vt_dew_point",
+    "vt_condensation_alarm",
+    "thermostat_mode",
+    "vt_thermostat_preset"
+  ],
+  "capabilitiesOptions": {
+    "target_temperature": {
+      "min": 5,
+      "max": 35,
+      "step": 0.5
+    },
+    "measure_temperature": {
+      "decimals": 1
+    },
+    "vt_dew_point": {
+      "title": {
+        "en": "Dew Point",
+        "no": "Duggpunkt",
+        "nl": "Dauwpunt"
+      },
+      "units": {
+        "en": "°C",
+        "no": "°C",
+        "nl": "°C"
+      },
+      "decimals": 1,
+      "icon": "/assets/cooling.svg"
+    },
+    "vt_condensation_alarm": {
+      "title": {
+        "en": "Condensation Risk",
+        "no": "Kondensrisiko",
+        "nl": "Condensatierisico"
+      },
+      "icon": "/assets/droplet.svg"
+    },
+    "vt_cooling": {
+      "title": {
+        "en": "Cooling",
+        "no": "Kjøling",
+        "nl": "Koelen"
+      }
+    },
+    "vt_onoff": {
+      "title": {
+        "en": "Heating",
+        "no": "Varme",
+        "nl": "Verwarmen"
+      }
+    },
+    "thermostat_mode": {
+      "title": {
+        "en": "Thermostat Mode",
+        "no": "Termostatmodus",
+        "nl": "Thermostaatmodus"
+      },
+      "values": [
+        {
+          "id": "auto",
+          "title": {
+            "en": "Auto",
+            "no": "Auto",
+            "nl": "Auto"
+          }
+        },
+        {
+          "id": "heat",
+          "title": {
+            "en": "Heat",
+            "no": "Varme",
+            "nl": "Verwarmen"
+          }
+        },
+        {
+          "id": "cool",
+          "title": {
+            "en": "Cool",
+            "no": "Kjøling",
+            "nl": "Koelen"
+          }
+        },
+        {
+          "id": "off",
+          "title": {
+            "en": "Off",
+            "no": "Av",
+            "nl": "Uit"
+          }
+        }
+      ]
+    },
+    "vt_thermostat_preset": {
+      "title": {
+        "en": "Thermostat Preset",
+        "no": "Termostatforvalg",
+        "nl": "Thermostaat voorinstelling"
+      },
+      "values": [
+        {
+          "id": "comfort",
+          "title": {
+            "en": "Comfort",
+            "no": "Komfort",
+            "nl": "Comfort"
+          }
+        },
+        {
+          "id": "eco",
+          "title": {
+            "en": "Eco",
+            "no": "Øko",
+            "nl": "Eco"
+          }
+        },
+        {
+          "id": "away",
+          "title": {
+            "en": "Away",
+            "no": "Borte",
+            "nl": "Afwezig"
+          }
+        },
+        {
+          "id": "boost",
+          "title": {
+            "en": "Boost",
+            "no": "Boost",
+            "nl": "Boost"
+          }
+        }
+      ]
+    }
+  }
 }

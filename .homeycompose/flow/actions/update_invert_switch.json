@@ -1,13 +1,19 @@
 {
   "id": "update_invert_switch",
   "title": {
-    "en": "Enable or disable 'Invert switch'"
+    "en": "Enable or disable 'Invert switch'",
+    "no": "Aktiver eller deaktiver 'Inverter bryter'",
+    "nl": "Schakel 'Schakelaar omkeren' in of uit"
   },
   "titleFormatted": {
-    "en": "[[invert_switch]] 'Invert switch'"
+    "en": "[[invert_switch]] 'Invert switch'",
+    "no": "[[invert_switch]] 'Inverter bryter'",
+    "nl": "[[invert_switch]] 'Schakelaar omkeren'"
   },
   "hint": {
-    "en": "Select 'Enable' and the thermostat will switch on if above the target, and switch off if below the target."
+    "en": "Select 'Enable' and the thermostat will switch on if above the target, and switch off if below the target.",
+    "no": "Velg 'Aktiver' og termostaten vil slå seg på over målet og av under målet.",
+    "nl": "Selecteer 'Inschakelen' en de thermostaat schakelt in boven het doel en uit onder het doel."
   },
   "args": [
     {
@@ -18,20 +24,26 @@
     {
       "name": "invert_switch",
       "title": {
-        "en": "Invert switch"
+        "en": "Invert switch",
+        "no": "Inverter bryter",
+        "nl": "Schakelaar omkeren"
       },
       "type": "dropdown",
       "values": [
         {
           "id": "false",
-          "label": {
-            "en": "Disable"
+          "title": {
+            "en": "Disable",
+            "no": "Deaktiver",
+            "nl": "Uitschakelen"
           }
         },
         {
           "id": "true",
-          "label": {
-            "en": "Enable"
+          "title": {
+            "en": "Enable",
+            "no": "Aktiver",
+            "nl": "Inschakelen"
           }
         }
       ]

@@ -1,0 +1,63 @@
+{
+  "id": "vt_thermostat_preset_is",
+  "title": {
+    "en": "Thermostat preset is",
+    "no": "Termostatforvalg er",
+    "nl": "Thermostaat voorinstelling is"
+  },
+  "titleFormatted": {
+    "en": "Thermostat preset is [[preset]]",
+    "no": "Termostatforvalg er [[preset]]",
+    "nl": "Thermostaat voorinstelling is [[preset]]"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=VThermo"
+    },
+    {
+      "name": "preset",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "comfort",
+          "title": {
+            "en": "Comfort",
+            "no": "Komfort",
+            "nl": "Comfort"
+          }
+        },
+        {
+          "id": "eco",
+          "title": {
+            "en": "Eco",
+            "no": "Øko",
+            "nl": "Eco"
+          }
+        },
+        {
+          "id": "away",
+          "title": {
+            "en": "Away",
+            "no": "Borte",
+            "nl": "Afwezig"
+          }
+        },
+        {
+          "id": "boost",
+          "title": {
+            "en": "Boost",
+            "no": "Boost",
+            "nl": "Boost"
+          }
+        }
+      ],
+      "title": {
+        "en": "Preset",
+        "no": "Forvalg",
+        "nl": "Voorinstelling"
+      }
+    }
+  ]
+}

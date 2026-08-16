@@ -2,10 +2,14 @@
   "id": "target_max_temp",
   "type": "number",
   "label": {
-    "en": "Maximum target temperature"
+    "en": "Maximum target temperature",
+    "no": "Maksimum måltemperatur",
+    "nl": "Maximum doeltemperatuur"
   },
   "hint": {
-    "en": "Maximum target temperature when the target temperature is updated from a master VThermo - thermostat."
+    "en": "Maximum target temperature when the target temperature is updated from a master VThermo - thermostat.",
+    "no": "Maksimal måltemperatur ved oppdatering fra overordnet termostat.",
+    "nl": "Maximale doeltemperatuur bij bijwerken vanaf hoofdthermostaat."
   },
   "value": 40,
   "min": -10,

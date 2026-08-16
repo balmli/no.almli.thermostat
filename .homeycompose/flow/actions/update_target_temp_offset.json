@@ -1,13 +1,19 @@
 {
   "id": "update_target_temp_offset",
   "title": {
-    "en": "Update target temperature offset"
+    "en": "Set target temperature offset",
+    "no": "Sett temperaturforskyvning",
+    "nl": "Stel doelcompensatie in"
   },
   "titleFormatted": {
-    "en": "Update target temperature offset to [[temp_offset]]"
+    "en": "Set target temperature offset to [[temp_offset]]°",
+    "no": "Sett temperaturforskyvning til [[temp_offset]]°",
+    "nl": "Stel doelcompensatie in op [[temp_offset]]°"
   },
   "hint": {
-    "en": "Update the offset when target temperature is updated from a master VThermo - thermostat."
+    "en": "Update the offset when target temperature is updated from a master VThermo - thermostat.",
+    "no": "Oppdater forskyvning når måltemperatur oppdateres fra en overordnet termostat.",
+    "nl": "Werk de compensatie bij wanneer de doeltemperatuur wordt bijgewerkt vanaf een hoofdthermostaat."
   },
   "args": [
     {

@@ -1,0 +1,68 @@
+{
+  "id": "vt_set_thermostat_mode",
+  "title": {
+    "en": "Set thermostat mode",
+    "no": "Sett termostatmodus",
+    "nl": "Stel thermostaatmodus in"
+  },
+  "titleFormatted": {
+    "en": "Set thermostat mode to [[mode]]",
+    "no": "Sett termostatmodus til [[mode]]",
+    "nl": "Stel thermostaatmodus in op [[mode]]"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=VThermo"
+    },
+    {
+      "name": "mode",
+      "title": {
+        "en": "Mode",
+        "no": "Modus",
+        "nl": "Modus"
+      },
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "auto",
+          "title": {
+            "en": "Auto",
+            "no": "Auto",
+            "nl": "Auto"
+          }
+        },
+        {
+          "id": "heat",
+          "title": {
+            "en": "Heat",
+            "no": "Varme",
+            "nl": "Verwarmen"
+          }
+        },
+        {
+          "id": "cool",
+          "title": {
+            "en": "Cool",
+            "no": "Kjøling",
+            "nl": "Koelen"
+          }
+        },
+        {
+          "id": "off",
+          "title": {
+            "en": "Off",
+            "no": "Av",
+            "nl": "Uit"
+          }
+        }
+      ]
+    }
+  ],
+  "hint": {
+    "en": "Set the thermostat mode to Auto, Heat, Cool, or Off.",
+    "no": "Sett termostatmodus til Auto, Varme, Kjøling eller Av.",
+    "nl": "Stel de thermostaatmodus in op Auto, Verwarmen, Koelen of Uit."
+  }
+}

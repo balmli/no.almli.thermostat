@@ -1,0 +1,15 @@
+{
+  "id": "devices_zone_coolers",
+  "type": "checkbox",
+  "label": {
+    "en": "Coolers",
+    "no": "Klimaanlegg og vifter",
+    "nl": "Airconditioners en ventilatoren"
+  },
+  "value": true,
+  "hint": {
+    "en": "Will control coolers (air conditioners, fans, refrigerators) in the same zone.",
+    "no": "Styrer kjøleenheter (klimaanlegg, vifter, kjøleskap) i samme sone.",
+    "nl": "Bedient koelapparaten (airconditioners, ventilatoren, koelkasten) in dezelfde zone."
+  }
+}

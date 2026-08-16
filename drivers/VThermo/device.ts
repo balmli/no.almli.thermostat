@@ -9,6 +9,115 @@ module.exports = class VThermoDevice extends BaseDevice {
 
     async migrate(): Promise<void> {
         try {
+            if (!this.hasCapability('thermostat_mode')) {
+                await this.addCapability('thermostat_mode');
+            }
+            try {
+                await this.setCapabilityOptions('thermostat_mode', {
+                    values: [
+                        {id: 'auto', title: {en: 'Auto'}},
+                        {id: 'heat', title: {en: 'Heat'}},
+                        {id: 'cool', title: {en: 'Cool'}},
+                        {id: 'off', title: {en: 'Off'}},
+                    ],
+                });
+            } catch (err) {
+                this.logger.error('setCapabilityOptions thermostat_mode failed', err);
+            }
+            if (
+                this.getCapabilityValue('thermostat_mode') === null ||
+                this.getCapabilityValue('thermostat_mode') === undefined
+            ) {
+                const defaultMode = this.getSetting('invert') ? 'cool' : 'heat';
+                await this.setCapabilityValue('thermostat_mode', defaultMode).catch(err => this.logger.error(err));
+            }
+            if (!this.hasCapability('vt_cooling')) {
+                await this.addCapability('vt_cooling');
+                await this.setCapabilityValue('vt_cooling', false).catch(err => this.logger.error(err));
+            }
+            if (!this.hasCapability('vt_thermostat_preset')) {
+                await this.addCapability('vt_thermostat_preset');
+            }
+            try {
+                await this.setCapabilityOptions('vt_thermostat_preset', {
+                    values: [
+                        {id: 'comfort', title: {en: 'Comfort'}},
+                        {id: 'eco', title: {en: 'Eco'}},
+                        {id: 'away', title: {en: 'Away'}},
+                        {id: 'boost', title: {en: 'Boost'}},
+                    ],
+                });
+            } catch (err) {
+                this.logger.error('setCapabilityOptions vt_thermostat_preset failed', err);
+            }
+            if (
+                this.getCapabilityValue('vt_thermostat_preset') === null ||
+                this.getCapabilityValue('vt_thermostat_preset') === undefined
+            ) {
+                await this.setCapabilityValue('vt_thermostat_preset', 'comfort').catch(err => this.logger.error(err));
+            }
+            const allowedCapabilities = new Set([
+                'onoff',
+                'vt_onoff',
+                'vt_cooling',
+                'target_temperature',
+                'measure_temperature',
+                'vt_dew_point',
+                'vt_condensation_alarm',
+                'thermostat_mode',
+                'vt_thermostat_preset',
+            ]);
+
+            for (const cap of this.getCapabilities()) {
+                if (!allowedCapabilities.has(cap)) {
+                    await this.removeCapability(cap).catch(err =>
+                        this.logger.error(`removeCapability ${cap} failed:`, err),
+                    );
+                }
+            }
+            if (!this.hasCapability('vt_dew_point')) {
+                await this.addCapability('vt_dew_point');
+            }
+            try {
+                await this.setCapabilityOptions('vt_dew_point', {
+                    title: this.homey.__('capabilities.vt_dew_point.title'),
+                    units: {
+                        en: '°C',
+                        no: '°C',
+                        nl: '°C',
+                    },
+                    decimals: 1,
+                    icon: '/assets/cooling.svg',
+                });
+            } catch (err) {
+                this.logger.error('setCapabilityOptions vt_dew_point failed', err);
+            }
+            if (!this.hasCapability('vt_condensation_alarm')) {
+                await this.addCapability('vt_condensation_alarm');
+                await this.setCapabilityValue('vt_condensation_alarm', false).catch(err => this.logger.error(err));
+            }
+            try {
+                await this.setCapabilityOptions('vt_condensation_alarm', {
+                    title: this.homey.__('capabilities.vt_condensation_alarm.title'),
+                    icon: '/assets/droplet.svg',
+                });
+            } catch (err) {
+                this.logger.error('setCapabilityOptions vt_condensation_alarm failed', err);
+            }
+            try {
+                await this.setCapabilityOptions('vt_cooling', {
+                    title: this.homey.__('capabilities.vt_cooling.title'),
+                });
+            } catch (err) {
+                this.logger.error('setCapabilityOptions vt_cooling failed', err);
+            }
+            try {
+                await this.setCapabilityOptions('vt_onoff', {
+                    title: this.homey.__('capabilities.vt_onoff.title'),
+                });
+            } catch (err) {
+                this.logger.error('setCapabilityOptions vt_onoff failed', err);
+            }
         } catch (err) {
             this.logger.error('migration failed', err);
         }
@@ -31,10 +140,30 @@ module.exports = class VThermoDevice extends BaseDevice {
             // @ts-ignore
             this.homey.app.updateByDataId(this.getData().id, 'target_temperature', value);
         });
+        this.registerCapabilityListener('thermostat_mode', async (value: any, opts: any) => {
+            // @ts-ignore
+            this.homey.app.updateByDataId(this.getData().id, 'thermostat_mode', value);
+            await this.homey.flow
+                .getDeviceTriggerCard('vt_thermostat_mode_changed')
+                .trigger(this, {mode: value}, {})
+                .catch((err: any) => this.logger.error(err));
+        });
+        this.registerCapabilityListener('vt_thermostat_preset', async (value: any, opts: any) => {
+            // @ts-ignore
+            this.homey.app.updateByDataId(this.getData().id, 'vt_thermostat_preset', value);
+            await this.homey.flow
+                .getDeviceTriggerCard('vt_thermostat_preset_changed')
+                .trigger(this, {preset: value}, {})
+                .catch((err: any) => this.logger.error(err));
+        });
     }
 
     onAdded(): void {
         this.setCapabilityValue('onoff', true).catch(err => this.logger.error(err));
+        this.setCapabilityValue('thermostat_mode', 'heat').catch(err => this.logger.error(err));
+        this.setCapabilityValue('vt_thermostat_preset', 'comfort').catch(err => this.logger.error(err));
+        this.setCapabilityValue('vt_cooling', false).catch(err => this.logger.error(err));
+        this.setCapabilityValue('vt_condensation_alarm', false).catch(err => this.logger.error(err));
     }
 
     async onSettings({
@@ -181,6 +310,40 @@ module.exports = class VThermoDevice extends BaseDevice {
             this.logger.info(`Target temperature update enabled set to ${target_update_enabled}`);
         } catch (err) {
             this.logger.error('updateTargetUpdateEnabled ERROR', err);
+        }
+    }
+
+    async updateThermostatMode(mode: string): Promise<void> {
+        try {
+            await this.setCapabilityValue('thermostat_mode', mode).catch(err => this.logger.error(err));
+            // @ts-ignore
+            this.homey.app.updateByDataId(this.getData().id, 'thermostat_mode', mode);
+            await this.homey.flow
+                .getDeviceTriggerCard('vt_thermostat_mode_changed')
+                .trigger(this, {mode}, {})
+                .catch(err => this.logger.error(err));
+            // @ts-ignore
+            this.homey.app.startCalculation();
+            this.logger.info(`Thermostat mode updated to ${mode}`);
+        } catch (err) {
+            this.logger.error('updateThermostatMode ERROR', err);
+        }
+    }
+
+    async updateThermostatPreset(preset: string): Promise<void> {
+        try {
+            await this.setCapabilityValue('vt_thermostat_preset', preset).catch(err => this.logger.error(err));
+            // @ts-ignore
+            this.homey.app.updateByDataId(this.getData().id, 'vt_thermostat_preset', preset);
+            await this.homey.flow
+                .getDeviceTriggerCard('vt_thermostat_preset_changed')
+                .trigger(this, {preset}, {})
+                .catch(err => this.logger.error(err));
+            // @ts-ignore
+            this.homey.app.startCalculation();
+            this.logger.info(`Thermostat preset updated to ${preset}`);
+        } catch (err) {
+            this.logger.error('updateThermostatPreset ERROR', err);
         }
     }
 };

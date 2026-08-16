@@ -2,10 +2,14 @@
   "id": "validate_min_temp",
   "type": "number",
   "label": {
-    "en": "Minimum validate temperature"
+    "en": "Minimum validate temperature",
+    "no": "Minimal gyldig temperatur",
+    "nl": "Minimale geldige temperatuur"
   },
   "hint": {
-    "en": "Temperatures below this value will not be used when calculating the temperature."
+    "en": "Temperatures below this value will not be used when calculating the temperature.",
+    "no": "Temperaturer under denne verdien vil bli ignorert ved beregning.",
+    "nl": "Temperaturen onder deze waarde worden genegeerd bij de berekening."
   },
   "value": 1,
   "min": -10,

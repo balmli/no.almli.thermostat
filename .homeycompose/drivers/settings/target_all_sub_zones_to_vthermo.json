@@ -2,10 +2,14 @@
   "id": "target_all_sub_zones_to_vthermo",
   "type": "checkbox",
   "label": {
-    "en": "Update other VThermos"
+    "en": "Update other VThermos",
+    "no": "Oppdater andre VThermos",
+    "nl": "Andere VThermos bijwerken"
   },
   "value": false,
   "hint": {
-    "en": "Update target temperature of other VThermos in all sub zones (all levels down)."
+    "en": "Update target temperature of other VThermos in all sub zones (all levels down).",
+    "no": "Oppdater måltemperatur for andre VThermoer i alle undersoner (alle nivåer ned).",
+    "nl": "Doeltemperatuur bijwerken van andere VThermo's in alle subzones (alle niveaus omlaag)."
   }
 }

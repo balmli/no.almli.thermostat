@@ -37,3 +37,11 @@ A long-running subscription test reproduces and fixes the stale state, or diagno
 - Regression tests cover subscription replacement, removed capabilities, full-snapshot removal, unavailable-to-available recovery, stable API listeners, partial initialization, awaited shutdown, stale fallback, and MAX age filtering.
 
 These tests exercise API-shaped manager resources and lifecycle behavior locally. They do not prove event delivery from every physical sensor app or Homey generation; an upstream sensor that stops publishing will still retain its last known reading according to the configured maximum-age behavior.
+
+## Follow-up: resubscribe race
+
+Replacing capability instances on every refresh and `device.update` exposed a race in `homey-api` 3.19: destroying a device's last capability instance starts disconnecting its realtime subscription, and a new instance created in the same tick sees the not-yet-cleared subscription and skips subscribing. Devices with a single supported capability, such as plain temperature sensors, were left without a subscription after every other refresh or update.
+
+- Capability instances are kept while the backing API device object is unchanged.
+- A replaced API device is subscribed before the previous instance is destroyed, so the per-URI subscription never drops to zero.
+- Regression tests cover instance reuse, replacement ordering, and event delivery through the real `homey-api` `Device` after a refresh. Delivery on physical Homey hardware remains unverified.

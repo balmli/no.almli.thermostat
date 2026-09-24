@@ -384,12 +384,22 @@ export class Devices {
     private makeCapabilityInstance(device: HomeyAPIV3Local.ManagerDevices.Device, capabilityId: string) {
         try {
             const deviceCapabilityId = capabilityIdFormat(device.id, capabilityId);
-            this.destroyCapabilityInstance(deviceCapabilityId);
+            const current = this.capabilityInstances.get(deviceCapabilityId);
+            // Destroying a device's last capability instance disconnects its realtime subscription, and
+            // homey-api skips the resubscribe when a new instance connects before that disconnect has settled.
+            // Keep the instance for an unchanged API device, and subscribe a replacement before destroying.
+            if (current?.device === device) {
+                return;
+            }
             //device.setMaxListeners(100);
             const capabilityInstance = device.makeCapabilityInstance(capabilityId, value =>
                 this.capabilityInstanceListener(device, capabilityId, value),
             );
             this.capabilityInstances.set(deviceCapabilityId, capabilityInstance);
+            if (current) {
+                current.destroy();
+                this.logger?.debug('Destroyed replaced capability instance: ', deviceCapabilityId);
+            }
             this.logger?.verbose(
                 `Registered capability instance: ${device.id} ${device.name} ${capabilityId} (${this.capabilityInstances.size} active)`,
             );

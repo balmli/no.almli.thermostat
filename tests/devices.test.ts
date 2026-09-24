@@ -191,6 +191,77 @@ describe('Devices registry', () => {
         expect(calculator.startCalculation).toHaveBeenCalledTimes(2);
     });
 
+    it('keeps capability subscriptions when the same API device is refreshed', () => {
+        const destroy = vi.fn();
+        const api = makeApiDevice({id: 'sensor', capabilities: {measure_temperature: 20}});
+        api.makeCapabilityInstance = vi.fn(() => ({device: api, destroy}));
+        const devices = new Devices({sensor: api} as any);
+
+        devices.registerDevices({sensor: api} as any);
+        devices.createOrUpdateDevice(api);
+
+        expect(api.makeCapabilityInstance).toHaveBeenCalledOnce();
+        expect(destroy).not.toHaveBeenCalled();
+    });
+
+    it('subscribes a replacement API device before destroying the previous subscription', () => {
+        const calls: string[] = [];
+        const first = makeApiDevice({id: 'sensor', capabilities: {measure_temperature: 20}});
+        first.makeCapabilityInstance = vi.fn(() => ({device: first, destroy: () => calls.push('destroy first')}));
+        const second = makeApiDevice({id: 'sensor', capabilities: {measure_temperature: 21}});
+        second.makeCapabilityInstance = vi.fn(() => {
+            calls.push('make second');
+            return {device: second, destroy: vi.fn()};
+        });
+        const devices = new Devices({sensor: first} as any);
+
+        devices.registerDevices({sensor: second} as any);
+
+        expect(calls).toEqual(['make second', 'destroy first']);
+    });
+
+    it('keeps receiving homey-api capability events after a device refresh', async () => {
+        const HomeyApiDevice = require('homey-api/lib/HomeyAPI/HomeyAPIV3/ManagerDevices/Device');
+        const subscribers = new Map<string, Set<any>>();
+        const homey = {
+            __debug: () => {},
+            async subscribe(uri: string, handlers: any) {
+                await new Promise(resolve => setTimeout(resolve, 1));
+                if (!subscribers.has(uri)) subscribers.set(uri, new Set());
+                subscribers.get(uri)!.add(handlers);
+                handlers.onConnect();
+                return {unsubscribe: () => subscribers.get(uri)?.delete(handlers)};
+            },
+        };
+        const manager = {__debug: () => {}, scheduleRefresh: () => {}};
+        const api = new HomeyApiDevice({
+            id: 'sensor',
+            homey,
+            manager,
+            properties: makeApiDevice({id: 'sensor', capabilities: {measure_temperature: 20}}),
+        });
+        const settle = () => new Promise(resolve => setTimeout(resolve, 20));
+        const emit = (value: number) =>
+            subscribers.get(api.uri)?.forEach(handlers =>
+                handlers.onEvent('capability', {
+                    capabilityId: 'measure_temperature',
+                    value,
+                    transactionId: `event-${value}`,
+                    transactionTime: Date.now() + value,
+                }),
+            );
+        const devices = new Devices({sensor: api} as any);
+        await settle();
+
+        devices.registerDevices({sensor: api} as any);
+        await settle();
+        emit(22);
+
+        expect(subscribers.get(api.uri)?.size).toBe(1);
+        expect(devices.getDevice('sensor')?.getLocalCapabilityValue('measure_temperature').value).toBe(22);
+        devices.destroy();
+    });
+
     it('destroys subscriptions for removed capabilities and snapshot devices', () => {
         const destroys = new Map<string, ReturnType<typeof vi.fn>>();
         const sensor = makeApiDevice({

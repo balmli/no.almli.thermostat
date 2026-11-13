@@ -24,6 +24,9 @@ export class Devices {
     private logger: any;
     private calculator?: Calculator;
     private devices: Device[];
+    // Keep inventory separate from controllable devices: losing availability must
+    // invalidate a complete power total, not silently remove one of its loads.
+    private powerDevices = new Map<string, Device>();
     private capabilityInstances: Map<string, HomeyAPIV3Local.ManagerDevices.Device.DeviceCapability>;
     private pendingPhysicalUpdates: Map<string, PendingPhysicalUpdate>;
 
@@ -42,6 +45,7 @@ export class Devices {
         }
         this.capabilityInstances.clear();
         this.pendingPhysicalUpdates.clear();
+        this.powerDevices.clear();
     }
 
     setCalculator(calculator?: Calculator): void {
@@ -127,6 +131,10 @@ export class Devices {
                     this.deleteDevice({id: device.id} as HomeyAPIV3Local.ManagerDevices.Device);
                 }
             }
+            this.powerDevices.clear();
+            for (const device of Object.values(devicesAsMap)) {
+                this.rememberPowerDevice(device);
+            }
             this.logger?.info(`Registered devices. (${this.devices.length} devices)`);
             this.calculator?.startCalculation();
         }
@@ -138,11 +146,17 @@ export class Devices {
      */
     createOrUpdateDevice(device: HomeyAPIV3Local.ManagerDevices.Device): Device | undefined {
         if (!this.validAndSupported(device)) {
+            const previousPowerDevice = this.powerDevices.get(device?.id);
             if (device?.id && this.getDevice(device.id)) {
                 this.deleteDevice(device);
             }
+            this.rememberPowerDevice(device, previousPowerDevice);
+            if (previousPowerDevice || this.powerDevices.has(device?.id)) {
+                this.calculator?.startCalculation();
+            }
             return;
         }
+        this.rememberPowerDevice(device);
         const current = this.getDevice(device.id);
         if (current) {
             this.replaceCapabilityInstances(device, current);
@@ -164,6 +178,7 @@ export class Devices {
      * @param device
      */
     deleteDevice(device: HomeyAPIV3Local.ManagerDevices.Device): void {
+        const removedPowerDevice = this.powerDevices.delete(device.id);
         const idx = this.devices.findIndex(d => d.id === device.id);
         if (idx >= 0) {
             const deviz = this.devices[idx];
@@ -180,6 +195,28 @@ export class Devices {
             }
             this.logger?.debug(`Deleted device: ${device.id}. (${this.devices.length} devices)`);
             this.calculator?.startCalculation();
+        } else if (removedPowerDevice) {
+            this.calculator?.startCalculation();
+        }
+    }
+
+    private rememberPowerDevice(device: HomeyAPIV3Local.ManagerDevices.Device, previous?: Device): void {
+        if (device?.id) {
+            const mapped = DeviceMapper.map(device);
+            // A partial unavailable event must not erase the source's scope and
+            // make the other heaters appear to be a complete total.
+            mapped.zone = device.zone === undefined ? previous?.zone : mapped.zone;
+            mapped.class = device.class === undefined ? previous?.class : mapped.class;
+            mapped.virtualClass = device.virtualClass === undefined ? previous?.virtualClass : mapped.virtualClass;
+            mapped.driverId = device.driverId === undefined ? previous?.driverId : mapped.driverId;
+            if (
+                Devices.filterDeviceClass(mapped, DeviceClass.heater) ||
+                Devices.filterDeviceClass(mapped, DeviceClass.thermostat)
+            ) {
+                this.powerDevices.set(device.id, mapped);
+            } else {
+                this.powerDevices.delete(device.id);
+            }
         }
     }
 
@@ -261,13 +298,20 @@ export class Devices {
      * @param zone a zone or a list of zones.
      * @param deviceClass filter by device class (optional)
      */
-    getDevicesFromZones(zone: Zone | Zone[] | undefined, deviceClass?: DeviceClass): Device[] | undefined {
+    getDevicesFromZones(
+        zone: Zone | Zone[] | undefined,
+        deviceClass?: DeviceClass,
+        includeUnavailable = false,
+    ): Device[] | undefined {
         if (!zone) {
             return undefined;
         }
         const zones = Array.isArray(zone) ? zone : [zone];
         const zoneIds: string[] = zones.map(z => z.id);
-        return this.devices
+        const devices = includeUnavailable
+            ? [...this.powerDevices.values()].map(d => this.getDevice(d.id) ?? d)
+            : this.devices;
+        return devices
             .filter(d => d.zone && zoneIds.includes(d.zone))
             .filter(d => Devices.filterDeviceClass(d, deviceClass));
     }
@@ -416,7 +460,10 @@ export class Devices {
         const deviz = this.getDevice(device.id);
         if (deviz) {
             const capability = deviz.getLocalCapabilityValue(capabilityId);
-            const canonicalValue = toCanonicalTemperature(capabilityId, value, capability?.units);
+            const canonicalValue =
+                capabilityId === 'measure_power' && value === undefined
+                    ? null
+                    : toCanonicalTemperature(capabilityId, value, capability?.units);
             this.confirmPhysicalUpdate(device.id, capabilityId, canonicalValue);
             if (deviz.hasChangedValue(capabilityId, canonicalValue)) {
                 deviz.setLocalCapabilityValue(capabilityId, canonicalValue);
@@ -528,6 +575,15 @@ export class Devices {
                             `Update: ${dr.id}:${localDevice.getName()}:${dr.capabilityId} -> ${dr.value}`,
                         );
                     } catch (err) {
+                        if (dr.capabilityId === 'measure_power') {
+                            // The calculator updates its local value optimistically.
+                            // Restore the published value after a failed write so
+                            // the next calculation can retry an invalidation too.
+                            this.getDevice(dr.id)?.setLocalCapabilityValue(
+                                'measure_power',
+                                localDevice.getCapabilityValue('measure_power'),
+                            );
+                        }
                         this.logger?.error('Update devices: UPDATE LOCAL failed:', dr, err);
                     }
                 } else {

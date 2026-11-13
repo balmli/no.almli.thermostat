@@ -28,6 +28,14 @@ You can use temperature sensors from the same zone, from the parent zone, and fr
 
 VThermo supports sensor and physical thermostat capabilities declared in Celsius or Fahrenheit. Calculations use Celsius internally and convert at the Homey API boundary according to each capability's unit metadata, allowing Celsius and Fahrenheit devices to be used together.
 
+#### Measured heater power (optional)
+
+Enable **Collect power readings from controlled heaters** to publish `measure_power` from the existing heater/physical-thermostat switching selections. Every source must have a valid measured value; otherwise the total is unknown (`null`). Zero is valid. No estimates or age-based expiry are used.
+
+On first activation, VThermo requests **Exclude from Energy**. You may include VThermo instead, provided all represented physical meters are excluded. Your choice is preserved; power collection and temperature/window control remain independent. Use direct, non-overlapping physical sources.
+
+**PELS 3.34.1 can retain old watts after `null`.** See [power contract and hardware checks](docs/controlled-heater-power.md) before replacing an existing setup.
+
 #### Triggers
 
 - Turned on

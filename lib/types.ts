@@ -160,6 +160,7 @@ export const SUPPORTED_CAPABILITIES = [
     'onoff',
     'measure_temperature',
     'measure_humidity',
+    'measure_power',
     'target_temperature',
     'thermostat_mode',
     'alarm_contact',
@@ -202,6 +203,7 @@ export class DeviceSettingssZone {
 }
 
 export class DeviceSettings {
+    collectPower?: boolean;
     zone?: DeviceSettingssZone;
     sub_zones?: DeviceSettingssZone;
     contactAlarm?: boolean;

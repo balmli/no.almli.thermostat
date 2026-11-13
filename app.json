@@ -1267,6 +1267,17 @@
               "hint": {
                 "en": "When unchecked, the device cannot be turned off and its on/off switch will remain on."
               }
+            },
+            {
+              "id": "collect_power",
+              "type": "checkbox",
+              "label": {
+                "en": "Collect power readings from controlled heaters"
+              },
+              "value": false,
+              "hint": {
+                "en": "Sum actual power readings from the heaters and physical thermostats selected for switching. Every selected device must have a valid reading. VThermo enables Exclude from Energy when first adding power. Advanced inclusion (turn Exclude from Energy off): here be dragons! Exclude all physical sources represented by VThermo to avoid double counting. One missing reading makes the entire total unknown; individual kWh counters are not forwarded. Your later Energy choice is preserved and does not affect power collection. Use physical devices directly, not virtual groups."
+              }
             }
           ]
         },

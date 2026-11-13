@@ -6,6 +6,7 @@ export class DeviceSettingsMapper {
             const t = new DeviceSettings();
 
             if (driverId === DRIVER_VTHERMO) {
+                t.collectPower = settings.collect_power === true;
                 t.zone = new DeviceSettingssZone();
                 t.zone.clazz = settings.devices_zone_heaters;
                 t.zone.thermostats = settings.devices_zone_thermostats;

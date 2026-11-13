@@ -9,8 +9,36 @@ module.exports = class VThermoDevice extends BaseDevice {
 
     async migrate(): Promise<void> {
         try {
+            await this.initializePowerCapability(this.getSetting('collect_power') === true);
         } catch (err) {
             this.logger.error('migration failed', err);
+        }
+    }
+
+    async initializePowerCapability(enabled: boolean): Promise<void> {
+        if (enabled && !this.hasCapability('measure_power')) {
+            await this.addCapability('measure_power');
+            // Apply the default only when first adding power; later Energy
+            // choices must survive restart and toggling collection off/on.
+            try {
+                await this.setSettings({energy_exclude: true});
+                if (this.getSetting('energy_exclude') !== true) {
+                    throw new Error('Initial Energy exclusion was not retained');
+                }
+            } catch (err) {
+                this.logger.error('Unable to set initial Energy exclusion', err);
+                await this.setWarning(this.homey.__('warning.power_energy_default_failed')).catch(err =>
+                    this.logger.error('Unable to display Energy warning', err),
+                );
+            }
+        }
+        if (this.hasCapability('measure_power')) {
+            // Never expose a persisted aggregate before a fresh calculation.
+            // Retain the capability after opt-out so Flows and Energy exclusion
+            // survive toggling the feature off and on.
+            await this.setCapabilityValue('measure_power', null);
+            // @ts-ignore
+            this.homey.app.updateByDataId(this.getData().id, 'measure_power', null);
         }
     }
 
@@ -62,11 +90,20 @@ module.exports = class VThermoDevice extends BaseDevice {
         if (err) {
             throw new Error(err);
         } else {
+            if (changedKeys.includes('collect_power')) {
+                await this.initializePowerCapability(newSettings.collect_power === true);
+            }
             // Keep the Web API-backed model in sync before calculation. Waiting for
             // a later device.update event can leave onoff_enabled stale long enough
             // for an off device to be evaluated as if switching were disabled.
             // @ts-ignore
             this.homey.app.updateSettingsByDataId(this.getData().id, newSettings);
+            if (changedKeys.includes('energy_exclude')) {
+                await this.unsetWarning().catch(err => this.logger.error('Unable to clear Energy warning', err));
+                if (newSettings.collect_power === true && newSettings.energy_exclude === false) {
+                    return this.homey.__('warning.power_energy_include');
+                }
+            }
         }
     }
 

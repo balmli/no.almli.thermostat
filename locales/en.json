@@ -1,4 +1,8 @@
 {
+  "warning": {
+    "power_energy_default_failed": "VThermo could not enable its default Exclude from Energy setting. Power collection still works. Check Advanced settings: exclude VThermo, or exclude all represented physical meters before including VThermo.",
+    "power_energy_include": "Here be dragons: including VThermo in Homey Energy can double count your heaters. Exclude every physical meter represented by this aggregate. One missing reading makes the whole total unknown; individual kWh counters are not forwarded."
+  },
   "error": {
     "switching_disabled": "Switching the device off has been disabled",
     "invalid_temperature_input": "Invalid temperature. Must be between -150 °C and 150 °C",

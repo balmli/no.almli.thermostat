@@ -38,9 +38,19 @@ export class DeviceMapper {
         for (const key in caps) {
             if (caps.hasOwnProperty(key) && SUPPORTED_CAPABILITIES.includes(key)) {
                 const values = caps[key];
+                if (key === 'measure_power' && !values) {
+                    capabilities.set(key, new DeviceCapability(null, NaN));
+                    continue;
+                }
                 const units = values['units'];
                 const value = toCanonicalTemperature(key, values['value'], units);
-                const dc = new DeviceCapability(value, new Date(values['lastUpdated']).getTime(), units);
+                const stamp = values['lastUpdated'];
+                const lastUpdated =
+                    key === 'measure_power' &&
+                    !(stamp instanceof Date || typeof stamp === 'string' || typeof stamp === 'number')
+                        ? NaN
+                        : new Date(stamp).getTime();
+                const dc = new DeviceCapability(value, lastUpdated, units);
                 capabilities.set(key, dc);
             }
         }

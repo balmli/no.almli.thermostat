@@ -74,6 +74,7 @@ describe('settings mappers', () => {
                 device_delay: 500,
             }),
         ).toEqual({
+            collectPower: false,
             zone: {clazz: true, thermostats: false},
             sub_zones: {clazz: false, thermostats: true},
             contactAlarm: true,

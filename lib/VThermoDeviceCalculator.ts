@@ -25,9 +25,55 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
                 requests.addRequest(this.calculateMeasureTemperature(device, zone));
                 requests.addRequests(this.calculateTargetTemperatures(device, zone));
                 requests.addRequests(this.calculateHeaterSwitching(device, zone));
+                requests.addRequest(this.calculateMeasurePower(device, zone));
             }
         }
         return requests;
+    }
+
+    calculateMeasurePower(device: Device, zone: Zone): DeviceRequest | undefined {
+        let power: number | null = null;
+        const settings = device.deviceSettings;
+        // Energy accounting is the user's choice; it does not change a reading.
+        if (settings?.collectPower) {
+            const sources = new Map(
+                [
+                    ...this.getHeaters(zone, this.zonesObj, settings, true),
+                    ...this.getThermostats(zone, this.zonesObj, settings, true),
+                ].map(d => [d.id, d]),
+            );
+            let total = 0;
+            for (const source of sources.values()) {
+                const reading = source.getLocalCapabilityValue('measure_power');
+                // Do not expand virtual groups or trust their aggregates: their
+                // members can overlap these sources or include this VThermo.
+                const group = source.driverId?.startsWith('homey:app:com.swttt.devicegroups:');
+                if (
+                    source.id === device.id ||
+                    source.isVThermo() ||
+                    source.isVHumidity() ||
+                    group ||
+                    source.ready !== true ||
+                    source.available !== true ||
+                    !source.capabilities?.includes('measure_power') ||
+                    !reading ||
+                    typeof reading.value !== 'number' ||
+                    !Number.isFinite(reading.value) ||
+                    reading.value < 0 ||
+                    !Number.isFinite(reading.lastUpdated) ||
+                    (reading.units != null && reading.units !== 'W')
+                ) {
+                    return this.updateAndCreateDeviceRequestIfChanged(device, 'measure_power', null);
+                }
+                // A change-only meter can have an old, still valid reading.
+                // Availability/null invalidates it; elapsed silence alone cannot.
+                total += reading.value;
+            }
+            if (sources.size > 0 && Number.isFinite(total)) {
+                power = total;
+            }
+        }
+        return this.updateAndCreateDeviceRequestIfChanged(device, 'measure_power', power);
     }
 
     /**
@@ -434,7 +480,7 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
      * @param zonesObj zone manager
      * @param deviceSettings device settings
      */
-    getHeaters(zone: Zone, zonesObj: Zones, deviceSettings?: DeviceSettings): Device[] {
+    getHeaters(zone: Zone, zonesObj: Zones, deviceSettings?: DeviceSettings, includeUnavailable = false): Device[] {
         const dcs: Device[] = [];
         if (deviceSettings) {
             const zones = [];
@@ -444,7 +490,7 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
             if (zone.children && deviceSettings.sub_zones && deviceSettings.sub_zones.clazz) {
                 zones.push(...zone.children);
             }
-            const devices = this.devicesObj.getDevicesFromZones(zones, DeviceClass.heater);
+            const devices = this.devicesObj.getDevicesFromZones(zones, DeviceClass.heater, includeUnavailable);
             if (devices) {
                 dcs.push(...devices);
             }
@@ -458,7 +504,7 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
      * @param zonesObj zone manager
      * @param deviceSettings device settings
      */
-    getThermostats(zone: Zone, zonesObj: Zones, deviceSettings?: DeviceSettings): Device[] {
+    getThermostats(zone: Zone, zonesObj: Zones, deviceSettings?: DeviceSettings, includeUnavailable = false): Device[] {
         const dcs: Device[] = [];
         if (
             deviceSettings &&
@@ -472,7 +518,7 @@ export class VThermoDeviceCalculator extends DeviceCalculator {
             if (zone.children && deviceSettings.sub_zones && deviceSettings.sub_zones.thermostats) {
                 zones.push(...zone.children);
             }
-            const devices = this.devicesObj.getDevicesFromZones(zones, DeviceClass.thermostat);
+            const devices = this.devicesObj.getDevicesFromZones(zones, DeviceClass.thermostat, includeUnavailable);
             if (devices) {
                 dcs.push(...devices);
             }
